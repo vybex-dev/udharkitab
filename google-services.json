@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "762138567483",
+    "project_id": "udhar-kitab",
+    "storage_bucket": "udhar-kitab.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762138567483:android:ce6543ae955b2520c90d1e",
+        "android_client_info": {
+          "package_name": "com.udharkitab.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv5NdZTUA-T-bvLjiqvdfmEeGHOkUcRPk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
