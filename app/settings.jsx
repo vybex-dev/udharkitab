@@ -13,16 +13,19 @@ import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
 
-import { signOut } from "../lib/firebase";
+import { signOut, deleteAccount } from "../lib/firebase";
 import {
   getLocalProfile,
   setLocalShopName,
   setLocalTheme,
   pushProfileToCloud,
+  deleteCloudProfile,
 } from "../lib/profile";
+import { getAccountDeletionStats, wipeAllLocalData } from "../lib/db";
 import { useLanguage } from "../contexts/LanguageContext";
 import { LANGUAGES } from "../constants/translations";
 import { colors } from "../constants/colors";
+import DeleteAccountModal from "../components/DeleteAccountModal";
 
 const APP_VERSION = Constants.expoConfig?.version ?? "1.0.0";
 
@@ -83,6 +86,8 @@ export default function SettingsScreen() {
   const [editingName, setEditingName] = useState(false);
   const [draftName, setDraftName] = useState("");
   const [loggingOut, setLoggingOut] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [deletionStats, setDeletionStats] = useState(null);
 
   useEffect(() => {
     loadProfile();
@@ -148,6 +153,33 @@ export default function SettingsScreen() {
         },
       },
     ]);
+  }
+
+  async function openDeleteAccountModal() {
+    try {
+      const stats = await getAccountDeletionStats();
+      setDeletionStats(stats);
+    } catch (e) {
+      console.error("getAccountDeletionStats error:", e);
+      setDeletionStats({ customerCount: 0, totalPending: 0, entryCount: 0 });
+    }
+    setDeleteModalVisible(true);
+  }
+
+  async function handleLogoutInstead() {
+    setDeleteModalVisible(false);
+    await handleLogout();
+  }
+
+  async function handleConfirmDeleteAccount() {
+    // Best-effort cloud cleanup first (needs the still-valid session), then
+    // the auth account itself, then wipe everything stored on-device.
+    await deleteCloudProfile().catch(() => {});
+    const { error } = await deleteAccount();
+    if (error) throw error;
+    await wipeAllLocalData();
+    setDeleteModalVisible(false);
+    router.replace("/login");
   }
 
   // Current language display
@@ -264,10 +296,24 @@ export default function SettingsScreen() {
                 : <Text style={{ color: colors.danger, fontSize: 18 }}>›</Text>
             }
           />
+          <Row
+            label={t.deleteAccount}
+            danger
+            onPress={openDeleteAccountModal}
+            right={<Text style={{ color: colors.danger, fontSize: 18 }}>›</Text>}
+          />
         </Section>
 
         <Text style={styles.bottomNote}>{t.bottomNote}</Text>
       </ScrollView>
+
+      <DeleteAccountModal
+        visible={deleteModalVisible}
+        stats={deletionStats}
+        onClose={() => setDeleteModalVisible(false)}
+        onLogoutInstead={handleLogoutInstead}
+        onConfirmDelete={handleConfirmDeleteAccount}
+      />
     </SafeAreaView>
   );
 }

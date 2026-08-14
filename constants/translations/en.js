@@ -200,6 +200,31 @@ export const en = {
   logout: "Logout",
   logoutConfirmTitle: "Logout?",
   logoutConfirmMessage: "Are you sure you want to logout?",
+  deleteAccount: "Delete Account",
+  deleteAccountError: "Something went wrong deleting your account. Please check your connection and try again.",
+
+  // Delete account flow — step 1 (plea)
+  deletePleaTitle: "Please don't go 🥺",
+  deletePleaSubtitle: "Deleting your account erases everything in Udhar Kitab, for good. Here's what you'd be leaving behind:",
+  deletePleaStatsCustomers: (n) => `${n} customer${n === 1 ? "" : "s"} you've been tracking`,
+  deletePleaStatsPending: (amount) => `${amount} in pending udhar you'd lose track of`,
+  deletePleaStatsForever: "None of this can be recovered afterwards.",
+  deleteKeepAccount: "Keep my account",
+  deleteStillWantTo: "I still want to delete my account",
+
+  // Delete account flow — step 2 (detour to logout)
+  deleteDetourTitle: "Just need a break?",
+  deleteDetourSubtitle: "Logging out keeps every customer, entry, and payment safe — you can sign back in any time and pick up right where you left off. Deleting your account can't be undone.",
+  deleteLogoutInstead: "Log out instead",
+  deletePermanently: "No, delete my account permanently",
+
+  // Delete account flow — step 3 (final confirmation)
+  deleteFinalTitle: "This is permanent",
+  deleteFinalSubtitle: "Your account, shop profile, and all local udhar data will be erased immediately. There's no undo and no recovery.",
+  deleteConfirmWord: "DELETE",
+  deleteTypePrompt: (word) => `Type ${word} to confirm`,
+  deleteConfirmButton: "Permanently delete my account",
+
   languageSection: "Language",
   changeLanguage: "Change Language",
   dataLocal: "All your udhar data stays only on your phone",

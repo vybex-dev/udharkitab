@@ -201,6 +201,31 @@ export const hi = {
   logout: "लॉग आउट",
   logoutConfirmTitle: "लॉग आउट?",
   logoutConfirmMessage: "क्या आप लॉग आउट करना चाहते हैं?",
+  deleteAccount: "खाता डिलीट करें",
+  deleteAccountError: "खाता डिलीट करने में कुछ गड़बड़ हो गई। कृपया अपना इंटरनेट कनेक्शन जांचें और फिर से कोशिश करें।",
+
+  // खाता डिलीट फ्लो — चरण 1 (अनुरोध)
+  deletePleaTitle: "कृपया मत जाइए 🥺",
+  deletePleaSubtitle: "खाता डिलीट करने से Udhar Kitab में सब कुछ हमेशा के लिए मिट जाएगा। आप यह सब पीछे छोड़ देंगे:",
+  deletePleaStatsCustomers: (n) => `${n} ग्राहक जिनका आप हिसाब रख रहे हैं`,
+  deletePleaStatsPending: (amount) => `${amount} का बकाया उधार जिसका हिसाब खो जाएगा`,
+  deletePleaStatsForever: "इसके बाद कुछ भी वापस नहीं मिलेगा।",
+  deleteKeepAccount: "मेरा खाता रखें",
+  deleteStillWantTo: "मुझे फिर भी अपना खाता डिलीट करना है",
+
+  // खाता डिलीट फ्लो — चरण 2 (लॉगआउट का विकल्प)
+  deleteDetourTitle: "बस थोड़ा ब्रेक चाहिए?",
+  deleteDetourSubtitle: "लॉग आउट करने से हर ग्राहक, एंट्री और भुगतान सुरक्षित रहता है — आप कभी भी वापस लॉग इन कर सकते हैं। खाता डिलीट करना वापस नहीं हो सकता।",
+  deleteLogoutInstead: "इसके बजाय लॉग आउट करें",
+  deletePermanently: "नहीं, मेरा खाता हमेशा के लिए डिलीट करें",
+
+  // खाता डिलीट फ्लो — चरण 3 (अंतिम पुष्टि)
+  deleteFinalTitle: "यह स्थायी है",
+  deleteFinalSubtitle: "आपका खाता, दुकान की प्रोफ़ाइल और सारा स्थानीय उधार डेटा तुरंत मिट जाएगा। इसे वापस नहीं लाया जा सकता।",
+  deleteConfirmWord: "DELETE",
+  deleteTypePrompt: (word) => `पुष्टि के लिए ${word} टाइप करें`,
+  deleteConfirmButton: "मेरा खाता हमेशा के लिए डिलीट करें",
+
   languageSection: "भाषा",
   changeLanguage: "भाषा बदलें",
   dataLocal: "सारा उधार डेटा सिर्फ आपके फोन पर है",
