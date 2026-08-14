@@ -56,7 +56,8 @@ export default function OnboardingTrialScreen() {
         shopName: draft.shopName,
         theme: draft.theme,
         language,
-        phone: draft.e164,
+        email: draft.email,
+        displayName: draft.displayName,
       }).catch(() => {});
 
       await markOnboardingComplete();

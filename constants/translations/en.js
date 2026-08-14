@@ -154,19 +154,10 @@ export const en = {
 
   // Login
   loginTagline: "Keep track of your udhar",
-  enterMobileTitle: "Enter mobile number",
-  otpWillBeSent: "An OTP will be sent to your number",
-  sendOtp: "Send OTP",
-  invalidPhone: "Enter a valid mobile number (10 digits)",
-  enterOtpTitle: "Enter OTP",
-  otpSentTo: (phone) => `Sent to +91 ${phone}`,
-  changeNumber: "Change number",
-  invalidOtp: (len) => `Enter the ${len}-digit OTP`,
-  verifyOtp: "Verify",
-  resendOtp: "Resend OTP",
+  loginTitle: "Welcome back",
+  loginSubtitle: "Sign in with Google to continue",
+  continueWithGoogle: "Continue with Google",
   sessionNotFound: "Session not found — please try again",
-  phoneLabel: "Mobile number",
-  otpLabel: "Enter OTP",
 
   // Paywall
   paywallBrand: "Udhar Kitab Pro",

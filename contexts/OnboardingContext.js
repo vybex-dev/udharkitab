@@ -2,7 +2,7 @@
  * contexts/OnboardingContext.js
  *
  * Holds answers collected across the onboarding screens in memory (not
- * persisted) until the final step commits them to local storage + Supabase.
+ * persisted) until the final step commits them to local storage + Firebase.
  * This keeps each screen simple — they read/write a shared draft instead of
  * each managing their own persistence — and means a user backing out
  * mid-flow (closing the app) just starts over cleanly with nothing
@@ -18,8 +18,7 @@ export const ONBOARDING_STEPS = [
   { key: "language", path: "/onboarding/language" },
   { key: "shop-name", path: "/onboarding/shop-name" },
   { key: "theme", path: "/onboarding/theme" },
-  { key: "phone", path: "/onboarding/phone" },
-  { key: "otp", path: "/onboarding/otp" },
+  { key: "google", path: "/onboarding/google" },
   { key: "trial", path: "/onboarding/trial" },
 ];
 
@@ -29,10 +28,10 @@ export function OnboardingProvider({ children }) {
   const [draft, setDraftState] = useState({
     shopName: "",
     theme: "light",
-    phone: "", // raw 10-digit
-    e164: "", // normalised +91XXXXXXXXXX, set once OTP is sent
-    confirmationResult: null,
-    appVerifier: null,
+    uid: "",
+    email: "",
+    displayName: "",
+    photoURL: "",
   });
 
   const updateDraft = useCallback((patch) => {

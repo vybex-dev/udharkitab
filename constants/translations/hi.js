@@ -153,19 +153,10 @@ export const hi = {
 
   // Login
   loginTagline: "अपने उधार का हिसाब रखें",
-  enterMobileTitle: "मोबाइल नंबर डालें",
-  otpWillBeSent: "आपके नंबर पर OTP आएगा",
-  sendOtp: "OTP भेजें",
-  invalidPhone: "सही मोबाइल नंबर डालें (10 अंक)",
-  enterOtpTitle: "OTP डालें",
-  otpSentTo: (phone) => `+91 ${phone} पर भेजा गया`,
-  changeNumber: "नंबर बदलें",
-  invalidOtp: (len) => `${len} अंकों का OTP डालें`,
-  verifyOtp: "जाँचें",
-  resendOtp: "OTP दोबारा भेजें",
+  loginTitle: "वापसी पर स्वागत है",
+  loginSubtitle: "जारी रखने के लिए Google से साइन इन करें",
+  continueWithGoogle: "Google से जारी रखें",
   sessionNotFound: "सत्र नहीं मिला — दोबारा कोशिश करें",
-  phoneLabel: "मोबाइल नंबर",
-  otpLabel: "OTP डालें",
 
   // Paywall
   paywallBrand: "Udhar Kitab Pro",

@@ -12,7 +12,20 @@
           "package_name": "com.udharkitab.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "762138567483-5tjepqnvf1lj1ood3eqdjcrv6hcilqp1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.udharkitab.app",
+            "certificate_hash": "4b18c13076e72682332fbbb1f5503e6ea1b2acf2"
+          }
+        },
+        {
+          "client_id": "762138567483-raij395l13quirurm11fhgvsev6ngepm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAv5NdZTUA-T-bvLjiqvdfmEeGHOkUcRPk"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "762138567483-raij395l13quirurm11fhgvsev6ngepm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

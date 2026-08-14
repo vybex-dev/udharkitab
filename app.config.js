@@ -32,6 +32,15 @@ export default {
       "expo-font",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          // Only needed for iOS — reversed client ID from GoogleService-Info.plist.
+          iosUrlScheme:
+            process.env.GOOGLE_IOS_URL_SCHEME ||
+            "com.googleusercontent.apps.placeholder",
+        },
+      ],
     ],
     scheme: "udharkitab",
     extra: {
@@ -41,6 +50,7 @@ export default {
       firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET,
       firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
       firebaseAppId: process.env.FIREBASE_APP_ID,
+      googleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
       eas: {
         projectId: "e3d5f686-0757-44a4-b08c-64c38e893f93",
       },

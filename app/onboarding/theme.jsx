@@ -41,7 +41,7 @@ export default function ThemeScreen() {
 
   function handleNext() {
     updateDraft({ theme: selected });
-    router.push("/onboarding/phone");
+    router.push("/onboarding/google");
   }
 
   return (
@@ -67,7 +67,9 @@ export default function ThemeScreen() {
               onPress={() => setSelected(opt.code)}
             >
               <View style={[styles.swatch, { backgroundColor: opt.swatchBg }]}>
-                <View style={[styles.swatchBar, { backgroundColor: opt.swatchBar }]} />
+                <View
+                  style={[styles.swatchBar, { backgroundColor: opt.swatchBar }]}
+                />
                 <View style={styles.swatchLine1} />
                 <View style={styles.swatchLine2} />
               </View>
@@ -89,7 +91,10 @@ export default function ThemeScreen() {
               </View>
 
               <View
-                style={[styles.radioOuter, isSelected && styles.radioOuterSelected]}
+                style={[
+                  styles.radioOuter,
+                  isSelected && styles.radioOuterSelected,
+                ]}
               >
                 {isSelected && <View style={styles.radioInner} />}
               </View>
@@ -132,8 +137,18 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   swatchBar: { height: 10, borderRadius: 3, marginBottom: 2 },
-  swatchLine1: { height: 6, borderRadius: 2, backgroundColor: theme.color.border, width: "80%" },
-  swatchLine2: { height: 6, borderRadius: 2, backgroundColor: theme.color.border, width: "60%" },
+  swatchLine1: {
+    height: 6,
+    borderRadius: 2,
+    backgroundColor: theme.color.border,
+    width: "80%",
+  },
+  swatchLine2: {
+    height: 6,
+    borderRadius: 2,
+    backgroundColor: theme.color.border,
+    width: "60%",
+  },
 
   cardText: { flex: 1, gap: 3 },
   labelRow: { flexDirection: "row", alignItems: "center", gap: 8 },

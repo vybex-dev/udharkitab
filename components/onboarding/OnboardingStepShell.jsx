@@ -79,21 +79,23 @@ export default function OnboardingStepShell({
       </ScrollView>
 
       <View style={styles.footer}>
-        <Pressable
-          style={({ pressed }) => [
-            styles.cta,
-            pressed && styles.ctaPressed,
-            (ctaDisabled || ctaLoading) && styles.ctaDisabled,
-          ]}
-          onPress={onPressCta}
-          disabled={ctaDisabled || ctaLoading}
-        >
-          {ctaLoading ? (
-            <ActivityIndicator color={theme.color.onPrimary} />
-          ) : (
-            <Text style={styles.ctaText}>{ctaLabel}</Text>
-          )}
-        </Pressable>
+        {ctaLabel ? (
+          <Pressable
+            style={({ pressed }) => [
+              styles.cta,
+              pressed && styles.ctaPressed,
+              (ctaDisabled || ctaLoading) && styles.ctaDisabled,
+            ]}
+            onPress={onPressCta}
+            disabled={ctaDisabled || ctaLoading}
+          >
+            {ctaLoading ? (
+              <ActivityIndicator color={theme.color.onPrimary} />
+            ) : (
+              <Text style={styles.ctaText}>{ctaLabel}</Text>
+            )}
+          </Pressable>
+        ) : null}
         {footerExtra}
       </View>
     </KeyboardAvoidingView>
