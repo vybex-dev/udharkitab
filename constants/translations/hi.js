@@ -243,6 +243,12 @@ export const hi = {
   dataSynced: "क्लाउड पर बैकअप है",
   cloudSyncOnHint: "आपके ग्राहक, एंट्री और भुगतान क्लाउड पर सुरक्षित हैं। इसे कभी भी बंद करके सिंकिंग रोकें और क्लाउड की प्रति हटाएं।",
   cloudSyncOffHint: "आपका डेटा सिर्फ इस फोन पर है। फोन बदलने पर सुरक्षित रहे, इसके लिए इसे चालू करें।",
+
+  // Network gate (login + settings sync toggle, only shown when sync needs the network)
+  networkErrorTitle: "इंटरनेट कनेक्शन नहीं है",
+  networkErrorSubtitle: "क्लाउड सिंक चालू है, इसलिए इस चरण के लिए इंटरनेट ज़रूरी है। कनेक्शन जांचें और फिर से कोशिश करें।",
+  networkErrorRetry: "फिर से कोशिश करें",
+  networkErrorRetrying: "जांच हो रही है...",
   bottomNote: "Udhar Kitab — सिर्फ आपका, सिर्फ आपके फोन पर 🔒",
 
   // Plan labels

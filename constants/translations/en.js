@@ -242,6 +242,12 @@ export const en = {
   dataSynced: "Backed up to the cloud",
   cloudSyncOnHint: "Your customers, entries, and payments are backed up to the cloud. Turn this off anytime to stop syncing and remove the cloud copy.",
   cloudSyncOffHint: "Your data stays only on this phone. Turn this on to back it up to the cloud so it's safe if you switch phones.",
+
+  // Network gate (login + settings sync toggle, only shown when sync needs the network)
+  networkErrorTitle: "No internet connection",
+  networkErrorSubtitle: "Cloud sync is turned on, so this step needs an internet connection. Check your connection and try again.",
+  networkErrorRetry: "Retry",
+  networkErrorRetrying: "Checking...",
   bottomNote: "Udhar Kitab — Just yours, only on your phone 🔒",
 
   // Plan labels

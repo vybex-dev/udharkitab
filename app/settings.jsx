@@ -30,10 +30,12 @@ import {
 } from "../lib/db";
 import { deleteAllCloudCustomerData } from "../lib/cloudSync";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import { LANGUAGES } from "../constants/translations";
 import { colors } from "../constants/colors";
 import { PRIVACY_POLICY_URL } from "../constants/links";
 import DeleteAccountModal from "../components/DeleteAccountModal";
+import NetworkErrorScreen from "../components/NetworkErrorScreen";
 
 const APP_VERSION = Constants.expoConfig?.version ?? "1.0.0";
 
@@ -99,6 +101,12 @@ export default function SettingsScreen() {
   const [syncEnabled, setSyncEnabled] = useState(false);
   const [syncBusy, setSyncBusy] = useState(false);
 
+  // Only used to block *turning sync on* while offline — turning it off
+  // never needs the network (local flag flip + best-effort cloud delete).
+  const { isConnected, refresh } = useNetworkStatus();
+  const [networkBlocked, setNetworkBlocked] = useState(false);
+  const [retrying, setRetrying] = useState(false);
+
   useEffect(() => {
     loadProfile();
   }, []);
@@ -115,6 +123,12 @@ export default function SettingsScreen() {
   }
 
   async function handleSyncToggle(next) {
+    if (next && isConnected === false) {
+      // Turning sync ON needs the network for the initial push — don't
+      // flip the switch, take over the screen instead.
+      setNetworkBlocked(true);
+      return;
+    }
     setSyncBusy(true);
     setSyncEnabled(next); // optimistic — feels instant, we revert on failure
     try {
@@ -129,6 +143,16 @@ export default function SettingsScreen() {
       Alert.alert(t.error || "Something went wrong", "");
     } finally {
       setSyncBusy(false);
+    }
+  }
+
+  async function handleNetworkRetry() {
+    setRetrying(true);
+    const online = await refresh();
+    setRetrying(false);
+    if (online) {
+      setNetworkBlocked(false);
+      handleSyncToggle(true);
     }
   }
 
@@ -214,6 +238,10 @@ export default function SettingsScreen() {
 
   // Current language display
   const currentLang = LANGUAGES.find((l) => l.code === language);
+
+  if (networkBlocked) {
+    return <NetworkErrorScreen onRetry={handleNetworkRetry} retrying={retrying} />;
+  }
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>

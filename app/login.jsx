@@ -4,23 +4,55 @@
  */
 
 import { View, Text, StyleSheet, Image, ScrollView, Pressable } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { signInWithGoogle, signOut } from "../lib/firebase";
 import { pullProfileFromCloud, markOnboardingComplete } from "../lib/profile";
+import { getCloudSyncEnabled } from "../lib/db";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import { colors } from "../constants/colors";
 import GoogleSignInButton from "../components/GoogleSignInButton";
+import NetworkErrorScreen from "../components/NetworkErrorScreen";
 
 export default function LoginScreen() {
   const router = useRouter();
   const { t } = useLanguage();
+  const { isConnected, refresh } = useNetworkStatus();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [noAccountFound, setNoAccountFound] = useState(false);
+
+  // Was cloud sync on the last time this device knew its state? This screen
+  // only shows for *returning* users (a fresh install has no local meta
+  // yet, so this stays false and the network gate below never fires for
+  // brand-new signups — see app/onboarding/google.jsx for that flow).
+  const [syncWasOn, setSyncWasOn] = useState(false);
+  const [retrying, setRetrying] = useState(false);
+
+  useEffect(() => {
+    getCloudSyncEnabled()
+      .then(setSyncWasOn)
+      .catch(() => setSyncWasOn(false));
+  }, []);
+
+  async function handleRetry() {
+    setRetrying(true);
+    await refresh();
+    setRetrying(false);
+  }
+
+  // Only block once we actually know both the sync flag and connectivity —
+  // isConnected starts null, so this can't flash on a screen that's really
+  // fine.
+  const networkBlocked = syncWasOn && isConnected === false;
+
+  if (networkBlocked) {
+    return <NetworkErrorScreen onRetry={handleRetry} retrying={retrying} />;
+  }
 
   async function handleGoogleSignIn() {
     setError("");
