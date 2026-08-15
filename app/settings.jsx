@@ -7,6 +7,7 @@
 import {
   View, Text, TextInput, Pressable, StyleSheet,
   ScrollView, Alert, ActivityIndicator, Switch, Linking,
+  KeyboardAvoidingView, Platform,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
@@ -253,6 +254,10 @@ export default function SettingsScreen() {
         </Pressable>
       </View>
 
+      <KeyboardAvoidingView
+        style={styles.kav}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
 
         {/* Shop name */}
@@ -391,6 +396,7 @@ export default function SettingsScreen() {
 
         <Text style={styles.bottomNote}>{t.bottomNote}</Text>
       </ScrollView>
+      </KeyboardAvoidingView>
 
       <DeleteAccountModal
         visible={deleteModalVisible}
@@ -405,6 +411,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
+  kav: { flex: 1 },
 
   header: {
     flexDirection: "row", alignItems: "center", justifyContent: "space-between",

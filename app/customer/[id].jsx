@@ -14,6 +14,8 @@ import {
   Modal,
   TextInput,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
@@ -693,6 +695,10 @@ export default function CustomerDetailScreen() {
         animationType="slide"
         onRequestClose={() => setOverdueModalVisible(false)}
       >
+        <KeyboardAvoidingView
+          style={modal.kav}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
         <Pressable
           style={modal.backdrop}
           onPress={() => setOverdueModalVisible(false)}
@@ -737,6 +743,7 @@ export default function CustomerDetailScreen() {
             <Text style={modal.cancelText}>{t.cancel}</Text>
           </Pressable>
         </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* ── Receive Payment modal ── */}
@@ -746,6 +753,10 @@ export default function CustomerDetailScreen() {
         animationType="slide"
         onRequestClose={closePaymentModal}
       >
+        <KeyboardAvoidingView
+          style={modal.kav}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
         <Pressable style={modal.backdrop} onPress={closePaymentModal} />
         <View style={[modal.sheet, payment.sheet]}>
           <View style={modal.handle} />
@@ -858,6 +869,7 @@ export default function CustomerDetailScreen() {
             <Text style={modal.cancelText}>{t.cancel}</Text>
           </Pressable>
         </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* ── Settle all confirmation modal (requires typing "confirm") ── */}
@@ -867,6 +879,10 @@ export default function CustomerDetailScreen() {
         animationType="fade"
         onRequestClose={() => setSettleAllModalVisible(false)}
       >
+        <KeyboardAvoidingView
+          style={modal.kav}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
         <Pressable
           style={modal.backdrop}
           onPress={() => setSettleAllModalVisible(false)}
@@ -916,6 +932,7 @@ export default function CustomerDetailScreen() {
             <Text style={modal.cancelText}>{t.cancel}</Text>
           </Pressable>
         </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* ── Settle single entry confirmation modal (amounts >= ₹200) ── */}
@@ -925,6 +942,10 @@ export default function CustomerDetailScreen() {
         animationType="fade"
         onRequestClose={() => setSettleEntryModalVisible(false)}
       >
+        <KeyboardAvoidingView
+          style={modal.kav}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
         <Pressable
           style={modal.backdrop}
           onPress={() => setSettleEntryModalVisible(false)}
@@ -972,6 +993,7 @@ export default function CustomerDetailScreen() {
             <Text style={modal.cancelText}>{t.cancel}</Text>
           </Pressable>
         </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* ── Add Phone modal (shown when Call/WhatsApp tapped with no number) ── */}
@@ -1038,8 +1060,12 @@ const overdue = StyleSheet.create({
 
 // ── Modal styles ──────────────────────────────────────────────────────────────
 const modal = StyleSheet.create({
-  backdrop: {
+  kav: {
     flex: 1,
+    justifyContent: "flex-end",
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.4)",
   },
   sheet: {

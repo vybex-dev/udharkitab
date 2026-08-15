@@ -17,6 +17,7 @@
 import { useState } from "react";
 import {
   View, Text, TextInput, Pressable, StyleSheet, Modal, ActivityIndicator,
+  KeyboardAvoidingView, Platform,
 } from "react-native";
 
 import { useLanguage } from "../contexts/LanguageContext";
@@ -69,9 +70,13 @@ export default function DeleteAccountModal({
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
-      <Pressable style={styles.backdrop} onPress={handleClose} />
-      <View style={styles.sheet}>
-        <View style={styles.handle} />
+      <KeyboardAvoidingView
+        style={styles.kav}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <Pressable style={styles.backdrop} onPress={handleClose} />
+        <View style={styles.sheet}>
+          <View style={styles.handle} />
 
         {step === "plea" && (
           <>
@@ -170,13 +175,15 @@ export default function DeleteAccountModal({
             </Pressable>
           </>
         )}
-      </View>
+        </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.4)" },
+  kav: { flex: 1, justifyContent: "flex-end" },
+  backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(0,0,0,0.4)" },
   sheet: {
     backgroundColor: colors.white, borderTopLeftRadius: 24,
     borderTopRightRadius: 24, padding: 24, paddingBottom: 36, gap: 12,
