@@ -152,10 +152,19 @@ export const en = {
     `Update the expected return date for ${n} overdue entr${n === 1 ? "y" : "ies"} of ${name}`,
   updateDueDateConfirm: "✓ Update",
 
+  // Welcome (first screen, new vs returning fork)
+  welcomeTagline: "Keep track of your udhar",
+  welcomeTitle: "Let's get you started",
+  welcomeSubtitle: "Are you new here, or do you already have a khata with us?",
+  welcomeNewCta: "I'm new — Get Started",
+  welcomeReturningCta: "I already have an account",
+
   // Login
   loginTagline: "Keep track of your udhar",
   loginTitle: "Welcome back",
   loginSubtitle: "Sign in with Google to continue",
+  loginNoAccountFound: "We couldn't find an existing khata for this Google account.",
+  loginSetUpInstead: "Set up a new account instead →",
   continueWithGoogle: "Continue with Google",
   sessionNotFound: "Session not found — please try again",
 

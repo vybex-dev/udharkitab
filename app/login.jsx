@@ -3,29 +3,48 @@
  * Login — one and only option: "Continue with Google". No phone, no OTP.
  */
 
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, Pressable } from "react-native";
 import { useState } from "react";
+import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { signInWithGoogle } from "../lib/firebase";
+import { signInWithGoogle, signOut } from "../lib/firebase";
+import { pullProfileFromCloud, markOnboardingComplete } from "../lib/profile";
 import { useLanguage } from "../contexts/LanguageContext";
 import { colors } from "../constants/colors";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 
 export default function LoginScreen() {
+  const router = useRouter();
   const { t } = useLanguage();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [noAccountFound, setNoAccountFound] = useState(false);
 
   async function handleGoogleSignIn() {
     setError("");
+    setNoAccountFound(false);
     setLoading(true);
     try {
       const { session, error: err } = await signInWithGoogle();
       if (err) throw err;
-      // A null session with no error means the user closed the picker —
-      // nothing to show. On success, navigation is owned by _layout.jsx's gate.
+      if (!session) return; // user closed the account picker — nothing to show
+
+      // This screen is specifically for returning users, so confirm a
+      // cloud profile actually exists for this Google account before
+      // sending them home — otherwise _layout.jsx's gate would just leave
+      // them stuck here with a session but no onboarding_complete flag.
+      const result = await pullProfileFromCloud();
+      if (result.success && result.found) {
+        await markOnboardingComplete();
+        router.replace("/");
+      } else {
+        setNoAccountFound(true);
+        // Sign back out so they land on a clean slate if they back out of
+        // this screen or reopen the app, rather than being half-signed-in.
+        await signOut().catch(() => {});
+      }
     } catch (e) {
       setError(e.message ?? t.error);
     } finally {
@@ -58,6 +77,15 @@ export default function LoginScreen() {
           <Text style={styles.stepSub}>{t.loginSubtitle}</Text>
 
           {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+          {noAccountFound ? (
+            <View style={styles.noAccountBox}>
+              <Text style={styles.noAccountText}>{t.loginNoAccountFound}</Text>
+              <Pressable onPress={() => router.push("/onboarding/language")} hitSlop={6}>
+                <Text style={styles.noAccountLink}>{t.loginSetUpInstead}</Text>
+              </Pressable>
+            </View>
+          ) : null}
 
           <GoogleSignInButton
             onPress={handleGoogleSignIn}
@@ -115,6 +143,15 @@ const styles = StyleSheet.create({
     color: colors.danger,
     fontWeight: "500",
   },
+
+  noAccountBox: {
+    backgroundColor: colors.amberLight,
+    borderRadius: 12,
+    padding: 12,
+    gap: 6,
+  },
+  noAccountText: { fontSize: 13, color: colors.amber, fontWeight: "500", lineHeight: 18 },
+  noAccountLink: { fontSize: 13, color: colors.primary, fontWeight: "700" },
 
   footer: {
     textAlign: "center",

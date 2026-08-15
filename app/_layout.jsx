@@ -3,8 +3,12 @@ import "react-native-url-polyfill/auto";
  * app/_layout.jsx
  * Root layout with:
  *  - LanguageProvider wrapping everything
- *  - Onboarding gate: brand-new users go through /onboarding/* once
- *    (language → shop name → theme → phone → OTP → trial start)
+ *  - Welcome gate: a brand-new install (onboarding not complete, no
+ *    session) lands on /welcome first and explicitly picks "I'm new" vs
+ *    "I already have a khata" instead of always being dropped into
+ *    onboarding.
+ *  - Onboarding gate: users who pick "I'm new" go through /onboarding/*
+ *    once (language → shop name → theme → phone → OTP → trial start)
  *  - Auth + plan gate: returning users go auth → trial/plan status → destination
  *  - GestureHandlerRootView + SafeAreaProvider
  *
@@ -12,11 +16,13 @@ import "react-native-url-polyfill/auto";
  *  onboarding_complete (lib/profile.js, local app_meta) is the single flag
  *  that decides whether a user has been through the full onboarding flow.
  *  It's set at the very end of /onboarding/trial once the user taps
- *  "Start free trial". Until then, any unauthenticated segment routes
- *  into /onboarding instead of the old standalone /language-picker or
- *  /login screens — those two routes still exist (Settings still links to
- *  language-picker for "Change Language"), they're just no longer the
- *  first-launch entry point.
+ *  "Start free trial" — or automatically, the moment a returning user's
+ *  cloud profile is recovered after they sign in from /login (see
+ *  handleGoogleSignIn in login.jsx and the recovery step below). Until one
+ *  of those happens, any unauthenticated segment routes into /welcome —
+ *  the old standalone /language-picker screen still exists (Settings still
+ *  links to it for "Change Language"), it's just no longer the first-launch
+ *  entry point.
  */
 
 import { Stack, useRouter, useSegments } from "expo-router";
@@ -29,14 +35,14 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { LanguageProvider, useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../hooks/useAuth";
 import { getCombinedPlanStatus } from "../lib/trial";
-import { isOnboardingComplete } from "../lib/profile";
+import { isOnboardingComplete, markOnboardingComplete, pullProfileFromCloud } from "../lib/profile";
 import { initDB, closeDB } from "../lib/db";
 import { colors } from "../constants/colors";
 
 // Routes reachable without a session. "onboarding" covers the whole
 // /onboarding/* group (expo-router gives the group's directory name as
 // segments[0] for any route inside it).
-const PUBLIC_SEGMENTS = ["login", "language-picker", "onboarding"];
+const PUBLIC_SEGMENTS = ["welcome", "login", "language-picker", "onboarding"];
 
 export default function RootLayout() {
   return (
@@ -80,6 +86,7 @@ function AuthGate() {
   const rcConfigured = useRef(false);
   const hasCheckedOnce = useRef(false);
   const gateRunning = useRef(false);
+  const recoveryAttempted = useRef(false);
   const segmentsRef = useRef(segments);
   segmentsRef.current = segments;
 
@@ -113,8 +120,29 @@ function AuthGate() {
 
       // ── Step 0: Onboarding (first ever launch, not yet completed) ────────
       if (!onboardingDone) {
-        if (currentSegment !== "onboarding") {
-          router.replace("/onboarding/language");
+        // A session can exist here without onboarding_complete being set
+        // locally — e.g. a returning user reinstalled, or the app relaunched
+        // with a persisted native session before local state caught up. If
+        // so, try to recover their profile from the cloud once, silently,
+        // instead of making them sit through onboarding or the welcome
+        // screen again.
+        if (session && !recoveryAttempted.current) {
+          recoveryAttempted.current = true;
+          try {
+            const result = await pullProfileFromCloud();
+            if (result.success && result.found) {
+              await markOnboardingComplete();
+              setOnboardingDone(true);
+              router.replace("/");
+              return;
+            }
+          } catch (e) {
+            console.error("Onboarding recovery error:", e);
+          }
+        }
+
+        if (!PUBLIC_SEGMENTS.includes(currentSegment)) {
+          router.replace("/welcome");
         }
         return;
       }
@@ -153,6 +181,7 @@ function AuthGate() {
     if (!session) {
       rcConfigured.current = false;
       hasCheckedOnce.current = false;
+      recoveryAttempted.current = false;
     }
   }, [session]);
 
@@ -181,6 +210,10 @@ function AuthGate() {
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="welcome"
+          options={{ headerShown: false, animation: "fade" }}
+        />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen
           name="language-picker"

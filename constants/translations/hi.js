@@ -151,10 +151,19 @@ export const hi = {
     `${name} के ${n} पुराने उधार की नई वापसी तारीख सेट करें`,
   updateDueDateConfirm: "✓ अपडेट करें",
 
+  // वेलकम (पहली स्क्रीन, नया या वापसी उपयोगकर्ता)
+  welcomeTagline: "अपने उधार का हिसाब रखें",
+  welcomeTitle: "चलिए शुरू करते हैं",
+  welcomeSubtitle: "क्या आप यहाँ नए हैं, या आपका खाता पहले से बना हुआ है?",
+  welcomeNewCta: "मैं नया हूँ — शुरू करें",
+  welcomeReturningCta: "मेरा खाता पहले से है",
+
   // Login
   loginTagline: "अपने उधार का हिसाब रखें",
   loginTitle: "वापसी पर स्वागत है",
   loginSubtitle: "जारी रखने के लिए Google से साइन इन करें",
+  loginNoAccountFound: "इस Google खाते के लिए हमें कोई मौजूदा खाता नहीं मिला।",
+  loginSetUpInstead: "इसके बजाय नया खाता बनाएँ →",
   continueWithGoogle: "Google से जारी रखें",
   sessionNotFound: "सत्र नहीं मिला — दोबारा कोशिश करें",
 
