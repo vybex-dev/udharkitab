@@ -203,6 +203,8 @@ export const en = {
   subscribeRow: "Subscribe",
   dataSection: "Data",
   dataWhereLabel: "Where is my data?",
+  cloudSyncLabel: "Sync to cloud",
+  privacyPolicyLabel: "Privacy Policy",
   appSection: "App",
   appVersion: "Version",
   accountSection: "Account",
@@ -237,6 +239,9 @@ export const en = {
   languageSection: "Language",
   changeLanguage: "Change Language",
   dataLocal: "All your udhar data stays only on your phone",
+  dataSynced: "Backed up to the cloud",
+  cloudSyncOnHint: "Your customers, entries, and payments are backed up to the cloud. Turn this off anytime to stop syncing and remove the cloud copy.",
+  cloudSyncOffHint: "Your data stays only on this phone. Turn this on to back it up to the cloud so it's safe if you switch phones.",
   bottomNote: "Udhar Kitab — Just yours, only on your phone 🔒",
 
   // Plan labels
@@ -338,6 +343,23 @@ export const en = {
   onboardingGoogleSubtitle: "Sign in with Google to continue — it's quick and secure.",
   onboardingGoogleStamp: "Signed in",
   onboardingGoogleTrust: "We only use your Google account to create and secure your khata. No OTPs, no passwords.",
+
+  // Onboarding — Step 5: Privacy & cloud sync
+  onboardingSyncEyebrow: "Your data, your choice",
+  onboardingSyncTitle: "How should we handle your data?",
+  onboardingSyncSubtitle: "Quick check before we open your khata.",
+  onboardingSyncRequiredBadge: "Required",
+  onboardingSyncPrivacyTitle: "I've read and agree to the Privacy Policy",
+  onboardingSyncPrivacyDescription:
+    "Required to continue — this explains what we collect and how it's used.",
+  onboardingSyncPrivacyLink: "Read Privacy Policy →",
+  onboardingSyncPrivacyRequired: "Please agree to the Privacy Policy to continue.",
+  onboardingSyncCloudTitle: "Back up my customers' data to the cloud",
+  onboardingSyncCloudDescription:
+    "Optional. Keeps your customers, udhar entries, and payments backed up to a secure cloud database tied to your Google account, so nothing is lost if you switch phones. You can turn this on or off anytime from Settings.",
+  onboardingSyncNote:
+    "Your khata works fully offline either way. This only decides whether a copy of your data is also kept in the cloud.",
+  onboardingSyncStamp: "Preference saved",
 
   // Onboarding Trial Screen
   trialFeature1: () => "100% free of cost forever",

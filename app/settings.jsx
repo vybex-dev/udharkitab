@@ -6,7 +6,7 @@
 
 import {
   View, Text, TextInput, Pressable, StyleSheet,
-  ScrollView, Alert, ActivityIndicator,
+  ScrollView, Alert, ActivityIndicator, Switch, Linking,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useRouter } from "expo-router";
@@ -21,10 +21,18 @@ import {
   pushProfileToCloud,
   deleteCloudProfile,
 } from "../lib/profile";
-import { getAccountDeletionStats, wipeAllLocalData } from "../lib/db";
+import {
+  getAccountDeletionStats,
+  wipeAllLocalData,
+  getCloudSyncEnabled,
+  enableCloudSync,
+  disableCloudSync,
+} from "../lib/db";
+import { deleteAllCloudCustomerData } from "../lib/cloudSync";
 import { useLanguage } from "../contexts/LanguageContext";
 import { LANGUAGES } from "../constants/translations";
 import { colors } from "../constants/colors";
+import { PRIVACY_POLICY_URL } from "../constants/links";
 import DeleteAccountModal from "../components/DeleteAccountModal";
 
 const APP_VERSION = Constants.expoConfig?.version ?? "1.0.0";
@@ -88,6 +96,8 @@ export default function SettingsScreen() {
   const [loggingOut, setLoggingOut] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const [deletionStats, setDeletionStats] = useState(null);
+  const [syncEnabled, setSyncEnabled] = useState(false);
+  const [syncBusy, setSyncBusy] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -98,8 +108,27 @@ export default function SettingsScreen() {
       const profile = await getLocalProfile();
       setShopName(profile.shopName);
       setTheme(profile.theme);
+      setSyncEnabled(await getCloudSyncEnabled());
     } catch (e) {
       console.error("loadProfile error:", e);
+    }
+  }
+
+  async function handleSyncToggle(next) {
+    setSyncBusy(true);
+    setSyncEnabled(next); // optimistic — feels instant, we revert on failure
+    try {
+      if (next) {
+        await enableCloudSync();
+      } else {
+        await disableCloudSync();
+      }
+    } catch (e) {
+      console.error("handleSyncToggle error:", e);
+      setSyncEnabled(!next);
+      Alert.alert(t.error || "Something went wrong", "");
+    } finally {
+      setSyncBusy(false);
     }
   }
 
@@ -175,6 +204,7 @@ export default function SettingsScreen() {
     // Best-effort cloud cleanup first (needs the still-valid session), then
     // the auth account itself, then wipe everything stored on-device.
     await deleteCloudProfile().catch(() => {});
+    await deleteAllCloudCustomerData().catch(() => {});
     const { error } = await deleteAccount();
     if (error) throw error;
     await wipeAllLocalData();
@@ -272,7 +302,34 @@ export default function SettingsScreen() {
         <Section title={t.dataSection}>
           <Row
             label={t.dataWhereLabel}
-            right={<Text style={styles.dataNote}>{t.dataLocal}</Text>}
+            right={
+              <Text style={styles.dataNote}>
+                {syncEnabled ? t.dataSynced : t.dataLocal}
+              </Text>
+            }
+          />
+          <Row
+            label={t.cloudSyncLabel}
+            right={
+              syncBusy ? (
+                <ActivityIndicator size="small" color={colors.primary} />
+              ) : (
+                <Switch
+                  value={syncEnabled}
+                  onValueChange={handleSyncToggle}
+                  trackColor={{ false: colors.border, true: colors.primaryLight }}
+                  thumbColor={syncEnabled ? colors.primary : "#FFFFFF"}
+                />
+              )
+            }
+          />
+          <Text style={styles.dataHint}>
+            {syncEnabled ? t.cloudSyncOnHint : t.cloudSyncOffHint}
+          </Text>
+          <Row
+            label={t.privacyPolicyLabel}
+            onPress={() => Linking.openURL(PRIVACY_POLICY_URL)}
+            right={<Text style={{ color: colors.primary, fontSize: 18 }}>›</Text>}
           />
         </Section>
 
@@ -345,6 +402,10 @@ const styles = StyleSheet.create({
 
   editValue: { fontSize: 14, color: colors.textSecondary, fontWeight: "500", maxWidth: 160, textAlign: "right" },
   dataNote: { fontSize: 12, color: colors.textSecondary, maxWidth: 180, textAlign: "right", lineHeight: 16 },
+  dataHint: {
+    fontSize: 11.5, color: colors.textTertiary, lineHeight: 16,
+    paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12,
+  },
   versionText: { fontSize: 14, color: colors.textTertiary },
 
   // Language row right side

@@ -42,7 +42,7 @@ export default function OnboardingGoogleScreen() {
         photoURL: session.user.photoURL || "",
       });
       setSignedIn(true);
-      router.push("/onboarding/trial");
+      router.push("/onboarding/sync");
     } catch (e) {
       setError(e.message ?? t.error);
     } finally {

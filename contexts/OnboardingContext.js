@@ -19,6 +19,7 @@ export const ONBOARDING_STEPS = [
   { key: "shop-name", path: "/onboarding/shop-name" },
   { key: "theme", path: "/onboarding/theme" },
   { key: "google", path: "/onboarding/google" },
+  { key: "sync", path: "/onboarding/sync" },
   { key: "trial", path: "/onboarding/trial" },
 ];
 
@@ -32,6 +33,8 @@ export function OnboardingProvider({ children }) {
     email: "",
     displayName: "",
     photoURL: "",
+    privacyAccepted: false,
+    syncEnabled: false,
   });
 
   const updateDraft = useCallback((patch) => {

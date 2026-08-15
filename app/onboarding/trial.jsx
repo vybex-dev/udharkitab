@@ -19,8 +19,10 @@ import {
   setLocalShopName,
   setLocalTheme,
   markOnboardingComplete,
+  markPrivacyPolicyAccepted,
   pushProfileToCloud,
 } from "../../lib/profile";
+import { enableCloudSync } from "../../lib/db";
 
 function todayStamp() {
   return new Date().toLocaleDateString("en-IN", {
@@ -51,6 +53,15 @@ export default function OnboardingTrialScreen() {
       await setLocalShopName(draft.shopName);
       await setLocalTheme(draft.theme);
       await startTrial();
+      await markPrivacyPolicyAccepted();
+
+      if (draft.syncEnabled) {
+        // Best-effort — a failed initial sync shouldn't block opening the
+        // ledger; the toggle in Settings lets them retry later.
+        enableCloudSync().catch((e) =>
+          console.warn("enableCloudSync (onboarding) failed:", e?.message || e),
+        );
+      }
 
       pushProfileToCloud({
         shopName: draft.shopName,

@@ -204,6 +204,8 @@ export const hi = {
   subscribeRow: "सदस्यता लें",
   dataSection: "डेटा",
   dataWhereLabel: "डेटा कहाँ है?",
+  cloudSyncLabel: "क्लाउड पर सिंक करें",
+  privacyPolicyLabel: "गोपनीयता नीति",
   appSection: "ऐप",
   appVersion: "संस्करण",
   accountSection: "खाता",
@@ -238,6 +240,9 @@ export const hi = {
   languageSection: "भाषा",
   changeLanguage: "भाषा बदलें",
   dataLocal: "सारा उधार डेटा सिर्फ आपके फोन पर है",
+  dataSynced: "क्लाउड पर बैकअप है",
+  cloudSyncOnHint: "आपके ग्राहक, एंट्री और भुगतान क्लाउड पर सुरक्षित हैं। इसे कभी भी बंद करके सिंकिंग रोकें और क्लाउड की प्रति हटाएं।",
+  cloudSyncOffHint: "आपका डेटा सिर्फ इस फोन पर है। फोन बदलने पर सुरक्षित रहे, इसके लिए इसे चालू करें।",
   bottomNote: "Udhar Kitab — सिर्फ आपका, सिर्फ आपके फोन पर 🔒",
 
   // Plan labels
@@ -338,6 +343,23 @@ export const hi = {
   onboardingGoogleSubtitle: "जारी रखने के लिए Google से साइन इन करें — यह तेज़ और सुरक्षित है।",
   onboardingGoogleStamp: "साइन इन हो गया",
   onboardingGoogleTrust: "हम आपके Google खाते का इस्तेमाल सिर्फ आपकी खाता बही बनाने और सुरक्षित करने के लिए करते हैं। कोई OTP नहीं, कोई पासवर्ड नहीं।",
+
+  // Onboarding — Step 5: गोपनीयता और क्लाउड सिंक
+  onboardingSyncEyebrow: "आपका डेटा, आपकी पसंद",
+  onboardingSyncTitle: "हम आपका डेटा कैसे संभालें?",
+  onboardingSyncSubtitle: "खाता बही खोलने से पहले एक छोटा-सा सवाल।",
+  onboardingSyncRequiredBadge: "ज़रूरी",
+  onboardingSyncPrivacyTitle: "मैंने गोपनीयता नीति पढ़ ली है और सहमत हूं",
+  onboardingSyncPrivacyDescription:
+    "जारी रखने के लिए ज़रूरी — यह बताती है कि हम क्या जानकारी लेते हैं और उसका इस्तेमाल कैसे करते हैं।",
+  onboardingSyncPrivacyLink: "गोपनीयता नीति पढ़ें →",
+  onboardingSyncPrivacyRequired: "जारी रखने के लिए कृपया गोपनीयता नीति से सहमत हों।",
+  onboardingSyncCloudTitle: "मेरे ग्राहकों का डेटा क्लाउड पर बैकअप करें",
+  onboardingSyncCloudDescription:
+    "वैकल्पिक। आपके ग्राहक, उधार एंट्री और भुगतान आपके Google खाते से जुड़े एक सुरक्षित क्लाउड डेटाबेस में सुरक्षित रहते हैं, ताकि फोन बदलने पर कुछ न खोए। इसे कभी भी सेटिंग्स से चालू या बंद कर सकते हैं।",
+  onboardingSyncNote:
+    "आपकी खाता बही दोनों ही स्थिति में पूरी तरह ऑफ़लाइन काम करती है। यह सिर्फ यह तय करता है कि आपके डेटा की एक प्रति क्लाउड पर भी रखी जाए या नहीं।",
+  onboardingSyncStamp: "पसंद सहेजी गई",
 
   // Onboarding Trial Screen
   trialFeature1: () => "हमेशा के लिए 100% मुफ़्त",
