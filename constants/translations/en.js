@@ -304,6 +304,40 @@ export const en = {
   save: "Save",
   cancel: "Cancel",
   confirm: "OK",
+  continueCta: "Continue",
+
+  // Onboarding — Step 1: Language
+  onboardingWelcomeEyebrow: "Welcome",
+  onboardingLanguageTitle: "Your digital khata, made simple.",
+  onboardingLanguageSubtitle: "Track udhaar and payments without the paperwork.",
+  onboardingLanguageStamp: "Language set",
+
+  // Onboarding — Step 2: Shop name
+  onboardingShopEyebrow: "Your shop",
+  onboardingShopTitle: "What's your shop called?",
+  onboardingShopSubtitle: "Let's personalize your digital khata.",
+  onboardingShopLedgerEyebrow: "📒 KHATA — SHOP COPY",
+  onboardingShopLedgerPlaceholder: "Your Shop Name",
+  onboardingShopStamp: "Shop name looks great",
+  shopNameRequired: "Enter your shop's name",
+
+  // Onboarding — Step 3: Theme
+  onboardingThemeEyebrow: "Look & feel",
+  onboardingThemeTitle: "Make Udhar Kitab yours.",
+  onboardingThemeSubtitle: "Choose the look you'll enjoy using every day.",
+  onboardingThemeStamp: "Style saved",
+  themeLightLabel: "Light",
+  themeLightSub: "Clean and bright",
+  themeDarkLabel: "Dark",
+  themeDarkSub: "Easy on the eyes — coming soon",
+  themeComingSoonBadge: "Soon",
+
+  // Onboarding — Step 4: Google sign-in
+  onboardingGoogleEyebrow: "Secure your khata",
+  onboardingGoogleTitle: "Let's secure your account.",
+  onboardingGoogleSubtitle: "Sign in with Google to continue — it's quick and secure.",
+  onboardingGoogleStamp: "Signed in",
+  onboardingGoogleTrust: "We only use your Google account to create and secure your khata. No OTPs, no passwords.",
 
   // Onboarding Trial Screen
   trialFeature1: () => "100% free of cost forever",

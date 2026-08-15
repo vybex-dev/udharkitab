@@ -26,7 +26,7 @@ export default function ShopNameScreen() {
   function handleNext() {
     const trimmed = name.trim();
     if (!trimmed) {
-      setError(t.nameRequired || "Enter your shop's name");
+      setError(t.shopNameRequired);
       return;
     }
     updateDraft({ shopName: trimmed });
@@ -38,17 +38,17 @@ export default function ShopNameScreen() {
   return (
     <OnboardingStepShell
       stepKey="shop-name"
-      eyebrow="Your shop"
-      title="What's your shop called?"
-      subtitle="Let's personalize your digital khata."
-      ctaLabel="Continue"
+      eyebrow={t.onboardingShopEyebrow}
+      title={t.onboardingShopTitle}
+      subtitle={t.onboardingShopSubtitle}
+      ctaLabel={t.continueCta}
       onPressCta={handleNext}
       ctaDisabled={!trimmedName}
       error={error}
     >
       {/* Live ledger-header preview */}
       <View style={styles.ledgerCard}>
-        <Text style={styles.ledgerEyebrow}>📒 KHATA — SHOP COPY</Text>
+        <Text style={styles.ledgerEyebrow}>{t.onboardingShopLedgerEyebrow}</Text>
         <Text
           style={[
             styles.ledgerName,
@@ -56,13 +56,13 @@ export default function ShopNameScreen() {
           ]}
           numberOfLines={1}
         >
-          {trimmedName || "Your Shop Name"}
+          {trimmedName || t.onboardingShopLedgerPlaceholder}
         </Text>
         <View style={styles.ledgerRule} />
       </View>
 
       <View style={styles.field}>
-        <Text style={styles.label}>{t.shopName || "SHOP NAME"}</Text>
+        <Text style={styles.label}>{t.shopName}</Text>
         <View style={styles.inputWrap}>
           <Text style={styles.inputIcon}>🏬</Text>
           <TextInput
@@ -72,7 +72,7 @@ export default function ShopNameScreen() {
               setName(txt);
               setError("");
             }}
-            placeholder={t.shopNamePlaceholder || "e.g. Sharma General Store"}
+            placeholder={t.shopNamePlaceholder}
             placeholderTextColor={theme.color.textSecondary}
             autoFocus
             autoCapitalize="words"
@@ -83,7 +83,7 @@ export default function ShopNameScreen() {
         </View>
       </View>
 
-      <ApprovalStamp visible={!!trimmedName} label="Shop name looks great" />
+      <ApprovalStamp visible={!!trimmedName} label={t.onboardingShopStamp} />
     </OnboardingStepShell>
   );
 }

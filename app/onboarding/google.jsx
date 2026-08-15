@@ -53,9 +53,9 @@ export default function OnboardingGoogleScreen() {
   return (
     <OnboardingStepShell
       stepKey="google"
-      eyebrow="Secure your khata"
-      title="Let's secure your account."
-      subtitle="Sign in with Google to continue — it's quick and secure."
+      eyebrow={t.onboardingGoogleEyebrow}
+      title={t.onboardingGoogleTitle}
+      subtitle={t.onboardingGoogleSubtitle}
       ctaLabel={null}
       onPressCta={null}
       error={error}
@@ -64,12 +64,12 @@ export default function OnboardingGoogleScreen() {
         <GoogleSignInButton onPress={handleGoogleSignIn} loading={loading} />
       </View>
 
-      <ApprovalStamp visible={signedIn} label="Signed in" />
+      <ApprovalStamp visible={signedIn} label={t.onboardingGoogleStamp} />
 
       <View style={styles.trustBox}>
         <Text style={styles.trustIcon}>🔒</Text>
         <Text style={styles.trustText}>
-          We only use your Google account to create and secure your khata. No OTPs, no passwords.
+          {t.onboardingGoogleTrust}
         </Text>
       </View>
     </OnboardingStepShell>

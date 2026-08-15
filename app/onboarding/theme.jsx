@@ -10,34 +10,36 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
+import { useLanguage } from "../../contexts/LanguageContext";
 import { useOnboarding } from "../../contexts/OnboardingContext";
 import { theme } from "../../constants/theme";
 import OnboardingStepShell from "../../components/onboarding/OnboardingStepShell";
 import ApprovalStamp from "../../components/onboarding/ApprovalStamp";
 
-const THEME_OPTIONS = [
-  {
-    code: "light",
-    label: "Light",
-    sub: "Clean and bright",
-    swatchBg: "#FFFFFF",
-    swatchBar: "#F8F9FA",
-    comingSoon: false,
-  },
-  {
-    code: "dark",
-    label: "Dark",
-    sub: "Easy on the eyes — coming soon",
-    swatchBg: "#191C1D",
-    swatchBar: "#2E3132",
-    comingSoon: true,
-  },
-];
-
 export default function ThemeScreen() {
   const router = useRouter();
+  const { t } = useLanguage();
   const { draft, updateDraft } = useOnboarding();
   const [selected, setSelected] = useState(draft.theme || "light");
+
+  const THEME_OPTIONS = [
+    {
+      code: "light",
+      label: t.themeLightLabel,
+      sub: t.themeLightSub,
+      swatchBg: "#FFFFFF",
+      swatchBar: "#F8F9FA",
+      comingSoon: false,
+    },
+    {
+      code: "dark",
+      label: t.themeDarkLabel,
+      sub: t.themeDarkSub,
+      swatchBg: "#191C1D",
+      swatchBar: "#2E3132",
+      comingSoon: true,
+    },
+  ];
 
   function handleNext() {
     updateDraft({ theme: selected });
@@ -47,10 +49,10 @@ export default function ThemeScreen() {
   return (
     <OnboardingStepShell
       stepKey="theme"
-      eyebrow="Look & feel"
-      title="Make Udhar Kitab yours."
-      subtitle="Choose the look you'll enjoy using every day."
-      ctaLabel="Continue"
+      eyebrow={t.onboardingThemeEyebrow}
+      title={t.onboardingThemeTitle}
+      subtitle={t.onboardingThemeSubtitle}
+      ctaLabel={t.continueCta}
       onPressCta={handleNext}
     >
       <View style={styles.cards}>
@@ -83,7 +85,7 @@ export default function ThemeScreen() {
                   </Text>
                   {opt.comingSoon && (
                     <View style={styles.badge}>
-                      <Text style={styles.badgeText}>Soon</Text>
+                      <Text style={styles.badgeText}>{t.themeComingSoonBadge}</Text>
                     </View>
                   )}
                 </View>
@@ -103,7 +105,7 @@ export default function ThemeScreen() {
         })}
       </View>
 
-      <ApprovalStamp visible={!!selected} label="Style saved" />
+      <ApprovalStamp visible={!!selected} label={t.onboardingThemeStamp} />
     </OnboardingStepShell>
   );
 }

@@ -304,6 +304,40 @@ export const hi = {
   save: "सहेजें",
   cancel: "रद्द करें",
   confirm: "ठीक है",
+  continueCta: "जारी रखें",
+
+  // ऑनबोर्डिंग — चरण 1: भाषा
+  onboardingWelcomeEyebrow: "स्वागत है",
+  onboardingLanguageTitle: "आपकी डिजिटल खाता बही, बिल्कुल आसान।",
+  onboardingLanguageSubtitle: "बिना कागज़ी काम के उधार और भुगतान का हिसाब रखें।",
+  onboardingLanguageStamp: "भाषा तय हो गई",
+
+  // ऑनबोर्डिंग — चरण 2: दुकान का नाम
+  onboardingShopEyebrow: "आपकी दुकान",
+  onboardingShopTitle: "आपकी दुकान का नाम क्या है?",
+  onboardingShopSubtitle: "चलिए अपनी डिजिटल खाता बही को निजी बनाते हैं।",
+  onboardingShopLedgerEyebrow: "📒 खाता — दुकान की प्रति",
+  onboardingShopLedgerPlaceholder: "आपकी दुकान का नाम",
+  onboardingShopStamp: "दुकान का नाम बढ़िया है",
+  shopNameRequired: "अपनी दुकान का नाम डालें",
+
+  // ऑनबोर्डिंग — चरण 3: थीम
+  onboardingThemeEyebrow: "रूप-रंग",
+  onboardingThemeTitle: "Udhar Kitab को अपने अंदाज़ में बनाएं।",
+  onboardingThemeSubtitle: "वह रूप चुनें जो आपको हर दिन पसंद आएगा।",
+  onboardingThemeStamp: "स्टाइल सहेजी गई",
+  themeLightLabel: "लाइट",
+  themeLightSub: "साफ़ और उजला",
+  themeDarkLabel: "डार्क",
+  themeDarkSub: "आंखों के लिए आरामदायक — जल्द आ रहा है",
+  themeComingSoonBadge: "जल्द",
+
+  // ऑनबोर्डिंग — चरण 4: Google साइन-इन
+  onboardingGoogleEyebrow: "अपना खाता सुरक्षित करें",
+  onboardingGoogleTitle: "चलिए आपका खाता सुरक्षित करते हैं।",
+  onboardingGoogleSubtitle: "जारी रखने के लिए Google से साइन इन करें — यह तेज़ और सुरक्षित है।",
+  onboardingGoogleStamp: "साइन इन हो गया",
+  onboardingGoogleTrust: "हम आपके Google खाते का इस्तेमाल सिर्फ आपकी खाता बही बनाने और सुरक्षित करने के लिए करते हैं। कोई OTP नहीं, कोई पासवर्ड नहीं।",
 
   // Onboarding Trial Screen
   trialFeature1: () => "हमेशा के लिए 100% मुफ़्त",

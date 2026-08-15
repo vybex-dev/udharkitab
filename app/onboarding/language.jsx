@@ -17,7 +17,7 @@ import ApprovalStamp from "../../components/onboarding/ApprovalStamp";
 
 export default function OnboardingLanguageScreen() {
   const router = useRouter();
-  const { language, chooseLanguage } = useLanguage();
+  const { language, chooseLanguage, t } = useLanguage();
   const [picked, setPicked] = useState(language);
   const [confirming, setConfirming] = useState(false);
 
@@ -38,10 +38,10 @@ export default function OnboardingLanguageScreen() {
   return (
     <OnboardingStepShell
       stepKey="language"
-      eyebrow="Welcome"
-      title="Your digital khata, made simple."
-      subtitle="Track udhaar and payments without the paperwork."
-      ctaLabel="Continue"
+      eyebrow={t.onboardingWelcomeEyebrow}
+      title={t.onboardingLanguageTitle}
+      subtitle={t.onboardingLanguageSubtitle}
+      ctaLabel={t.continueCta}
       onPressCta={handleContinue}
       ctaLoading={confirming}
     >
@@ -78,7 +78,7 @@ export default function OnboardingLanguageScreen() {
         })}
       </View>
 
-      <ApprovalStamp visible={!!picked} label="Language set" />
+      <ApprovalStamp visible={!!picked} label={t.onboardingLanguageStamp} />
     </OnboardingStepShell>
   );
 }
