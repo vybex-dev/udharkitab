@@ -579,70 +579,81 @@ export default function CustomerDetailScreen() {
           <View style={styles.divider} />
 
           {isFullySettled ? (
-            <>
-              <View style={styles.allSettledBadge}>
-                <Text style={styles.allSettledIcon}>✓</Text>
-                <Text style={styles.allSettledText}>{t.allSettled}</Text>
-              </View>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.receivePaymentBtn,
-                  styles.receivePaymentBtnFullWidth,
-                  pressed && styles.receivePaymentPressed,
-                ]}
-                onPress={openPaymentModal}
-              >
-                <Text style={styles.receivePaymentText}>
-                  {t.receivePayment}
-                </Text>
-              </Pressable>
-            </>
+            <View style={styles.statusRow}>
+              <Ionicons
+                name="checkmark-circle"
+                size={17}
+                color={colors.success}
+              />
+              <Text style={styles.statusRowText}>{t.allSettled}</Text>
+            </View>
           ) : (
             <>
               <Text style={styles.pendingLabel}>{t.totalPending}</Text>
               <Text style={styles.pendingAmount}>
                 {formatRupees(pendingAmount)}
               </Text>
-
-              <View style={styles.actionsRow}>
-                <Pressable
-                  style={({ pressed }) => [
-                    styles.receivePaymentBtn,
-                    pressed && styles.receivePaymentPressed,
-                  ]}
-                  onPress={openPaymentModal}
-                  disabled={!hasUnsettled}
-                >
-                  <Text style={styles.receivePaymentText}>
-                    {t.receivePayment}
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={({ pressed }) => [
-                    styles.settleAllBtn,
-                    pressed && styles.settleAllPressed,
-                    settling && styles.settleAllDisabled,
-                  ]}
-                  onPress={handleSettleAll}
-                  disabled={settling || !hasUnsettled}
-                >
-                  {settling ? (
-                    <ActivityIndicator color={colors.success} size="small" />
-                  ) : (
-                    <Text style={styles.settleAllText}>{t.markAllPaid}</Text>
-                  )}
-                </Pressable>
-              </View>
             </>
           )}
 
           {creditBalance > 0.009 && (
-            <View style={styles.advanceBadge}>
-              <Text style={styles.advanceLabel}>{t.advanceBalance}</Text>
-              <Text style={styles.advanceAmount}>
-                {formatRupees(creditBalance)}
+            <View style={styles.creditRow}>
+              <Ionicons
+                name="arrow-up-circle"
+                size={14}
+                color={colors.success}
+              />
+              <Text style={styles.creditRowText}>
+                {t.advanceBalance} ·{" "}
+                <Text style={styles.creditRowAmount}>
+                  {formatRupees(creditBalance)}
+                </Text>
               </Text>
-              <Text style={styles.advanceHint}>{t.advanceHint}</Text>
+            </View>
+          )}
+
+          {isFullySettled ? (
+            <Pressable
+              style={({ pressed }) => [
+                styles.receivePaymentBtn,
+                styles.receivePaymentBtnFullWidth,
+                pressed && styles.receivePaymentPressed,
+              ]}
+              onPress={openPaymentModal}
+            >
+              <Text style={styles.receivePaymentText}>
+                {t.receivePayment}
+              </Text>
+            </Pressable>
+          ) : (
+            <View style={styles.actionsRow}>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.receivePaymentBtn,
+                  pressed && styles.receivePaymentPressed,
+                ]}
+                onPress={openPaymentModal}
+                disabled={!hasUnsettled}
+              >
+                <Text style={styles.receivePaymentText}>
+                  {t.receivePayment}
+                </Text>
+              </Pressable>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.settleAllBtn,
+                  pressed && styles.settleAllPressed,
+                  settling && styles.settleAllDisabled,
+                ]}
+                onPress={handleSettleAll}
+                disabled={settling || !hasUnsettled}
+              >
+                {settling ? (
+                  <ActivityIndicator color={colors.success} size="small" />
+                ) : (
+                  <Text style={styles.settleAllText}>{t.markAllPaid}</Text>
+                )}
+              </Pressable>
             </View>
           )}
         </View>
@@ -1435,51 +1446,32 @@ const styles = StyleSheet.create({
   settleAllDisabled: { opacity: 0.4 },
   settleAllText: { fontSize: 14, fontWeight: "700", color: colors.success },
 
-  allSettledBadge: {
+  statusRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
-    marginTop: 18,
-    width: "100%",
-    backgroundColor: colors.successLight,
-    borderRadius: 14,
-    paddingVertical: 14,
+    gap: 6,
   },
-  allSettledIcon: { fontSize: 15, fontWeight: "800", color: colors.success },
-  allSettledText: { fontSize: 15, fontWeight: "700", color: colors.success },
+  statusRowText: { fontSize: 16, fontWeight: "700", color: colors.success },
 
-  receivePaymentBtnFullWidth: { width: "100%", marginTop: 14 },
+  receivePaymentBtnFullWidth: { width: "100%", marginTop: 16 },
 
-  advanceBadge: {
-    marginTop: 16,
-    width: "100%",
-    backgroundColor: colors.successLight,
-    borderRadius: 14,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+  // Compact one-line credit note — replaces the old boxed "advance balance"
+  // panel so a settled khata with a carried-forward amount doesn't stack
+  // three separate colored blocks on top of each other.
+  creditRow: {
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
+    gap: 5,
+    marginTop: 10,
   },
-  advanceLabel: {
-    fontSize: 11,
-    color: colors.success,
-    fontWeight: "700",
-    letterSpacing: 0.4,
-    textTransform: "uppercase",
+  creditRowText: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    fontWeight: "500",
   },
-  advanceAmount: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: colors.success,
-    marginTop: 2,
-  },
-  advanceHint: {
-    fontSize: 12,
-    color: colors.success,
-    opacity: 0.8,
-    marginTop: 4,
-    textAlign: "center",
-  },
+  creditRowAmount: { color: colors.success, fontWeight: "700" },
 
   sectionRow: {
     flexDirection: "row",

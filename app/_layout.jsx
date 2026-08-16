@@ -36,7 +36,7 @@ import { LanguageProvider, useLanguage } from "../contexts/LanguageContext";
 import { useAuth } from "../hooks/useAuth";
 import { getCombinedPlanStatus } from "../lib/trial";
 import { isOnboardingComplete, markOnboardingComplete, pullProfileFromCloud } from "../lib/profile";
-import { initDB, closeDB } from "../lib/db";
+import { initDB, closeDB, restoreCustomersFromCloud } from "../lib/db";
 import { colors } from "../constants/colors";
 
 // Routes reachable without a session. "onboarding" covers the whole
@@ -77,6 +77,7 @@ function AuthGate() {
   const router = useRouter();
   const segments = useSegments();
   const { session, user, loading: authLoading } = useAuth();
+  const { setLanguage } = useLanguage();
 
   const [planStatus, setPlanStatus] = useState(null);
   const [checkingPlan, setCheckingPlan] = useState(true);
@@ -131,6 +132,11 @@ function AuthGate() {
           try {
             const result = await pullProfileFromCloud();
             if (result.success && result.found) {
+              // Same recovery moment as login.jsx: profile is back, now
+              // bring the actual khata data back too (no-ops if this
+              // device already has local customers).
+              await restoreCustomersFromCloud().catch(() => {});
+              if (result.language) await setLanguage(result.language);
               await markOnboardingComplete();
               setOnboardingDone(true);
               router.replace("/");
@@ -171,7 +177,7 @@ function AuthGate() {
       setCheckingPlan(false);
       gateRunning.current = false;
     }
-  }, [authLoading, onboardingChecked, onboardingDone, session, user]);
+  }, [authLoading, onboardingChecked, onboardingDone, session, user, setLanguage]);
 
   useEffect(() => {
     runGate();

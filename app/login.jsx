@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { signInWithGoogle, signOut } from "../lib/firebase";
 import { pullProfileFromCloud, markOnboardingComplete } from "../lib/profile";
-import { getCloudSyncEnabled } from "../lib/db";
+import { getCloudSyncEnabled, restoreCustomersFromCloud } from "../lib/db";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import { colors } from "../constants/colors";
@@ -19,7 +19,7 @@ import NetworkErrorScreen from "../components/NetworkErrorScreen";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, setLanguage } = useLanguage();
   const { isConnected, refresh } = useNetworkStatus();
 
   const [loading, setLoading] = useState(false);
@@ -69,6 +69,13 @@ export default function LoginScreen() {
       // them stuck here with a session but no onboarding_complete flag.
       const result = await pullProfileFromCloud();
       if (result.success && result.found) {
+        // Bring their khatas back too — pullProfileFromCloud only restores
+        // shop name/theme, this is what actually gets customers/entries/
+        // payments back onto the device (no-ops if local data already exists).
+        await restoreCustomersFromCloud().catch(() => {});
+        // Same gap existed for their chosen language — apply it now that
+        // we're back on the language context that owns it.
+        if (result.language) await setLanguage(result.language);
         await markOnboardingComplete();
         router.replace("/");
       } else {
