@@ -56,11 +56,20 @@ export const hi = {
   allocatedOfAmount: (allocated, amount) =>
     `${amount} में से ${allocated} बाँटी गई`,
   selectMoreItemsHint: "बाकी रकम के लिए एक और एंट्री चुनें",
-  amountExceedsPending: (max) =>
-    `रकम कुल बाकी (${max}) से ज़्यादा नहीं हो सकती`,
+  advanceWillBeAdded: (amt) =>
+    `सारा बाकी चुकता — अतिरिक्त ${amt} एडवांस बैलेंस में जोड़ी जाएगी`,
   recordPaymentBtn: "✓ भुगतान दर्ज करें",
   appliedTag: (amt) => `${amt} लगाई गई`,
   noPendingItems: "कोई बाकी एंट्री नहीं",
+
+  // Advance / credit balance (khata carry-forward)
+  advanceBalance: "एडवांस बैलेंस",
+  advanceHint: "अतिरिक्त मिली रकम — इस खाते में आगे जोड़ी गई",
+  applyCreditTitle: "एडवांस बैलेंस इस्तेमाल करें?",
+  applyCreditMessage: (amount, name) =>
+    `${name} के पास ${amount} एडवांस बैलेंस है। क्या इसे इस नए उधार में लगाएँ?`,
+  applyCreditYes: "हाँ, लगाएँ",
+  applyCreditNo: "नहीं, उधार रहने दें",
 
   // Add entry
   addEntryTitle: "उधार दिया",

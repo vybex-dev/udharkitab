@@ -36,6 +36,7 @@ import {
   getOverdueEntries,
   updateOverdueDates,
   recordPayment,
+  getCustomerCreditBalance,
   updateCustomerPhone,
   deleteCustomer,
 } from "../../lib/db";
@@ -185,6 +186,7 @@ export default function CustomerDetailScreen() {
   const [customer, setCustomer] = useState(null);
   const [entries, setEntries] = useState([]);
   const [pendingAmount, setPendingAmount] = useState(0);
+  const [creditBalance, setCreditBalance] = useState(0);
   const [overdueEntries, setOverdueEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [settling, setSettling] = useState(false);
@@ -219,26 +221,29 @@ export default function CustomerDetailScreen() {
 
   const pendingEntries = entries.filter((e) => !e.settled);
   const parsedPaymentAmount = parseFloat(paymentAmount.replace(/,/g, "")) || 0;
-  const selectedItemsInOrder = pendingEntries.filter((e) =>
-    selectedEntryIds.has(e.id),
-  );
+  // Paying more than what's currently pending: this clears every pending
+  // item automatically (no manual selection needed) and the extra becomes
+  // an advance balance on the customer's profile instead of being rejected.
+  const isOverpayment =
+    parsedPaymentAmount > 0 && parsedPaymentAmount > pendingAmount;
+  const selectedItemsInOrder = isOverpayment
+    ? pendingEntries
+    : pendingEntries.filter((e) => selectedEntryIds.has(e.id));
   const { allocations: paymentAllocations, remaining: unallocatedRemaining } =
     allocatePayment(parsedPaymentAmount, selectedItemsInOrder);
   const appliedMap = Object.fromEntries(
     paymentAllocations.map((a) => [a.entryId, a.amount]),
   );
   const allocatedTotal = parsedPaymentAmount - unallocatedRemaining;
+  // Once every pending item is covered, anything left over is the advance
+  // amount that will be recorded on the customer's khata.
+  const advanceAmount = isOverpayment ? unallocatedRemaining : 0;
 
-  const paymentError =
-    parsedPaymentAmount > 0 && parsedPaymentAmount > pendingAmount
-      ? t.amountExceedsPending(formatRupees(pendingAmount))
-      : null;
-
-  const canSavePayment =
-    parsedPaymentAmount > 0 &&
-    !paymentError &&
-    unallocatedRemaining <= 0.009 &&
-    paymentAllocations.length > 0;
+  const canSavePayment = isOverpayment
+    ? true
+    : parsedPaymentAmount > 0 &&
+      unallocatedRemaining <= 0.009 &&
+      paymentAllocations.length > 0;
 
   useFocusEffect(
     useCallback(() => {
@@ -259,11 +264,12 @@ export default function CustomerDetailScreen() {
   async function loadData() {
     setLoading(true);
     try {
-      const [cust, allEntries, pending, overdue] = await Promise.all([
+      const [cust, allEntries, pending, overdue, credit] = await Promise.all([
         getCustomer(custId),
         getEntriesForCustomer(custId),
         getPendingAmountForCustomer(custId),
         getOverdueEntries(custId),
+        getCustomerCreditBalance(custId),
       ]);
       setCustomer(cust);
       const sorted = [
@@ -273,6 +279,7 @@ export default function CustomerDetailScreen() {
       setEntries(sorted);
       setPendingAmount(pending);
       setOverdueEntries(overdue);
+      setCreditBalance(credit);
     } catch (e) {
       console.error("CustomerDetail loadData error:", e);
     } finally {
@@ -454,6 +461,9 @@ export default function CustomerDetailScreen() {
   }
 
   function toggleEntrySelection(entryId) {
+    // While overpaying, every pending item is auto-selected and cleared —
+    // manual toggling would be misleading, so it's a no-op here.
+    if (isOverpayment) return;
     setSelectedEntryIds((prev) => {
       const next = new Set(prev);
       if (next.has(entryId)) next.delete(entryId);
@@ -569,10 +579,24 @@ export default function CustomerDetailScreen() {
           <View style={styles.divider} />
 
           {isFullySettled ? (
-            <View style={styles.allSettledBadge}>
-              <Text style={styles.allSettledIcon}>✓</Text>
-              <Text style={styles.allSettledText}>{t.allSettled}</Text>
-            </View>
+            <>
+              <View style={styles.allSettledBadge}>
+                <Text style={styles.allSettledIcon}>✓</Text>
+                <Text style={styles.allSettledText}>{t.allSettled}</Text>
+              </View>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.receivePaymentBtn,
+                  styles.receivePaymentBtnFullWidth,
+                  pressed && styles.receivePaymentPressed,
+                ]}
+                onPress={openPaymentModal}
+              >
+                <Text style={styles.receivePaymentText}>
+                  {t.receivePayment}
+                </Text>
+              </Pressable>
+            </>
           ) : (
             <>
               <Text style={styles.pendingLabel}>{t.totalPending}</Text>
@@ -610,6 +634,16 @@ export default function CustomerDetailScreen() {
                 </Pressable>
               </View>
             </>
+          )}
+
+          {creditBalance > 0.009 && (
+            <View style={styles.advanceBadge}>
+              <Text style={styles.advanceLabel}>{t.advanceBalance}</Text>
+              <Text style={styles.advanceAmount}>
+                {formatRupees(creditBalance)}
+              </Text>
+              <Text style={styles.advanceHint}>{t.advanceHint}</Text>
+            </View>
           )}
         </View>
 
@@ -779,8 +813,10 @@ export default function CustomerDetailScreen() {
             />
           </View>
 
-          {paymentError ? (
-            <Text style={payment.errorText}>{paymentError}</Text>
+          {isOverpayment ? (
+            <Text style={[payment.allocatedText, payment.allocatedTextDone]}>
+              {t.advanceWillBeAdded(formatRupees(advanceAmount))}
+            </Text>
           ) : parsedPaymentAmount > 0 ? (
             <Text
               style={[
@@ -796,7 +832,9 @@ export default function CustomerDetailScreen() {
             </Text>
           ) : null}
 
-          <Text style={payment.sectionLabel}>{t.selectItemsLabel}</Text>
+          {pendingEntries.length > 0 && (
+            <Text style={payment.sectionLabel}>{t.selectItemsLabel}</Text>
+          )}
 
           <ScrollView
             style={payment.itemList}
@@ -807,7 +845,7 @@ export default function CustomerDetailScreen() {
             ) : (
               pendingEntries.map((item) => {
                 const due = item.amount - (item.paid_amount || 0);
-                const isSelected = selectedEntryIds.has(item.id);
+                const isSelected = isOverpayment || selectedEntryIds.has(item.id);
                 const applied = appliedMap[item.id] || 0;
                 return (
                   <Pressable
@@ -1410,6 +1448,38 @@ const styles = StyleSheet.create({
   },
   allSettledIcon: { fontSize: 15, fontWeight: "800", color: colors.success },
   allSettledText: { fontSize: 15, fontWeight: "700", color: colors.success },
+
+  receivePaymentBtnFullWidth: { width: "100%", marginTop: 14 },
+
+  advanceBadge: {
+    marginTop: 16,
+    width: "100%",
+    backgroundColor: colors.successLight,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: "center",
+  },
+  advanceLabel: {
+    fontSize: 11,
+    color: colors.success,
+    fontWeight: "700",
+    letterSpacing: 0.4,
+    textTransform: "uppercase",
+  },
+  advanceAmount: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: colors.success,
+    marginTop: 2,
+  },
+  advanceHint: {
+    fontSize: 12,
+    color: colors.success,
+    opacity: 0.8,
+    marginTop: 4,
+    textAlign: "center",
+  },
 
   sectionRow: {
     flexDirection: "row",

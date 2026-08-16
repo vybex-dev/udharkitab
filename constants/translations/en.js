@@ -56,11 +56,20 @@ export const en = {
   allocatedOfAmount: (allocated, amount) =>
     `${allocated} of ${amount} allocated`,
   selectMoreItemsHint: "select an item to apply the rest",
-  amountExceedsPending: (max) =>
-    `Amount can't be more than total pending (${max})`,
+  advanceWillBeAdded: (amt) =>
+    `All pending cleared — ${amt} extra will be added as advance balance`,
   recordPaymentBtn: "✓ Record Payment",
   appliedTag: (amt) => `${amt} applied`,
   noPendingItems: "No pending items",
+
+  // Advance / credit balance (khata carry-forward)
+  advanceBalance: "Advance Balance",
+  advanceHint: "Extra amount received — carried forward on this khata",
+  applyCreditTitle: "Use advance balance?",
+  applyCreditMessage: (amount, name) =>
+    `${name} has ${amount} advance balance. Apply it to this new udhar?`,
+  applyCreditYes: "Yes, apply",
+  applyCreditNo: "No, keep as udhar",
 
   // Add entry
   addEntryTitle: "Add Udhar",

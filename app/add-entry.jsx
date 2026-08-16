@@ -27,8 +27,20 @@ import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import NameDropdown from "../components/NameDropdown";
-import { insertCustomer, insertEntry, getCustomerByPhone } from "../lib/db";
-import { todayISO, formatDate, isoToDate, dateToISO } from "../lib/date";
+import {
+  insertCustomer,
+  insertEntry,
+  getCustomerByPhone,
+  getCustomerCreditBalance,
+  applyCreditToEntry,
+} from "../lib/db";
+import {
+  todayISO,
+  formatDate,
+  isoToDate,
+  dateToISO,
+  formatRupees,
+} from "../lib/date";
 import { useLanguage } from "../contexts/LanguageContext";
 import { colors } from "../constants/colors";
 
@@ -258,13 +270,46 @@ export default function AddEntryScreen() {
         }
       }
 
-      await insertEntry({
+      const entryId = await insertEntry({
         customerId: cid,
         amount: parsedAmt,
         note: note.trim() || null,
         date,
         dueDate: dueDateEnabled ? dueDate : null,
       });
+
+      // If this customer already has an advance/credit balance sitting on
+      // their khata (from a past overpayment), offer to use it against
+      // this new udhar instead of leaving both a debt and a credit open —
+      // but always ask first, never apply it silently.
+      const creditBalance = await getCustomerCreditBalance(cid);
+      if (creditBalance > 0.009) {
+        const applyAmount = Math.min(creditBalance, parsedAmt);
+        Alert.alert(
+          t.applyCreditTitle,
+          t.applyCreditMessage(formatRupees(applyAmount), trimName),
+          [
+            { text: t.applyCreditNo, style: "cancel", onPress: () => router.back() },
+            {
+              text: t.applyCreditYes,
+              onPress: async () => {
+                try {
+                  await applyCreditToEntry({
+                    customerId: cid,
+                    entryId,
+                    amount: applyAmount,
+                  });
+                } catch (e) {
+                  console.error("applyCreditToEntry error:", e);
+                } finally {
+                  router.back();
+                }
+              },
+            },
+          ],
+        );
+        return;
+      }
 
       router.back();
     } catch (e) {
