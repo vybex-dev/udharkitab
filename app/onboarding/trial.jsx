@@ -11,6 +11,7 @@ import { useState } from "react";
 
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useOnboarding } from "../../contexts/OnboardingContext";
+import { useSubscription } from "../../contexts/SubscriptionContext";
 import { theme } from "../../constants/theme";
 import OnboardingStepShell from "../../components/onboarding/OnboardingStepShell";
 
@@ -36,6 +37,7 @@ export default function OnboardingTrialScreen() {
   const router = useRouter();
   const { language, t } = useLanguage();
   const { draft } = useOnboarding();
+  const { refreshSubscription } = useSubscription();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -72,6 +74,7 @@ export default function OnboardingTrialScreen() {
       }).catch(() => {});
 
       await markOnboardingComplete();
+      await refreshSubscription().catch(() => {});
       router.replace("/");
     } catch (e) {
       console.error("Onboarding trial start error:", e);

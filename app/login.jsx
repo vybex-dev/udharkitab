@@ -12,6 +12,7 @@ import { signInWithGoogle, signOut } from "../lib/firebase";
 import { pullProfileFromCloud, markOnboardingComplete } from "../lib/profile";
 import { getCloudSyncEnabled, restoreCustomersFromCloud } from "../lib/db";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useSubscription } from "../contexts/SubscriptionContext";
 import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import { colors } from "../constants/colors";
 import GoogleSignInButton from "../components/GoogleSignInButton";
@@ -20,6 +21,7 @@ import NetworkErrorScreen from "../components/NetworkErrorScreen";
 export default function LoginScreen() {
   const router = useRouter();
   const { t, setLanguage } = useLanguage();
+  const { refreshSubscription } = useSubscription();
   const { isConnected, refresh } = useNetworkStatus();
 
   const [loading, setLoading] = useState(false);
@@ -77,6 +79,7 @@ export default function LoginScreen() {
         // we're back on the language context that owns it.
         if (result.language) await setLanguage(result.language);
         await markOnboardingComplete();
+        await refreshSubscription().catch(() => {});
         router.replace("/");
       } else {
         setNoAccountFound(true);

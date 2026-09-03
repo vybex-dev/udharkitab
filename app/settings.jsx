@@ -31,6 +31,7 @@ import {
 } from "../lib/db";
 import { deleteAllCloudCustomerData } from "../lib/cloudSync";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useSubscription } from "../contexts/SubscriptionContext";
 import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import { LANGUAGES } from "../constants/translations";
 import { colors } from "../constants/colors";
@@ -91,6 +92,14 @@ const sec = StyleSheet.create({
 export default function SettingsScreen() {
   const router = useRouter();
   const { t, language } = useLanguage();
+  const {
+    isPremium,
+    trial,
+    planSource,
+    presentPaywall,
+    presentCustomerCenter,
+    restore,
+  } = useSubscription();
 
   const [shopName, setShopName] = useState("");
   const [theme, setTheme] = useState("light");
@@ -101,6 +110,7 @@ export default function SettingsScreen() {
   const [deletionStats, setDeletionStats] = useState(null);
   const [syncEnabled, setSyncEnabled] = useState(false);
   const [syncBusy, setSyncBusy] = useState(false);
+  const [restoring, setRestoring] = useState(false);
 
   // Only used to block *turning sync on* while offline — turning it off
   // never needs the network (local flag flip + best-effort cloud delete).
@@ -157,7 +167,29 @@ export default function SettingsScreen() {
     }
   }
 
-
+  async function handleRestorePurchases() {
+    setRestoring(true);
+    try {
+      const res = await restore();
+      if (res.isPremium) {
+        Alert.alert(
+          t.restoreSuccessTitle || "Purchases Restored",
+          t.restoreSuccessMessage || "Your premium subscription has been restored successfully!"
+        );
+      } else if (res.error) {
+        Alert.alert(t.restoreErrorTitle || "Restore Failed", res.error);
+      } else {
+        Alert.alert(
+          t.restoreNoneTitle || "No Purchases Found",
+          t.restoreNoneMessage || "We could not find an active subscription associated with your account."
+        );
+      }
+    } catch (e) {
+      Alert.alert(t.restoreErrorTitle || "Restore Failed", e?.message || "Failed to restore.");
+    } finally {
+      setRestoring(false);
+    }
+  }
 
   async function saveShopName() {
     const trimmed = draftName.trim();
@@ -329,7 +361,69 @@ export default function SettingsScreen() {
           />
         </Section>
 
-
+        {/* Subscription */}
+        <Section title={t.planSection || "Subscription"}>
+          <Row
+            label={t.planStatus || "Plan Status"}
+            right={
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "700",
+                  color: isPremium
+                    ? colors.primary
+                    : trial?.active
+                    ? colors.textPrimary
+                    : colors.danger,
+                }}
+              >
+                {isPremium
+                  ? (t.planPremiumActive || "★ UDHAR KITAB Premium")
+                  : trial?.active
+                  ? (t.planTrialActive ? t.planTrialActive(trial.daysLeft) : `🎁 Free Trial (${trial.daysLeft}d left)`)
+                  : (t.planTrialExpired || "Trial Expired")}
+              </Text>
+            }
+          />
+          {!isPremium ? (
+            <Row
+              label={t.upgradeToPremium || "Upgrade to Premium"}
+              onPress={async () => {
+                const res = await presentPaywall().catch(() => ({ success: false }));
+                if (!res?.success) {
+                  router.push("/paywall");
+                }
+              }}
+              right={
+                <View style={styles.langRight}>
+                  <Text style={{ color: colors.primary, fontWeight: "600", fontSize: 14 }}>
+                    {t.viewPlans || "View Plans"}
+                  </Text>
+                  <Text style={{ color: colors.primary, fontSize: 18 }}>›</Text>
+                </View>
+              }
+            />
+          ) : (
+            <Row
+              label={t.manageSubscription || "Manage Subscription"}
+              onPress={() => presentCustomerCenter()}
+              right={<Text style={{ color: colors.primary, fontSize: 18 }}>›</Text>}
+            />
+          )}
+          <Row
+            label={t.restorePurchases || "Restore Purchases"}
+            onPress={handleRestorePurchases}
+            right={
+              restoring ? (
+                <ActivityIndicator size="small" color={colors.primary} />
+              ) : (
+                <Text style={{ color: colors.primary, fontSize: 14, fontWeight: "600" }}>
+                  {t.restorePurchase || "Restore"}
+                </Text>
+              )
+            }
+          />
+        </Section>
 
         {/* Data */}
         <Section title={t.dataSection}>

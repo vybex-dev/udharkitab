@@ -29,15 +29,35 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, ActivityIndicator, AppState } from "react-native";
+import { StyleSheet, View, ActivityIndicator, AppState, LogBox } from "react-native";
 import { useEffect, useRef, useState, useCallback } from "react";
 
 import { LanguageProvider, useLanguage } from "../contexts/LanguageContext";
+import { SubscriptionProvider, useSubscription } from "../contexts/SubscriptionContext";
 import { useAuth } from "../hooks/useAuth";
 import { getCombinedPlanStatus } from "../lib/trial";
 import { isOnboardingComplete, markOnboardingComplete, pullProfileFromCloud } from "../lib/profile";
 import { initDB, closeDB, restoreCustomersFromCloud } from "../lib/db";
 import { colors } from "../constants/colors";
+
+// Suppress expected third-party offline noise from showing as red LogBox errors.
+// Firebase Firestore connection attempts and RevenueCat network failures are
+// purely informational when the device is offline — the app continues working
+// normally via local SQLite. These are not actionable errors.
+LogBox.ignoreLogs([
+  // Firebase JS SDK / Firestore offline messages
+  "@firebase/firestore",
+  "Could not reach Cloud Firestore backend",
+  "Failed to get document because the client is offline",
+  "Fetching auth token failed",
+  "auth/network-request-failed",
+  // RevenueCat network errors when offline
+  "[RevenueCat]",
+  "PurchasesError(code=NetworkError",
+  "Error fetching offerings",
+  "Error performing request",
+  "Unable to resolve host",
+]);
 
 // Routes reachable without a session. "onboarding" covers the whole
 // /onboarding/* group (expo-router gives the group's directory name as
@@ -47,12 +67,14 @@ const PUBLIC_SEGMENTS = ["welcome", "login", "language-picker", "onboarding"];
 export default function RootLayout() {
   return (
     <LanguageProvider>
-      <GestureHandlerRootView style={styles.root}>
-        <SafeAreaProvider>
-          <StatusBar style="dark" />
-          <AppGate />
-        </SafeAreaProvider>
-      </GestureHandlerRootView>
+      <SubscriptionProvider>
+        <GestureHandlerRootView style={styles.root}>
+          <SafeAreaProvider>
+            <StatusBar style="dark" />
+            <AppGate />
+          </SafeAreaProvider>
+        </GestureHandlerRootView>
+      </SubscriptionProvider>
     </LanguageProvider>
   );
 }
@@ -78,6 +100,7 @@ function AuthGate() {
   const segments = useSegments();
   const { session, user, loading: authLoading } = useAuth();
   const { setLanguage } = useLanguage();
+  const { isPremium, trial, refreshSubscription } = useSubscription();
 
   const [planStatus, setPlanStatus] = useState(null);
   const [checkingPlan, setCheckingPlan] = useState(true);
@@ -138,6 +161,7 @@ function AuthGate() {
               await restoreCustomersFromCloud().catch(() => {});
               if (result.language) await setLanguage(result.language);
               await markOnboardingComplete();
+              await refreshSubscription().catch(() => {});
               setOnboardingDone(true);
               router.replace("/");
               return;
@@ -167,6 +191,18 @@ function AuthGate() {
       setPlanStatus(status);
       hasCheckedOnce.current = true;
 
+      const planActive = isPremium || trial?.active || status.active;
+
+      if (!planActive) {
+        // Trial has ended and user has no active subscription:
+        // Confine user strictly to the paywall screen!
+        if (currentSegment !== "paywall") {
+          router.replace("/paywall");
+        }
+        return;
+      }
+
+      // If plan is active and user is still on an auth/onboarding public route, go home
       const inPublic = PUBLIC_SEGMENTS.includes(currentSegment);
       if (inPublic) {
         router.replace("/");
@@ -177,7 +213,7 @@ function AuthGate() {
       setCheckingPlan(false);
       gateRunning.current = false;
     }
-  }, [authLoading, onboardingChecked, onboardingDone, session, user, setLanguage]);
+  }, [authLoading, onboardingChecked, onboardingDone, session, user, setLanguage, isPremium, trial?.active, refreshSubscription]);
 
   useEffect(() => {
     runGate();
@@ -239,6 +275,7 @@ function AuthGate() {
           options={{ presentation: "modal", animation: "slide_from_bottom" }}
         />
         <Stack.Screen name="customer/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="paywall" options={{ headerShown: false, animation: "fade" }} />
       </Stack>
 
       {checkingPlan && (
