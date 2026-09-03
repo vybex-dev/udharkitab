@@ -10,6 +10,7 @@ export const en = {
   // Home screen
   totalPending: "Total Pending",
   todayReceived: "Received Today",
+  totalReceived: "Total Received",
   addUdhar: "+ Add Udhar",
   settledCustomers: "Settled Customers",
   noUdhar: "No udhar yet",
@@ -295,9 +296,34 @@ export const en = {
   // Home screen — Pending/Settled toggle
   pendingTab: "Pending",
   settledTab: "Settled",
+  homeTab: "Home",
   noSettledCustomersTitle: "No settled customers yet",
   noSettledCustomersSub:
     "Customers show up here once all their udhar is cleared.",
+
+  // Home screen — analytics overview (app/index.jsx)
+  namaste: "NAMASTE",
+  totalCollectionMonth: "TOTAL COLLECTION · THIS MONTH",
+  pendingUdharLabel: "PENDING UDHAR",
+  collectionRateLabelHome: "COLLECTION RATE",
+  weeklyFlow: "Weekly Flow",
+  collectionHealth: "COLLECTION RATE THIS MONTH",
+  collectionHealthSub: (collected, given) =>
+    `${collected} collected of ${given} given out this month.`,
+  healthExcellent: "Excellent",
+  healthGood: "Good",
+  healthFair: "Fair",
+  healthNeedsAttention: "Needs attention",
+  topCustomers: "Top Customers",
+  seeAll: "See all",
+  noPendingCustomers: "No pending customers right now.",
+  dueToday: "Due Today",
+  dueTodayLabel: "Due today",
+  overdue: "Overdue",
+  overdueLabel: "Overdue",
+  urgent: "URGENT",
+  due: "Due",
+  sendReminder: "Send Reminder",
 
   // Analytics screen
   analyticsTitle: "Analytics",

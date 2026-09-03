@@ -27,6 +27,7 @@ import StatBar from "../components/StatBar";
 import CustomerRow from "../components/CustomerRow";
 import SettledCustomerRow from "../components/SettledCustomerRow";
 import EmptyState from "../components/EmptyState";
+import SettledEmptyState from "../components/SettledEmptyState";
 import BottomTabBar from "../components/BottomTabBar";
 
 import { useCustomers } from "../hooks/useCustomers";
@@ -63,6 +64,7 @@ export default function PendingScreen() {
 
   const {
     customers: settledCustomers,
+    stats: settledStats,
     loading: settledLoading,
     refreshing: settledRefreshing,
     sort: settledSort,
@@ -276,7 +278,7 @@ export default function PendingScreen() {
     if (searchActive) return null;
     return (
       <>
-        {isPendingMode && (
+        {isPendingMode ? (
           <>
             <OverdueBanner />
             <StatBar
@@ -285,6 +287,13 @@ export default function PendingScreen() {
             />
             <DueTodayStrip />
           </>
+        ) : (
+          <StatBar
+            totalPending={settledStats.totalReceived}
+            todayReceived={settledStats.todayReceived}
+            leftLabel={t.totalReceived}
+            leftColor={colors.success}
+          />
         )}
         <View style={styles.pillRow}>
           {SORT_OPTIONS.map((opt) => (
@@ -322,18 +331,7 @@ export default function PendingScreen() {
       );
     }
     if (!isPendingMode) {
-      return (
-        <View style={styles.noResults}>
-          <Text style={styles.noResultsIcon}>✅</Text>
-          <Text style={styles.noResultsTitle}>
-            {t.noSettledCustomersTitle || "No settled customers yet"}
-          </Text>
-          <Text style={styles.noResultsSub}>
-            {t.noSettledCustomersSub ||
-              "Customers show up here once all their udhar is cleared."}
-          </Text>
-        </View>
-      );
+      return <SettledEmptyState />;
     }
     return <EmptyState />;
   }

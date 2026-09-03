@@ -10,6 +10,7 @@ export const hi = {
   // Home screen
   totalPending: "कुल बाकी",
   todayReceived: "आज मिला",
+  totalReceived: "कुल प्राप्त",
   addUdhar: "+ उधार दिया",
   settledCustomers: "चुकता हुए ग्राहक",
   noUdhar: "कोई उधार नहीं",
@@ -295,9 +296,34 @@ export const hi = {
   // Home screen — Pending/Settled toggle
   pendingTab: "बाकी",
   settledTab: "चुकता",
+  homeTab: "होम",
   noSettledCustomersTitle: "अभी कोई चुकता ग्राहक नहीं",
   noSettledCustomersSub:
     "जब किसी ग्राहक का पूरा उधार चुकता हो जाएगा, वो यहाँ दिखेगा।",
+
+  // Home screen — analytics overview (app/index.jsx)
+  namaste: "नमस्ते",
+  totalCollectionMonth: "कुल वसूली · इस महीने",
+  pendingUdharLabel: "बाकी उधार",
+  collectionRateLabelHome: "वसूली दर",
+  weeklyFlow: "साप्ताहिक प्रवाह",
+  collectionHealth: "इस महीने वसूली दर",
+  collectionHealthSub: (collected, given) =>
+    `${given} में से ${collected} इस महीने वसूल हुआ।`,
+  healthExcellent: "बेहतरीन",
+  healthGood: "अच्छा",
+  healthFair: "ठीक-ठाक",
+  healthNeedsAttention: "ध्यान देने की ज़रूरत",
+  topCustomers: "मुख्य ग्राहक",
+  seeAll: "सभी देखें",
+  noPendingCustomers: "अभी कोई बाकी ग्राहक नहीं है।",
+  dueToday: "आज देय",
+  dueTodayLabel: "आज देय",
+  overdue: "देरी से बाकी",
+  overdueLabel: "देरी से बाकी",
+  urgent: "ज़रूरी",
+  due: "देय",
+  sendReminder: "याद दिलाएं",
 
   // Analytics screen
   analyticsTitle: "विश्लेषण",

@@ -8,13 +8,18 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { colors } from "../constants/colors";
 import { formatRupees } from "../lib/date";
 
-export default function StatBar({ totalPending = 0, todayReceived = 0 }) {
+export default function StatBar({
+  totalPending = 0,
+  todayReceived = 0,
+  leftLabel,
+  leftColor = colors.danger,
+}) {
   const { t } = useLanguage();
   return (
     <View style={styles.container}>
       <View style={styles.stat}>
-        <Text style={styles.label}>{t.totalPending}</Text>
-        <Text style={[styles.amount, { color: colors.danger }]}>
+        <Text style={styles.label}>{leftLabel ?? t.totalPending}</Text>
+        <Text style={[styles.amount, { color: leftColor }]}>
           {formatRupees(totalPending)}
         </Text>
       </View>

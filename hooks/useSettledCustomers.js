@@ -7,13 +7,14 @@
 
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "expo-router";
-import { getSettledCustomers } from "../lib/db";
+import { getSettledCustomers, getSettledStats } from "../lib/db";
 import { useLanguage } from "../contexts/LanguageContext";
 
 export function useSettledCustomers(initialSort = "recent", enabled = true) {
   const { t } = useLanguage();
   const [sort, setSort] = useState(initialSort);
   const [customers, setCustomers] = useState([]);
+  const [stats, setStats] = useState({ totalReceived: 0, todayReceived: 0 });
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
@@ -30,8 +31,12 @@ export function useSettledCustomers(initialSort = "recent", enabled = true) {
     setError(null);
 
     try {
-      const list = await getSettledCustomers(sort);
+      const [list, settledStats] = await Promise.all([
+        getSettledCustomers(sort),
+        getSettledStats(),
+      ]);
       setCustomers(list);
+      setStats(settledStats);
     } catch (e) {
       console.error("useSettledCustomers loadData error:", e);
       setError(e.message ?? t.error);
@@ -51,6 +56,7 @@ export function useSettledCustomers(initialSort = "recent", enabled = true) {
 
   return {
     customers,
+    stats,
     loading,
     refreshing,
     error,

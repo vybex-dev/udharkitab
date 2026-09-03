@@ -25,6 +25,7 @@ import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../constants/colors";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const BAR_HEIGHT = 64; // height of the flat part of the bar
 const TOP_CORNER_RADIUS = 28; // rounds just the top-left/top-right corners
@@ -38,18 +39,19 @@ export default function BottomTabBar({
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const bottomPad = insets.bottom || 10;
+  const { t } = useLanguage();
 
   const TABS = [
     {
       key: "home",
-      label: "Home",
+      label: t.homeTab || "Home",
       icon: "home-outline",
       iconActive: "home",
       onPress: onSelectHome,
     },
     {
       key: "pending",
-      label: "Pending",
+      label: t.pendingTab || "Pending",
       icon: "time-outline",
       iconActive: "time",
       onPress: onSelectPending,
@@ -57,14 +59,14 @@ export default function BottomTabBar({
     // "+" sits in the middle — rendered separately, not in this map
     {
       key: "settled",
-      label: "Settled",
+      label: t.settledTab || "Settled",
       icon: "checkmark-circle-outline",
       iconActive: "checkmark-circle",
       onPress: onSelectSettled,
     },
     {
       key: "settings",
-      label: "Settings",
+      label: t.settingsTitle || "Settings",
       icon: "settings-outline",
       iconActive: "settings",
       onPress: () => router.push("/settings"),

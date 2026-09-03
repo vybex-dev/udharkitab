@@ -8,10 +8,12 @@
 import { View, Text, StyleSheet } from "react-native";
 import { colors } from "../../constants/colors";
 
-const DAY_LETTERS = ["S", "M", "T", "W", "T", "F", "S"];
+const DAY_LETTERS_EN = ["S", "M", "T", "W", "T", "F", "S"];
+const DAY_LETTERS_HI = ["र", "सो", "मं", "बु", "गु", "शु", "श"];
 
-export default function WeeklyFlowChart({ data = [] }) {
+export default function WeeklyFlowChart({ data = [], language = "en" }) {
   const max = Math.max(1, ...data.map((d) => d.collected));
+  const dayLetters = language === "hi" ? DAY_LETTERS_HI : DAY_LETTERS_EN;
 
   return (
     <View style={styles.container}>
@@ -35,7 +37,7 @@ export default function WeeklyFlowChart({ data = [] }) {
                 />
               </View>
               <Text style={[styles.dayLabel, isToday && styles.dayLabelToday]}>
-                {DAY_LETTERS[new Date(d.date).getDay()] ?? "-"}
+                {dayLetters[new Date(d.date).getDay()] ?? "-"}
               </Text>
             </View>
           );

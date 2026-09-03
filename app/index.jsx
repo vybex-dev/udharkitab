@@ -136,7 +136,7 @@ export default function HomeScreen() {
               </View>
               <View style={styles.collectionBadge}>
                 <Text style={styles.collectionBadgeLabel}>
-                  {t.collectionRateLabel || "COLLECTION RATE"}
+                  {t.collectionRateLabelHome || "COLLECTION RATE"}
                 </Text>
                 <Text style={styles.collectionBadgeValue}>
                   {collectionRatePct}%
@@ -150,7 +150,7 @@ export default function HomeScreen() {
             <Text style={styles.cardTitle}>
               {t.weeklyFlow || "Weekly Flow"}
             </Text>
-            <WeeklyFlowChart data={weeklyFlow} />
+            <WeeklyFlowChart data={weeklyFlow} language={language} />
           </View>
 
           {/* Collection Rate (honest replacement for a fake health score) */}
@@ -171,8 +171,12 @@ export default function HomeScreen() {
               </Text>
             </View>
             <Text style={styles.healthSub}>
-              {t.collectionHealthSub ||
-                `${formatRupees(monthComparison.currentCollected)} collected of ${formatRupees(monthComparison.currentGiven)} given out this month.`}
+              {typeof t.collectionHealthSub === "function"
+                ? t.collectionHealthSub(
+                    formatRupees(monthComparison.currentCollected),
+                    formatRupees(monthComparison.currentGiven),
+                  )
+                : `${formatRupees(monthComparison.currentCollected)} collected of ${formatRupees(monthComparison.currentGiven)} given out this month.`}
             </Text>
           </View>
 
