@@ -283,7 +283,7 @@ export default function SettingsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
+    <SafeAreaView key={language} style={styles.safe} edges={["top", "bottom"]}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>{t.settingsTitle}</Text>

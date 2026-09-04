@@ -681,7 +681,7 @@ export default function CustomerDetailScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe} edges={["top"]}>
+    <SafeAreaView key={language} style={styles.safe} edges={["top"]}>
       {/* Nav bar */}
       <View style={styles.navBar}>
         <Pressable onPress={() => router.back()} hitSlop={12}>
