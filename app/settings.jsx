@@ -41,7 +41,7 @@ import NetworkErrorScreen from "../components/NetworkErrorScreen";
 
 const APP_VERSION = Constants.expoConfig?.version ?? "1.0.0";
 
-const THEME_LABELS = { light: "Light", dark: "Dark (coming soon)" };
+// THEME_LABELS is built dynamically using translation keys — see getThemeLabel() in the component
 
 
 
@@ -100,6 +100,12 @@ export default function SettingsScreen() {
     presentCustomerCenter,
     restore,
   } = useSubscription();
+
+  // Translated theme labels — built here so they always reflect the current language
+  const themeLabels = {
+    light: t.themeLightLabel,
+    dark: t.themeDarkComingSoon || t.themeDarkLabel,
+  };
 
   const [shopName, setShopName] = useState("");
   const [theme, setTheme] = useState("light");
@@ -342,19 +348,19 @@ export default function SettingsScreen() {
         </Section>
 
         {/* Theme */}
-        <Section title="Appearance">
+        <Section title={t.appearanceSection}>
           <Row
-            label="Theme"
+            label={t.themeLabel}
             onPress={() => {
-              Alert.alert("Choose theme", "", [
-                { text: "Light", onPress: () => handleThemeChange("light") },
-                { text: "Dark (coming soon)", onPress: () => handleThemeChange("dark") },
+              Alert.alert(t.chooseTheme, "", [
+                { text: t.themeLightLabel, onPress: () => handleThemeChange("light") },
+                { text: t.themeDarkComingSoon || t.themeDarkLabel, onPress: () => handleThemeChange("dark") },
                 { text: t.cancel, style: "cancel" },
               ]);
             }}
             right={
               <View style={styles.langRight}>
-                <Text style={styles.langLabel}>{THEME_LABELS[theme] || "Light"}</Text>
+                <Text style={styles.langLabel}>{themeLabels[theme] || t.themeLightLabel}</Text>
                 <Text style={{ color: colors.primary, fontSize: 18 }}>›</Text>
               </View>
             }

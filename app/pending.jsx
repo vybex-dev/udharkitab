@@ -370,7 +370,7 @@ export default function PendingScreen() {
       ) : (
         <View style={styles.header}>
           <Text style={styles.screenTitle}>
-            {isPendingMode ? t.pendingTabLabel || "Pending" : t.settledTabLabel || "Settled"}
+            {isPendingMode ? t.pendingTab : t.settledTab}
           </Text>
           <View style={styles.headerIcons}>
             <Pressable onPress={openSearch} hitSlop={12}>

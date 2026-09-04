@@ -208,6 +208,11 @@ export const en = {
   shopName: "Shop Name",
   shopNamePlaceholder: "Enter a name",
   saveShop: "Save",
+  appearanceSection: "Appearance",
+  themeLabel: "Theme",
+  chooseTheme: "Choose theme",
+  themeDarkComingSoon: "Dark (coming soon)",
+
   planSection: "Subscription",
   planStatus: "Plan Status",
   planPremiumActive: "UDHAR KITAB Premium",

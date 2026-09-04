@@ -209,6 +209,11 @@ export const hi = {
   shopName: "दुकान का नाम",
   shopNamePlaceholder: "नाम डालें",
   saveShop: "सहेजें",
+  appearanceSection: "रूप-रंग",
+  themeLabel: "थीम",
+  chooseTheme: "थीम चुनें",
+  themeDarkComingSoon: "डार्क (जल्द आ रहा है)",
+
   planSection: "सदस्यता (Subscription)",
   planStatus: "योजना स्थिति",
   planPremiumActive: "उधार किताब प्रीमियम",
