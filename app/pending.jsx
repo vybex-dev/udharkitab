@@ -20,6 +20,7 @@ import {
   Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { useState, useMemo, useEffect } from "react";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -306,6 +307,7 @@ export default function PendingScreen() {
                   styles.pillText,
                   sort === opt.key && styles.pillTextActive,
                 ]}
+                numberOfLines={1}
               >
                 {opt.label}
               </Text>
@@ -339,54 +341,82 @@ export default function PendingScreen() {
     <SafeAreaView style={styles.safe} edges={["top"]}>
       {/* Header */}
       {searchActive ? (
-        <View style={styles.searchBar}>
-          <Ionicons name="search" size={18} color={colors.textTertiary} />
-          <TextInput
-            style={styles.searchInput}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder={t.searchPlaceholder}
-            placeholderTextColor={colors.textTertiary}
-            autoFocus
-            returnKeyType="search"
-            autoCorrect={false}
-            autoCapitalize="words"
-            onSubmitEditing={Keyboard.dismiss}
-          />
-          {searchQuery.length > 0 && (
-            <Pressable
-              onPress={() => setSearchQuery("")}
-              hitSlop={10}
-              style={styles.clearBtn}
-            >
-              <Text style={styles.clearBtnText}>✕</Text>
-            </Pressable>
-          )}
-          <Pressable onPress={closeSearch} hitSlop={12}>
+        <Animated.View
+          entering={FadeInDown.duration(220)}
+          style={styles.searchBarWrap}
+        >
+          <View style={styles.searchField}>
+            <Ionicons name="search" size={18} color={colors.primary} />
+            <TextInput
+              style={styles.searchInput}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder={t.searchPlaceholder}
+              placeholderTextColor={colors.textTertiary}
+              autoFocus
+              returnKeyType="search"
+              autoCorrect={false}
+              autoCapitalize="words"
+              onSubmitEditing={Keyboard.dismiss}
+            />
+            {searchQuery.length > 0 && (
+              <Pressable
+                onPress={() => setSearchQuery("")}
+                hitSlop={10}
+                style={styles.clearBtn}
+              >
+                <Ionicons name="close" size={13} color={colors.white} />
+              </Pressable>
+            )}
+          </View>
+          <Pressable
+            onPress={closeSearch}
+            hitSlop={12}
+            style={({ pressed }) => [
+              styles.cancelBtn,
+              pressed && styles.cancelBtnPressed,
+            ]}
+          >
             <Text style={styles.cancelText}>{t.searchCancel}</Text>
           </Pressable>
-        </View>
+        </Animated.View>
       ) : (
         <View style={styles.header}>
           <Text style={styles.screenTitle}>
             {isPendingMode ? t.pendingTab : t.settledTab}
           </Text>
           <View style={styles.headerIcons}>
-            <Pressable onPress={openSearch} hitSlop={12}>
-              <Ionicons name="search" size={22} color={colors.textSecondary} />
+            <Pressable
+              onPress={openSearch}
+              hitSlop={8}
+              style={({ pressed }) => [
+                styles.searchIconBtn,
+                pressed && styles.searchIconBtnPressed,
+              ]}
+            >
+              <Ionicons name="search" size={20} color={colors.textSecondary} />
             </Pressable>
           </View>
         </View>
       )}
 
       {searchActive && searchQuery.trim().length > 0 && (
-        <View style={styles.resultsBadge}>
-          <Text style={styles.resultsBadgeText}>
+        <Animated.View entering={FadeIn.duration(150)} style={styles.resultsBadge}>
+          <Ionicons
+            name={
+              filteredCustomers.length === 0
+                ? "alert-circle-outline"
+                : "people"
+            }
+            size={13}
+            color={colors.primary}
+          />
+          <Text style={styles.resultsBadgeText} numberOfLines={1}>
             {filteredCustomers.length === 0
               ? t.noResultsBadge
               : t.resultsBadge(filteredCustomers.length)}
           </Text>
-        </View>
+        </Animated.View>
       )}
 
       {loading ? (
@@ -428,6 +458,7 @@ export default function PendingScreen() {
 
       {!searchActive && filteredCustomers.length > 0 && (
         <PressableScale
+          containerStyle={styles.fabContainer}
           style={styles.fab}
           onPress={() => router.push("/add-entry")}
         >
@@ -721,63 +752,100 @@ const styles = StyleSheet.create({
     letterSpacing: -0.6,
   },
   headerIcons: { flexDirection: "row", alignItems: "center", gap: 12 },
-  searchIconText: { fontSize: 20 },
+  searchIconBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.surface,
+  },
+  searchIconBtnPressed: { backgroundColor: colors.primaryLight },
 
-  searchBar: {
+  searchBarWrap: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingTop: 10,
+    paddingBottom: 12,
     backgroundColor: colors.white,
     borderBottomWidth: 1,
     borderBottomColor: "rgba(0,0,0,0.06)",
     gap: 10,
   },
-  searchBarIcon: { fontSize: 16 },
+  searchField: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    minHeight: 46,
+    backgroundColor: colors.surface,
+    borderRadius: 15,
+    paddingHorizontal: 14,
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+  },
   searchInput: {
     flex: 1,
-    height: 42,
     fontSize: 15,
+    lineHeight: 22,
+    paddingVertical: 10,
     color: colors.textPrimary,
-    backgroundColor: colors.surfaceHover || "#F8FAFC",
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.06)",
   },
-  clearBtn: { padding: 4 },
-  clearBtnText: { fontSize: 13, color: colors.textTertiary, fontWeight: "600" },
+  clearBtn: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.textTertiary,
+  },
+  cancelBtn: {
+    paddingHorizontal: 6,
+    paddingVertical: 8,
+    borderRadius: 10,
+  },
+  cancelBtnPressed: { backgroundColor: colors.surface },
   cancelText: {
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "700",
     color: colors.primary,
     letterSpacing: -0.2,
   },
 
   resultsBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 9,
     backgroundColor: colors.primaryLight,
     borderBottomWidth: 1,
     borderBottomColor: "rgba(0,0,0,0.04)",
   },
-  resultsBadgeText: { fontSize: 12, fontWeight: "700", color: colors.primary },
+  resultsBadgeText: {
+    flexShrink: 1,
+    fontSize: 12.5,
+    fontWeight: "700",
+    color: colors.primary,
+  },
 
   pillRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
+    flexWrap: "nowrap",
     paddingHorizontal: 16,
     paddingVertical: 10,
     gap: 8,
   },
   pill: {
+    flexShrink: 1,
     paddingHorizontal: 14,
-    paddingVertical: 9,
+    paddingVertical: 10,
     borderRadius: 18,
     backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: "rgba(0,0,0,0.06)",
-    flexShrink: 0,
+    minHeight: 38,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
@@ -794,9 +862,6 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontWeight: "500",
     letterSpacing: -0.2,
-    flexShrink: 0,
-    lineHeight: 20,
-    includeFontPadding: false,
   },
   pillTextActive: { color: colors.primary, fontWeight: "700" },
 
@@ -824,10 +889,13 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 
-  fab: {
+  fabContainer: {
     position: "absolute",
     bottom: 92,
     alignSelf: "center",
+    zIndex: 10,
+  },
+  fab: {
     backgroundColor: colors.primary,
     paddingHorizontal: 28,
     paddingVertical: 15,
@@ -837,7 +905,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.28,
     shadowRadius: 14,
     elevation: 12,
-    zIndex: 10,
   },
   fabText: {
     color: colors.white,
