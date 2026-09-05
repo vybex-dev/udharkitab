@@ -352,7 +352,11 @@ export default function SettingsScreen() {
                 const res = await presentPaywall().catch(() => ({
                   success: false,
                 }));
-                if (!res?.success) router.push("/paywall");
+                // Only fall back to our custom paywall on a genuine failure
+                // (e.g. native module unavailable). If the user just closed
+                // the RevenueCat sheet, respect that instead of stacking a
+                // second paywall on top.
+                if (!res?.success && !res?.cancelled) router.push("/paywall");
               } else {
                 presentCustomerCenter();
               }
@@ -504,7 +508,10 @@ export default function SettingsScreen() {
                   const res = await presentPaywall().catch(() => ({
                     success: false,
                   }));
-                  if (!res?.success) {
+                  // Only fall back to our custom paywall on a genuine
+                  // failure — not when the user cancelled the RevenueCat
+                  // sheet, or we'd stack a second paywall on top of it.
+                  if (!res?.success && !res?.cancelled) {
                     router.push("/paywall");
                   }
                 }}

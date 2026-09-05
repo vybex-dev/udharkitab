@@ -21,6 +21,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { useLanguage } from "../contexts/LanguageContext";
 import { LANGUAGES } from "../constants/translations";
 import { colors } from "../constants/colors";
+import { pushProfileToCloud } from "../lib/profile";
 
 export default function LanguagePickerScreen() {
   const router = useRouter();
@@ -33,6 +34,10 @@ export default function LanguagePickerScreen() {
     if (fromSettings) {
       // Just switch — don't mark "first time chosen" again
       await setLanguage(code);
+      // Best-effort cloud sync — local is already saved, this just keeps
+      // the reinstall-on-new-device case accurate (same pattern as
+      // saveShopName/handleThemeChange in app/settings.jsx).
+      pushProfileToCloud({ language: code }).catch(() => {});
       router.back();
     } else {
       // First launch — mark as chosen, gate will push to /login

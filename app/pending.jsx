@@ -20,8 +20,15 @@ import {
   Modal,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
-import { useState, useMemo, useEffect } from "react";
+import Animated, {
+  FadeInDown,
+  FadeIn,
+  SlideInRight,
+  SlideInLeft,
+  SlideOutRight,
+  SlideOutLeft,
+} from "react-native-reanimated";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -57,6 +64,16 @@ export default function PendingScreen() {
   const [listMode, setListMode] = useState(
     mode === "settled" ? "settled" : "pending",
   ); // "pending" | "settled"
+
+  // Guards against playing the slide-in animation on the screen's very
+  // first mount (that transition is already handled by the Stack's own
+  // slide_from_right push animation from Home) — only a real in-page tab
+  // tap below flips this to true. With just two tabs the direction itself
+  // needs no extra state: leaving "pending" always means moving forward to
+  // "settled" (so it always exits left / the new tab enters from the
+  // right), and leaving "settled" always means moving back to "pending"
+  // (exits right / enters from the left).
+  const hasSwitchedTabRef = useRef(false);
 
   // Keep in sync if the footer navigates here again with a different ?mode=
   useEffect(() => {
@@ -337,6 +354,10 @@ export default function PendingScreen() {
     return <EmptyState />;
   }
 
+  // Fixed slide pair for the current tab — see note by hasSwitchedTabRef.
+  const tabEnterAnim = listMode === "pending" ? SlideInLeft : SlideInRight;
+  const tabExitAnim = listMode === "pending" ? SlideOutLeft : SlideOutRight;
+
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
       {/* Header */}
@@ -381,7 +402,12 @@ export default function PendingScreen() {
           </Pressable>
         </Animated.View>
       ) : (
-        <View style={styles.header}>
+        <Animated.View
+          key={`header-${listMode}`}
+          entering={hasSwitchedTabRef.current ? tabEnterAnim.duration(240) : undefined}
+          exiting={tabExitAnim.duration(240)}
+          style={styles.header}
+        >
           <Text style={styles.screenTitle}>
             {isPendingMode ? t.pendingTab : t.settledTab}
           </Text>
@@ -397,7 +423,7 @@ export default function PendingScreen() {
               <Ionicons name="search" size={20} color={colors.textSecondary} />
             </Pressable>
           </View>
-        </View>
+        </Animated.View>
       )}
 
       {searchActive && searchQuery.trim().length > 0 && (
@@ -419,42 +445,49 @@ export default function PendingScreen() {
         </Animated.View>
       )}
 
-      {loading ? (
-        <ActivityIndicator
-          style={{ marginTop: 60 }}
-          size="large"
-          color={colors.primary}
-        />
-      ) : (
-        <FlatList
-          data={filteredCustomers}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) =>
-            isPendingMode ? (
-              <CustomerRow customer={item} />
-            ) : (
-              <SettledCustomerRow customer={item} />
-            )
-          }
-          ListHeaderComponent={renderHeader}
-          ListEmptyComponent={<ListEmpty />}
-          contentContainerStyle={
-            filteredCustomers.length === 0 && styles.emptyContent
-          }
-          refreshControl={
-            !searchActive ? (
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={refresh}
-                tintColor={colors.primary}
-              />
-            ) : undefined
-          }
-          style={styles.list}
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
-        />
-      )}
+      <Animated.View
+        key={`content-${listMode}`}
+        entering={hasSwitchedTabRef.current ? tabEnterAnim.duration(240) : undefined}
+        exiting={tabExitAnim.duration(240)}
+        style={{ flex: 1 }}
+      >
+        {loading ? (
+          <ActivityIndicator
+            style={{ marginTop: 60 }}
+            size="large"
+            color={colors.primary}
+          />
+        ) : (
+          <FlatList
+            data={filteredCustomers}
+            keyExtractor={(item) => String(item.id)}
+            renderItem={({ item }) =>
+              isPendingMode ? (
+                <CustomerRow customer={item} />
+              ) : (
+                <SettledCustomerRow customer={item} />
+              )
+            }
+            ListHeaderComponent={renderHeader}
+            ListEmptyComponent={<ListEmpty />}
+            contentContainerStyle={
+              filteredCustomers.length === 0 && styles.emptyContent
+            }
+            refreshControl={
+              !searchActive ? (
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={refresh}
+                  tintColor={colors.primary}
+                />
+              ) : undefined
+            }
+            style={styles.list}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+          />
+        )}
+      </Animated.View>
 
       {!searchActive && filteredCustomers.length > 0 && (
         <PressableScale
@@ -469,12 +502,14 @@ export default function PendingScreen() {
       {!searchActive && (
         <BottomTabBar
           active={listMode}
-          onSelectHome={() => router.replace("/")}
+          onSelectHome={() => router.back()}
           onSelectPending={() => {
+            hasSwitchedTabRef.current = true;
             setListMode("pending");
             router.setParams({ mode: "pending" });
           }}
           onSelectSettled={() => {
+            hasSwitchedTabRef.current = true;
             setListMode("settled");
             router.setParams({ mode: "settled" });
           }}
