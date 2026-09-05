@@ -8,7 +8,7 @@
 [![Repo](https://img.shields.io/badge/GitHub-vybex--dev%2Fudharkitab-181717?logo=github)](https://github.com/vybex-dev/udharkitab)
 [![Expo](https://img.shields.io/badge/Expo-SDK%2054-000020?logo=expo)](https://expo.dev)
 [![RevenueCat](https://img.shields.io/badge/Powered%20by-RevenueCat-F2545B?logo=revenuecat)](https://www.revenuecat.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-lightgrey.svg)](./LICENSE)
 
 </div>
 
@@ -82,6 +82,7 @@ udharkitab/
 │   ├── settings.jsx
 │   ├── analytics.jsx
 │   ├── paywall.jsx           # UdharKitab Pro screen
+│   ├── privacy-policy.jsx    # in-app Privacy Policy screen
 │   └── login.jsx / welcome.jsx
 ├── components/
 │   ├── analytics/            # dashboard widgets
@@ -89,6 +90,7 @@ udharkitab/
 │   └── ...                   # CustomerRow, EntryRow, PressableScale, etc.
 ├── constants/
 │   ├── translations/         # en.js / hi.js / index.js
+│   ├── privacyPolicyContent.js
 │   ├── colors.js
 │   └── theme.js
 ├── contexts/                 # Language, Onboarding, Subscription
@@ -173,7 +175,7 @@ To use your own project:
 
 Read the full policy at **[Privacy Policy](https://github.com/vybex-dev/udharkitab/blob/main/Privacy.md)**.
 
-In-app, the policy renders natively at `app/privacy-policy.jsx` (content in `constants/privacyPolicyContent.js`) rather than opening a browser — linked from Settings and from the onboarding consent step.
+In-app, the policy renders natively at `app/privacy-policy.jsx` (content in `constants/privacyPolicyContent.js`) — a plain-language summary card up top, with the full legal text in collapsible sections below — rather than opening a browser. Linked from Settings and from the onboarding consent step.
 
 ## Scripts
 

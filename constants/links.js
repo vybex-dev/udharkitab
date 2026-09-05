@@ -10,7 +10,7 @@
  * of this URL, so it never bounces out to a browser.
  */
 
-// TODO: swap this placeholder for the real, published Privacy Policy URL
-// before release.
+// TODO: swap this for a proper hosted page if you move off GitHub for the
+// public copy.
 export const PRIVACY_POLICY_URL =
   "https://github.com/vybex-dev/udharkitab/blob/main/Privacy.md";
