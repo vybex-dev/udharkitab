@@ -1,14 +1,13 @@
 /**
- * app/pending.jsx
- * Pending customers list screen. Reached via the bottom tab bar's
- * "Pending" button, or Home's "See all" link.
+ * app/settled.jsx
+ * Settled customers list screen. Reached via the bottom tab bar's
+ * "Settled" button.
  *
- * This used to be one file that also rendered the Settled list behind
- * a ?mode= param, with a hand-rolled slide animation for switching
- * between the two. It's now split into two real routes — this one and
- * app/settled.jsx — so each stays focused, and switching tabs is a
- * normal navigation that gets the same slide transition as everywhere
- * else in the app (see app/_layout.jsx's Stack defaults).
+ * Sibling of app/pending.jsx — the two used to be a single file that
+ * switched on a ?mode= param. They're split so each stays focused, and
+ * switching tabs is a normal navigation that gets the same slide
+ * transition as everywhere else in the app (see app/_layout.jsx's
+ * Stack defaults).
  */
 
 import {
@@ -17,42 +16,30 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { useState, useMemo } from "react";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import StatBar from "../components/StatBar";
-import CustomerRow from "../components/CustomerRow";
-import EmptyState from "../components/EmptyState";
+import SettledCustomerRow from "../components/SettledCustomerRow";
+import SettledEmptyState from "../components/SettledEmptyState";
 import BottomTabBar from "../components/BottomTabBar";
 import ListHeader from "../components/lists/ListHeader";
 import ResultsBadge from "../components/lists/ResultsBadge";
 import SortPillRow from "../components/lists/SortPillRow";
 import AddUdharFab from "../components/lists/AddUdharFab";
 import NoSearchResults from "../components/lists/NoSearchResults";
-import OverdueBanner from "../components/pending/OverdueBanner";
-import OverdueModal from "../components/pending/OverdueModal";
-import DueTodayStrip from "../components/pending/DueTodayStrip";
 
-import { useCustomers } from "../hooks/useCustomers";
+import { useSettledCustomers } from "../hooks/useSettledCustomers";
 import { useCustomerListSearch } from "../hooks/useCustomerListSearch";
 import { useLanguage } from "../contexts/LanguageContext";
 import { colors } from "../constants/colors";
 
-export default function PendingScreen() {
+export default function SettledScreen() {
   const router = useRouter();
   const { t } = useLanguage();
 
-  const {
-    customers,
-    dueToday,
-    stats,
-    loading,
-    refreshing,
-    sort,
-    setSort,
-    refresh,
-  } = useCustomers();
+  const { customers, stats, loading, refreshing, sort, setSort, refresh } =
+    useSettledCustomers("recent");
 
   const {
     searchActive,
@@ -63,45 +50,22 @@ export default function PendingScreen() {
     closeSearch,
   } = useCustomerListSearch(customers);
 
-  const [overdueModalVisible, setOverdueModalVisible] = useState(false);
-
   const SORT_OPTIONS = [
     { key: "highest", label: t.filterHighest },
     { key: "recent", label: t.filterRecent },
     { key: "name", label: t.filterName },
   ];
 
-  // Overdue customers derived from the list (overdue_count comes from db query)
-  const overdueCustomers = useMemo(
-    () => customers.filter((c) => c.overdue_count > 0),
-    [customers],
-  );
-
-  function goToCustomer(id) {
-    router.push(`/customer/${id}`);
-  }
-
-  function handleBannerPress() {
-    if (overdueCustomers.length === 1) {
-      goToCustomer(overdueCustomers[0].id);
-    } else {
-      setOverdueModalVisible(true);
-    }
-  }
-
   function renderHeader() {
     if (searchActive) return null;
     return (
       <>
-        <OverdueBanner
-          overdueCustomers={overdueCustomers}
-          onPress={handleBannerPress}
-        />
         <StatBar
-          totalPending={stats.totalPending}
+          totalPending={stats.totalReceived}
           todayReceived={stats.todayReceived}
+          leftLabel={t.totalReceived}
+          leftColor={colors.success}
         />
-        <DueTodayStrip dueToday={dueToday} onSelectCustomer={goToCustomer} />
         <SortPillRow
           options={SORT_OPTIONS}
           activeSort={sort}
@@ -116,13 +80,13 @@ export default function PendingScreen() {
     if (searchQuery.trim()) {
       return <NoSearchResults query={searchQuery.trim()} />;
     }
-    return <EmptyState />;
+    return <SettledEmptyState />;
   }
 
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
       <ListHeader
-        title={t.pendingTab}
+        title={t.settledTab}
         searchActive={searchActive}
         searchQuery={searchQuery}
         onChangeSearch={setSearchQuery}
@@ -145,7 +109,7 @@ export default function PendingScreen() {
         <FlatList
           data={filteredCustomers}
           keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => <CustomerRow customer={item} />}
+          renderItem={({ item }) => <SettledCustomerRow customer={item} />}
           ListHeaderComponent={renderHeader}
           ListEmptyComponent={<ListEmpty />}
           contentContainerStyle={
@@ -170,22 +134,12 @@ export default function PendingScreen() {
 
       {!searchActive && (
         <BottomTabBar
-          active="pending"
+          active="settled"
           onSelectHome={() => router.back()}
-          onSelectPending={() => {}}
-          onSelectSettled={() => router.replace("/settled")}
+          onSelectPending={() => router.replace("/pending")}
+          onSelectSettled={() => {}}
         />
       )}
-
-      <OverdueModal
-        visible={overdueModalVisible}
-        onClose={() => setOverdueModalVisible(false)}
-        overdueCustomers={overdueCustomers}
-        onSelectCustomer={(id) => {
-          setOverdueModalVisible(false);
-          goToCustomer(id);
-        }}
-      />
     </SafeAreaView>
   );
 }

@@ -1,13 +1,16 @@
 /**
  * components/BottomTabBar.jsx
- * Custom footer/tab bar, rendered from both app/index.jsx (Home) and
- * app/pending.jsx (Pending/Settled list).
+ * Custom footer/tab bar, rendered from app/index.jsx (Home),
+ * app/pending.jsx (Pending), and app/settled.jsx (Settled).
  *
  * Items: Home | Pending | (+ Add Udhar) | Settled | Settings
  *
- * "Home" navigates to "/". "Pending"/"Settled" navigate to
- * "/pending?mode=pending|settled" (or just flip local state if already
- * on that screen). "+" opens the add-entry modal, raised above the bar.
+ * "Home" navigates to "/". "Pending"/"Settled" are two separate
+ * routes ("/pending" and "/settled") — each screen passes in its own
+ * onSelectPending/onSelectSettled: a no-op for the tab that's already
+ * active, and router.replace(...) for the other one, so switching
+ * tabs slides to the other screen without piling up the back stack.
+ * "+" opens the add-entry modal, raised above the bar.
  * The bar itself has rounded top-left/top-right corners (see
  * TOP_CORNER_RADIUS) for a soft, floating look.
  *

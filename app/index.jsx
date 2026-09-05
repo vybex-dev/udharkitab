@@ -1,8 +1,8 @@
 /**
  * app/index.jsx
  * Home screen — analytics-style overview rather than a customer list.
- * Reached via the bottom tab bar's "Home" button; Pending/Settled tabs
- * go to app/pending.jsx instead.
+ * Reached via the bottom tab bar's "Home" button; the Pending/Settled
+ * tabs go to app/pending.jsx and app/settled.jsx instead.
  *
  * Every number here comes from lib/analyticsDb.js / lib/db.js — nothing
  * is fabricated. Two things deliberately do NOT appear because there's
@@ -314,8 +314,8 @@ export default function HomeScreen() {
       <BottomTabBar
         active="home"
         onSelectHome={() => {}}
-        onSelectPending={() => router.push("/pending?mode=pending")}
-        onSelectSettled={() => router.push("/pending?mode=settled")}
+        onSelectPending={() => router.push("/pending")}
+        onSelectSettled={() => router.push("/settled")}
       />
     </SafeAreaView>
   );
