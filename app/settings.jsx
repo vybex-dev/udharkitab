@@ -14,7 +14,6 @@ import {
   Alert,
   ActivityIndicator,
   Switch,
-  Linking,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
@@ -46,7 +45,6 @@ import { useSubscription } from "../contexts/SubscriptionContext";
 import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import { LANGUAGES } from "../constants/translations";
 import { colors } from "../constants/colors";
-import { PRIVACY_POLICY_URL } from "../constants/links";
 import DeleteAccountModal from "../components/DeleteAccountModal";
 import NetworkErrorScreen from "../components/NetworkErrorScreen";
 
@@ -590,7 +588,7 @@ export default function SettingsScreen() {
             </Text>
             <Row
               label={t.privacyPolicyLabel}
-              onPress={() => Linking.openURL(PRIVACY_POLICY_URL)}
+              onPress={() => router.push("/privacy-policy")}
               right={
                 <Text style={{ color: colors.primary, fontSize: 18 }}>›</Text>
               }

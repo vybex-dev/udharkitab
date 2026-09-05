@@ -27,6 +27,7 @@ Built with React Native + Expo · SQLite-first with optional cloud backup · Rev
 - [Environment Variables](#environment-variables)
 - [RevenueCat Setup](#revenuecat-setup)
 - [Firebase Setup](#firebase-setup)
+- [Privacy Policy](#privacy-policy)
 - [Scripts](#scripts)
 - [Architecture Notes](#architecture-notes)
 - [Roadmap](#roadmap)
@@ -166,6 +167,12 @@ To use your own project:
 1. Create a Firebase project, enable **Authentication → Google**, and enable **Firestore**.
 2. Download `google-services.json` (Android) and set the iOS/Web config values into `.env`.
 3. Firestore data shape: `users/{uid}/customers/{customerId}` — one document per customer with entries/payments embedded (see `lib/cloudSync.js` for the full sync contract). Cloud sync is opt-in and always best-effort: local SQLite remains the source of truth on-device.
+
+## Privacy Policy
+
+Read the full policy at **[udharkitab.app/privacy](https://udharkitab.app/privacy)**.
+
+In-app, the policy renders natively at `app/privacy-policy.jsx` (content in `constants/privacyPolicyContent.js`) rather than opening a browser — linked from Settings and from the onboarding consent step.
 
 ## Scripts
 

@@ -33,7 +33,6 @@ export default function PaywallScreen() {
     isPremium,
     isPlanActive,
     packages,
-    presentPaywall,
     purchase,
     restore,
     refreshSubscription,
@@ -54,15 +53,8 @@ export default function PaywallScreen() {
   async function handleSubscribe() {
     setBusy(true);
     try {
-      // 1. Try RevenueCat native paywall UI first
-      const res = await presentPaywall();
-      if (res.success) {
-        await refreshSubscription();
-        if (router.canGoBack()) router.back();
-        return;
-      }
-
-      // 2. If native paywall was not presented (e.g. dev build fallback), try package purchase
+      // Purchase directly — the custom screen above IS the paywall, so we
+      // don't want RevenueCat's own hosted paywall UI popping up on top of it.
       if (packages?.monthly) {
         const pRes = await purchase(packages.monthly);
         if (pRes.success) {
@@ -75,10 +67,7 @@ export default function PaywallScreen() {
       } else {
         Alert.alert(
           t.paywallBrand || "Udhar Kitab Pro",
-          res.result === "NOT_PRESENTED"
-            ? "In-app purchases are available on native iOS/Android builds. Please configure store credentials or restore past purchases."
-            : t.error ||
-                "Unable to load purchase options right now. Please try again.",
+          "In-app purchases are available on native iOS/Android builds. Please configure store credentials or restore past purchases.",
         );
       }
     } catch (e) {

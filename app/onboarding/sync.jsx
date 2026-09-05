@@ -12,14 +12,13 @@
  *    consent-first behavior.
  */
 
-import { View, Text, Pressable, StyleSheet, Linking } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useOnboarding } from "../../contexts/OnboardingContext";
 import { theme } from "../../constants/theme";
-import { PRIVACY_POLICY_URL } from "../../constants/links";
 import OnboardingStepShell from "../../components/onboarding/OnboardingStepShell";
 import OnboardingCheckboxRow from "../../components/onboarding/OnboardingCheckboxRow";
 import ApprovalStamp from "../../components/onboarding/ApprovalStamp";
@@ -67,7 +66,7 @@ export default function OnboardingSyncScreen() {
       >
         <Pressable
           hitSlop={8}
-          onPress={() => Linking.openURL(PRIVACY_POLICY_URL)}
+          onPress={() => router.push("/privacy-policy")}
           style={styles.linkBtn}
         >
           <Text style={styles.linkText}>{t.onboardingSyncPrivacyLink}</Text>
