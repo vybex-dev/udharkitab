@@ -1,6 +1,15 @@
-# UdharKitab (उधार किताब)
+<div align="center">
+  <img src="assets/icon.png" alt="UdharKitab logo" width="120" />
 
-**A shopkeeper's credit book, digitized.**
+  # UdharKitab (उधार किताब)
+
+  **A shopkeeper's credit book, digitized.**
+
+  [![Repo](https://img.shields.io/badge/GitHub-vybex--dev%2Fudharkitab-181717?logo=github)](https://github.com/vybex-dev/udharkitab)
+  [![Expo](https://img.shields.io/badge/Expo-SDK%2054-000020?logo=expo)](https://expo.dev)
+  [![RevenueCat](https://img.shields.io/badge/Powered%20by-RevenueCat-F2545B?logo=revenuecat)](https://www.revenuecat.com/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+</div>
 
 UdharKitab replaces the paper *udhar khata* that small shopkeepers across India use to track credit given to regular customers. It's offline-first, bilingual (Hindi/English), and built for someone who has never used a business app before.
 
@@ -101,7 +110,7 @@ udharkitab/
 ### Installation
 
 ```bash
-git clone <this-repo-url>
+git clone https://github.com/vybex-dev/udharkitab.git
 cd udharkitab
 npm install
 ```
