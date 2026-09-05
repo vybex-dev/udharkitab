@@ -200,4 +200,4 @@ In-app, the policy renders natively at `app/privacy-policy.jsx` (content in `con
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+All rights reserved — see [LICENSE](./LICENSE). The source is public for the RevenueCat Shipaton 2026 submission and evaluation, not for reuse or redistribution.
