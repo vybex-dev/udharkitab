@@ -26,6 +26,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BottomTabBar from "../components/BottomTabBar";
 import WeeklyFlowChart from "../components/analytics/WeeklyFlowChart";
 import AvatarCircle from "../components/AvatarCircle";
+import PressableScale from "../components/PressableScale";
 
 import { useHomeAnalytics } from "../hooks/useHomeAnalytics";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -48,12 +49,15 @@ export default function HomeScreen() {
     refresh,
   } = useHomeAnalytics();
 
-  const collectionRatePct = Math.round((monthComparison.currentRate || 0) * 100);
+  const collectionRatePct = Math.round(
+    (monthComparison.currentRate || 0) * 100,
+  );
 
   const monthChangePct =
     monthComparison.previousCollected > 0
       ? Math.round(
-          ((monthComparison.currentCollected - monthComparison.previousCollected) /
+          ((monthComparison.currentCollected -
+            monthComparison.previousCollected) /
             monthComparison.previousCollected) *
             100,
         )
@@ -92,9 +96,7 @@ export default function HomeScreen() {
         >
           {/* Header */}
           <View style={styles.headerBlock}>
-            <Text style={styles.eyebrow}>
-              {t.namaste || "NAMASTE"}
-            </Text>
+            <Text style={styles.eyebrow}>{t.namaste || "NAMASTE"}</Text>
             <Text style={styles.shopName} numberOfLines={1}>
               {shopName || "UdharKitab"}
             </Text>
@@ -185,9 +187,13 @@ export default function HomeScreen() {
             <Text style={styles.sectionTitle}>
               {t.topCustomers || "Top Customers"}
             </Text>
-            <Pressable onPress={() => router.push("/pending")} hitSlop={8}>
+            <PressableScale
+              onPress={() => router.push("/pending")}
+              hitSlop={8}
+              activeScale={0.96}
+            >
               <Text style={styles.seeAll}>{t.seeAll || "See all"}</Text>
-            </Pressable>
+            </PressableScale>
           </View>
 
           {topDebtors.length === 0 ? (
@@ -196,15 +202,13 @@ export default function HomeScreen() {
             </Text>
           ) : (
             topDebtors.map((c) => (
-              <Pressable
+              <PressableScale
                 key={c.id}
-                style={({ pressed }) => [
-                  styles.customerRow,
-                  pressed && styles.customerRowPressed,
-                ]}
+                style={styles.customerRow}
                 onPress={() => router.push(`/customer/${c.id}`)}
+                activeScale={0.98}
               >
-                <AvatarCircle name={c.name} size={40} />
+                <AvatarCircle name={c.name} size={42} />
                 <View style={styles.customerInfo}>
                   <Text style={styles.customerName} numberOfLines={1}>
                     {c.name}
@@ -213,7 +217,7 @@ export default function HomeScreen() {
                 <Text style={styles.customerAmount}>
                   {formatRupees(c.pending)}
                 </Text>
-              </Pressable>
+              </PressableScale>
             ))
           )}
 
@@ -241,14 +245,15 @@ export default function HomeScreen() {
                     <Text style={styles.dueDate}>
                       {t.dueTodayLabel || "Due today"}
                     </Text>
-                    <Pressable
+                    <PressableScale
                       style={styles.reminderBtn}
                       onPress={() => router.push(`/customer/${c.id}`)}
+                      activeScale={0.95}
                     >
                       <Text style={styles.reminderBtnText}>
                         {t.sendReminder || "Send Reminder"}
                       </Text>
-                    </Pressable>
+                    </PressableScale>
                   </View>
                 ))}
               </ScrollView>
@@ -269,7 +274,10 @@ export default function HomeScreen() {
                 contentContainerStyle={styles.dueScroll}
               >
                 {overdueCards.map((c) => (
-                  <View key={c.id} style={[styles.dueCard, styles.dueCardUrgent]}>
+                  <View
+                    key={c.id}
+                    style={[styles.dueCard, styles.dueCardUrgent]}
+                  >
                     <View style={styles.urgentBadge}>
                       <Text style={styles.urgentBadgeText}>
                         {t.urgent || "URGENT"}
@@ -286,14 +294,15 @@ export default function HomeScreen() {
                         ? `${t.due || "Due"}: ${relativeLabel(c.oldest_due_date, language)}`
                         : t.overdueLabel || "Overdue"}
                     </Text>
-                    <Pressable
+                    <PressableScale
                       style={styles.reminderBtn}
                       onPress={() => router.push(`/customer/${c.id}`)}
+                      activeScale={0.95}
                     >
                       <Text style={styles.reminderBtnText}>
                         {t.sendReminder || "Send Reminder"}
                       </Text>
-                    </Pressable>
+                    </PressableScale>
                   </View>
                 ))}
               </ScrollView>
@@ -314,33 +323,40 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.background },
-  content: { paddingBottom: 24 },
+  content: { paddingBottom: 28 },
 
   headerBlock: {
     paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 8,
+    paddingTop: 16,
+    paddingBottom: 12,
   },
   eyebrow: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: "700",
     color: colors.textTertiary,
-    letterSpacing: 1,
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
   },
   shopName: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "800",
     color: colors.textPrimary,
+    letterSpacing: -0.8,
     marginTop: 2,
   },
 
   collectionCard: {
     marginHorizontal: 16,
-    marginTop: 8,
-    marginBottom: 14,
+    marginTop: 6,
+    marginBottom: 16,
     backgroundColor: colors.primary,
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: 24,
+    padding: 22,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.24,
+    shadowRadius: 20,
+    elevation: 6,
   },
   collectionTopRow: {
     flexDirection: "row",
@@ -348,101 +364,121 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   collectionLabel: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: "rgba(255,255,255,0.85)",
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
+  },
+  changePill: {
+    backgroundColor: "rgba(255,255,255,0.2)",
+    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  changePillNegative: { backgroundColor: "rgba(0,0,0,0.22)" },
+  changePillText: {
     fontSize: 11,
     fontWeight: "700",
     color: colors.white,
-    opacity: 0.85,
-    letterSpacing: 0.5,
+    letterSpacing: -0.2,
   },
-  changePill: {
-    backgroundColor: "rgba(255,255,255,0.22)",
-    borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-  },
-  changePillNegative: { backgroundColor: "rgba(0,0,0,0.18)" },
-  changePillText: { fontSize: 11, fontWeight: "800", color: colors.white },
   collectionAmount: {
-    fontSize: 32,
+    fontSize: 38,
     fontWeight: "800",
     color: colors.white,
-    marginTop: 6,
+    letterSpacing: -1.2,
+    marginTop: 8,
   },
   collectionBadgeRow: {
     flexDirection: "row",
-    gap: 8,
-    marginTop: 16,
+    gap: 10,
+    marginTop: 20,
   },
   collectionBadge: {
     flex: 1,
-    backgroundColor: "rgba(255,255,255,0.16)",
-    borderRadius: 14,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    backgroundColor: "rgba(255,255,255,0.15)",
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.18)",
   },
   collectionBadgeLabel: {
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: "700",
-    color: colors.white,
-    opacity: 0.8,
+    color: "rgba(255,255,255,0.8)",
     letterSpacing: 0.5,
+    textTransform: "uppercase",
   },
   collectionBadgeValue: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "800",
     color: colors.white,
-    marginTop: 3,
+    letterSpacing: -0.3,
+    marginTop: 4,
   },
 
   card: {
     marginHorizontal: 16,
-    marginBottom: 14,
+    marginBottom: 16,
     backgroundColor: colors.white,
-    borderRadius: 18,
-    padding: 18,
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.04)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 16,
+    elevation: 2,
   },
   cardTitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "800",
     color: colors.textPrimary,
-    marginBottom: 6,
+    letterSpacing: -0.4,
+    marginBottom: 8,
   },
 
   healthCard: {
     marginHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 18,
     backgroundColor: colors.white,
-    borderRadius: 18,
-    padding: 18,
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.04)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 16,
+    elevation: 2,
   },
   healthTopRow: { flexDirection: "row", alignItems: "center" },
   healthEyebrow: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: "700",
     color: colors.textTertiary,
-    letterSpacing: 0.6,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
   },
   healthMainRow: {
     flexDirection: "row",
     alignItems: "flex-end",
     marginTop: 6,
   },
-  healthScore: { fontSize: 34, fontWeight: "800", color: colors.textPrimary },
+  healthScore: {
+    fontSize: 36,
+    fontWeight: "800",
+    color: colors.textPrimary,
+    letterSpacing: -1,
+  },
   healthScoreUnit: {
     fontSize: 18,
     fontWeight: "700",
     color: colors.textTertiary,
-    marginLeft: 2,
+    marginLeft: 3,
     marginBottom: 5,
   },
   healthBadge: {
@@ -450,23 +486,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
     marginTop: 8,
+    backgroundColor: "#DCFCE7",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    alignSelf: "flex-start",
   },
   healthDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
     backgroundColor: colors.success,
   },
   healthBadgeText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "700",
     color: colors.success,
   },
   healthSub: {
-    fontSize: 12,
+    fontSize: 13,
     color: colors.textSecondary,
     marginTop: 10,
-    lineHeight: 17,
+    lineHeight: 18,
   },
 
   sectionHeader: {
@@ -474,57 +515,79 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-    paddingTop: 4,
-    paddingBottom: 8,
+    paddingTop: 6,
+    paddingBottom: 10,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "800",
     color: colors.textPrimary,
+    letterSpacing: -0.5,
   },
-  seeAll: { fontSize: 13, fontWeight: "700", color: colors.primary },
+  seeAll: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: colors.primary,
+    letterSpacing: -0.2,
+  },
   emptyInline: {
     fontSize: 13,
     color: colors.textSecondary,
     paddingHorizontal: 20,
-    paddingBottom: 8,
+    paddingBottom: 12,
   },
 
   customerRow: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     backgroundColor: colors.white,
-    borderRadius: 16,
+    borderRadius: 18,
     marginHorizontal: 16,
     marginBottom: 10,
     gap: 12,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.04)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
     elevation: 1,
   },
-  customerRowPressed: { backgroundColor: colors.surface },
+  customerRowPressed: {
+    backgroundColor: colors.surfaceHover || colors.surface,
+  },
   customerInfo: { flex: 1 },
-  customerName: { fontSize: 14, fontWeight: "700", color: colors.textPrimary },
-  customerAmount: { fontSize: 14, fontWeight: "800", color: colors.danger },
+  customerName: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: colors.textPrimary,
+    letterSpacing: -0.3,
+  },
+  customerAmount: {
+    fontSize: 15,
+    fontWeight: "800",
+    color: colors.danger,
+    letterSpacing: -0.3,
+  },
 
-  dueScroll: { paddingHorizontal: 16, gap: 12, paddingBottom: 8 },
+  dueScroll: { paddingHorizontal: 16, gap: 12, paddingBottom: 12 },
   dueCard: {
-    width: 170,
-    borderRadius: 16,
-    padding: 14,
+    width: 176,
+    borderRadius: 18,
+    padding: 16,
     marginRight: 4,
     backgroundColor: colors.white,
     borderLeftWidth: 4,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.04)",
     gap: 4,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 2,
   },
   dueCardUrgent: { borderLeftColor: colors.danger },
   dueCardSoon: { borderLeftColor: colors.amber },
@@ -532,20 +595,40 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     backgroundColor: "#FEE2E2",
     borderRadius: 8,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    marginBottom: 2,
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    marginBottom: 3,
   },
-  urgentBadgeText: { fontSize: 9, fontWeight: "800", color: colors.danger },
-  dueName: { fontSize: 14, fontWeight: "700", color: colors.textPrimary },
-  dueAmount: { fontSize: 16, fontWeight: "800", color: colors.danger },
-  dueDate: { fontSize: 11, color: colors.textSecondary },
+  urgentBadgeText: { fontSize: 10, fontWeight: "800", color: colors.danger },
+  dueName: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.textPrimary,
+    letterSpacing: -0.2,
+  },
+  dueAmount: {
+    fontSize: 16,
+    fontWeight: "800",
+    color: colors.danger,
+    letterSpacing: -0.3,
+  },
+  dueDate: { fontSize: 12, color: colors.textSecondary },
   reminderBtn: {
-    marginTop: 8,
-    backgroundColor: "#181A20",
-    borderRadius: 10,
-    paddingVertical: 8,
+    marginTop: 10,
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    paddingVertical: 9,
     alignItems: "center",
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 2,
   },
-  reminderBtnText: { fontSize: 12, fontWeight: "700", color: colors.white },
+  reminderBtnText: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: colors.white,
+    letterSpacing: -0.2,
+  },
 });

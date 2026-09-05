@@ -27,6 +27,7 @@ import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import NameDropdown from "../components/NameDropdown";
+import PressableScale from "../components/PressableScale";
 import {
   insertCustomer,
   insertEntry,
@@ -289,7 +290,11 @@ export default function AddEntryScreen() {
           t.applyCreditTitle,
           t.applyCreditMessage(formatRupees(applyAmount), trimName),
           [
-            { text: t.applyCreditNo, style: "cancel", onPress: () => router.back() },
+            {
+              text: t.applyCreditNo,
+              style: "cancel",
+              onPress: () => router.back(),
+            },
             {
               text: t.applyCreditYes,
               onPress: async () => {
@@ -411,6 +416,21 @@ export default function AddEntryScreen() {
                 maxLength={8}
               />
             </View>
+            {/* Quick preset amount chips */}
+            <View style={styles.presetRow}>
+              {[100, 200, 500, 1000, 2000].map((val) => (
+                <PressableScale
+                  key={val}
+                  style={styles.presetChip}
+                  onPress={() => {
+                    const current = parseFloat(amount.replace(/,/g, "")) || 0;
+                    setAmount(String(current + val));
+                  }}
+                >
+                  <Text style={styles.presetChipText}>+₹{val}</Text>
+                </PressableScale>
+              ))}
+            </View>
           </View>
 
           {/* ── Note ── */}
@@ -472,7 +492,7 @@ export default function AddEntryScreen() {
             <Text style={styles.label}>{t.date}</Text>
             <View style={styles.dateFixedCard}>
               <Text style={styles.dateFixedText}>
-                {formatDate(date, language)}
+                📅 {formatDate(date, language)}
               </Text>
             </View>
           </View>
@@ -480,12 +500,8 @@ export default function AddEntryScreen() {
 
         {/* Save */}
         <View style={styles.footer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.saveBtn,
-              pressed && styles.saveBtnPressed,
-              saving && styles.saveBtnDisabled,
-            ]}
+          <PressableScale
+            style={[styles.saveBtn, saving && styles.saveBtnDisabled]}
             onPress={handleSave}
             disabled={saving}
           >
@@ -494,7 +510,7 @@ export default function AddEntryScreen() {
             ) : (
               <Text style={styles.saveBtnText}>{t.saveEntry}</Text>
             )}
-          </Pressable>
+          </PressableScale>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -567,40 +583,41 @@ const styles = StyleSheet.create({
   },
   countryCode: {
     height: 52,
-    paddingHorizontal: 12,
-    borderRadius: 12,
+    paddingHorizontal: 14,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
+    borderColor: "rgba(0,0,0,0.06)",
+    backgroundColor: colors.surfaceHover || "#F8FAFC",
     justifyContent: "center",
   },
   countryCodeText: {
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "700",
     color: colors.textPrimary,
+    letterSpacing: -0.2,
   },
   phoneInput: {
     flex: 1,
     height: 52,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
+    borderColor: "rgba(0,0,0,0.06)",
+    borderRadius: 16,
     paddingHorizontal: 14,
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "600",
     color: colors.textPrimary,
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   },
 
   input: {
     height: 52,
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
+    borderColor: "rgba(0,0,0,0.06)",
+    borderRadius: 16,
     paddingHorizontal: 14,
-    fontSize: 16,
+    fontSize: 15,
     color: colors.textPrimary,
   },
   noteInput: { height: 52 },
@@ -610,45 +627,78 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    height: 52,
-    paddingLeft: 14,
+    borderColor: "rgba(0,0,0,0.06)",
+    borderRadius: 18,
+    height: 64,
+    paddingHorizontal: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
   },
   rupeeSymbol: {
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: 26,
+    fontWeight: "800",
     color: colors.danger,
-    marginRight: 4,
+    marginRight: 6,
   },
   amountInput: {
     flex: 1,
-    fontSize: 22,
-    fontWeight: "700",
+    fontSize: 28,
+    fontWeight: "800",
     color: colors.danger,
-    height: 52,
+    height: 64,
+    letterSpacing: -0.6,
+  },
+  presetRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 8,
+  },
+  presetChip: {
+    backgroundColor: colors.white,
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.06)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.02,
+    shadowRadius: 4,
+  },
+  presetChipText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: colors.textPrimary,
+    letterSpacing: -0.2,
   },
 
   dateCard: {
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
-    padding: 12,
+    borderColor: "rgba(0,0,0,0.06)",
+    borderRadius: 16,
+    padding: 14,
     gap: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.02,
+    shadowRadius: 6,
   },
   datePreview: {
     textAlign: "center",
     fontSize: 13,
     color: colors.textSecondary,
-    fontWeight: "500",
+    fontWeight: "600",
   },
 
   dateFixedCard: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceHover || "#F8FAFC",
     borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 12,
+    borderColor: "rgba(0,0,0,0.04)",
+    borderRadius: 16,
     paddingVertical: 15,
     alignItems: "center",
   },
@@ -656,15 +706,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: colors.textPrimary,
+    letterSpacing: -0.2,
   },
 
   // Due date toggle
   toggleBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+    paddingHorizontal: 14,
+    paddingVertical: 5,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: "rgba(0,0,0,0.08)",
     backgroundColor: colors.white,
   },
   toggleBtnOn: {
@@ -676,7 +727,7 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     fontWeight: "600",
   },
-  toggleBtnTextOn: { color: colors.primary },
+  toggleBtnTextOn: { color: colors.primary, fontWeight: "700" },
   dueDateHint: {
     fontSize: 12,
     color: colors.textTertiary,
@@ -684,20 +735,28 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
 
-  footer: { padding: 16, paddingBottom: 8, backgroundColor: colors.background },
+  footer: {
+    padding: 16,
+    paddingBottom: 10,
+    backgroundColor: colors.background,
+  },
   saveBtn: {
     backgroundColor: colors.primary,
-    height: 54,
-    borderRadius: 14,
+    height: 56,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    shadowRadius: 6,
-    elevation: 4,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.28,
+    shadowRadius: 14,
+    elevation: 6,
   },
-  saveBtnPressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
   saveBtnDisabled: { opacity: 0.6 },
-  saveBtnText: { color: colors.white, fontSize: 17, fontWeight: "700" },
+  saveBtnText: {
+    color: colors.white,
+    fontSize: 17,
+    fontWeight: "700",
+    letterSpacing: -0.3,
+  },
 });

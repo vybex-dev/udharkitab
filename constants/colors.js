@@ -1,30 +1,35 @@
 export const colors = {
-  // Brand
-  primary: "#534AB7", // purple — FAB, active pills, links
-  primaryLight: "#EEEDFE", // light purple — pill backgrounds
+  // Brand — Apple Royal Indigo / Accent
+  primary: "#4F46E5", // Apple Indigo — FAB, active pills, links
+  primaryLight: "#EEF2FF", // soft indigo tint
+  primaryDark: "#3730A3",
 
   // Semantic — amounts
-  danger: "#A32D2D", // dark red — pending amounts, udhar button
-  dangerLight: "#FCEBEB", // light red — udhar button background
-  success: "#3B6D11", // dark green — paid amounts, settle button/badge
-  successLight: "#EAF3DE", // light green — wapas button background
+  danger: "#E11D48", // Apple red — pending amounts, udhar button
+  dangerLight: "#FFF1F2", // light rose background
+  success: "#16A34A", // Apple green — paid amounts, settle button/badge
+  successLight: "#F0FDF4", // light green background
 
   // Warning
-  amber: "#854F0B", // amber — warnings
-  amberLight: "#FAEEDA", // light amber — warning backgrounds
+  amber: "#D97706", // Apple amber / orange — warnings
+  amberLight: "#FFFBEB", // light amber background
 
   // Contact actions
-  whatsapp: "#25D366", // WhatsApp brand green — call/whatsapp buttons
-  whatsappLight: "#E3F9EA", // light green — whatsapp icon background
+  whatsapp: "#25D366", // WhatsApp brand green
+  whatsappLight: "#E8F9EE", // light green
 
-  // Text
-  textPrimary: "#1A1A1A", // main text
-  textSecondary: "#6B6B6B", // muted text
-  textTertiary: "#9E9E9E", // hints, labels
+  // Typography — Apple SF Label hierarchy
+  textPrimary: "#0F172A", // iOS main label (near-black)
+  textSecondary: "#64748B", // iOS secondary label (muted slate)
+  textTertiary: "#94A3B8", // iOS tertiary label (hint / caption)
 
-  // Layout
-  border: "#E5E5E5", // all borders
-  surface: "#F8F8F8", // card backgrounds, stat boxes
+  // Layout & Materials — Apple Grouped Surfaces
+  border: "#E2E8F0", // hairline border
+  borderSubtle: "rgba(0, 0, 0, 0.04)", // Apple ultra-fine border
+  surface: "#F8FAFC", // subtle secondary surface
+  surfaceHover: "#F1F5F9",
   white: "#FFFFFF",
-  background: "#F2F2F2", // page background
+  background: "#F1F5F9", // Apple system grouped background
+  card: "#FFFFFF",
 };
+

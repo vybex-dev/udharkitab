@@ -11,11 +11,13 @@ export default function EmptyState() {
   const { t } = useLanguage();
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../assets/icon.png")}
-        style={styles.icon}
-        resizeMode="contain"
-      />
+      <View style={styles.badge}>
+        <Image
+          source={require("../assets/icon.png")}
+          style={styles.icon}
+          resizeMode="contain"
+        />
+      </View>
       <Text style={styles.title}>{t.noUdhar}</Text>
       <Text style={styles.sub}>{t.noUdharSub}</Text>
     </View>
@@ -28,9 +30,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingBottom: 80,
+    paddingHorizontal: 32,
     gap: 8,
   },
-  icon: { width: 72, height: 72, marginBottom: 8, borderRadius: 20 },
-  title: { fontSize: 18, fontWeight: "700", color: colors.textPrimary },
-  sub: { fontSize: 14, color: colors.textSecondary },
+  badge: {
+    width: 84,
+    height: 84,
+    borderRadius: 26,
+    backgroundColor: colors.primaryLight,
+    borderWidth: 1,
+    borderColor: "rgba(79, 70, 229, 0.12)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+  },
+  icon: { width: 48, height: 48, borderRadius: 14 },
+  title: {
+    fontSize: 19,
+    fontWeight: "800",
+    color: colors.textPrimary,
+    letterSpacing: -0.4,
+  },
+  sub: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    textAlign: "center",
+    lineHeight: 20,
+  },
 });

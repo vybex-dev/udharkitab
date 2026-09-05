@@ -2,9 +2,10 @@
  * components/CustomerRow.jsx
  */
 
-import { Pressable, View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import AvatarCircle from "./AvatarCircle";
+import PressableScale from "./PressableScale";
 import { colors } from "../constants/colors";
 import { formatRupees, relativeLabel } from "../lib/date";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -15,10 +16,10 @@ export default function CustomerRow({ customer }) {
   const { id, name, pending, last_entry_date } = customer;
 
   return (
-    <Pressable
-      style={({ pressed }) => [styles.row, pressed && styles.pressed]}
+    <PressableScale
+      style={styles.row}
       onPress={() => router.push(`/customer/${id}`)}
-      android_ripple={{ color: colors.border }}
+      activeScale={0.98}
     >
       <AvatarCircle name={name} size={44} />
 
@@ -32,7 +33,7 @@ export default function CustomerRow({ customer }) {
       </View>
 
       <Text style={styles.amount}>{formatRupees(pending)}</Text>
-    </Pressable>
+    </PressableScale>
   );
 }
 
@@ -41,21 +42,36 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 13,
+    paddingVertical: 14,
     backgroundColor: colors.white,
-    borderRadius: 16,
+    borderRadius: 18,
     marginHorizontal: 16,
-    marginBottom: 10,
+    marginBottom: 8,
     gap: 12,
+    borderWidth: 1,
+    borderColor: "rgba(0, 0, 0, 0.04)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.03,
+    shadowRadius: 10,
     elevation: 1,
   },
-  pressed: { backgroundColor: colors.surface },
   info: { flex: 1, gap: 3 },
-  name: { fontSize: 15, fontWeight: "600", color: colors.textPrimary },
-  date: { fontSize: 12, color: colors.textSecondary },
-  amount: { fontSize: 16, fontWeight: "700", color: colors.danger },
+  name: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: colors.textPrimary,
+    letterSpacing: -0.3,
+  },
+  date: {
+    fontSize: 12,
+    fontWeight: "500",
+    color: colors.textSecondary,
+  },
+  amount: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: colors.danger,
+    letterSpacing: -0.4,
+  },
 });

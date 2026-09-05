@@ -24,6 +24,7 @@ import { useSubscription } from "../contexts/SubscriptionContext";
 import { signOut } from "../lib/firebase";
 import { theme } from "../constants/theme";
 import { colors } from "../constants/colors";
+import PressableScale from "../components/PressableScale";
 
 export default function PaywallScreen() {
   const router = useRouter();
@@ -76,12 +77,16 @@ export default function PaywallScreen() {
           t.paywallBrand || "Udhar Kitab Pro",
           res.result === "NOT_PRESENTED"
             ? "In-app purchases are available on native iOS/Android builds. Please configure store credentials or restore past purchases."
-            : t.error || "Unable to load purchase options right now. Please try again."
+            : t.error ||
+                "Unable to load purchase options right now. Please try again.",
         );
       }
     } catch (e) {
       console.error("Paywall subscribe error:", e);
-      Alert.alert(t.error || "Error", e.message || "Failed to process purchase.");
+      Alert.alert(
+        t.error || "Error",
+        e.message || "Failed to process purchase.",
+      );
     } finally {
       setBusy(false);
     }
@@ -95,7 +100,8 @@ export default function PaywallScreen() {
         await refreshSubscription();
         Alert.alert(
           t.restoreSuccessTitle || "Purchases Restored",
-          t.restoreSuccessMessage || "Your premium subscription has been restored successfully!",
+          t.restoreSuccessMessage ||
+            "Your premium subscription has been restored successfully!",
           [
             {
               text: t.done || "Done",
@@ -103,17 +109,21 @@ export default function PaywallScreen() {
                 if (router.canGoBack()) router.back();
               },
             },
-          ]
+          ],
         );
       } else {
         Alert.alert(
           t.restoreNoneTitle || "No Purchases Found",
-          t.restoreNoneMessage || "We could not find an active subscription associated with your account."
+          t.restoreNoneMessage ||
+            "We could not find an active subscription associated with your account.",
         );
       }
     } catch (e) {
       console.error("Paywall restore error:", e);
-      Alert.alert(t.restoreErrorTitle || "Restore Failed", e.message || "Could not restore purchases.");
+      Alert.alert(
+        t.restoreErrorTitle || "Restore Failed",
+        e.message || "Could not restore purchases.",
+      );
     } finally {
       setRestoring(false);
     }
@@ -135,13 +145,16 @@ export default function PaywallScreen() {
               router.replace("/welcome");
             } catch (e) {
               console.error("Logout error:", e);
-              Alert.alert(t.error || "Error", e.message || "Failed to log out.");
+              Alert.alert(
+                t.error || "Error",
+                e.message || "Failed to log out.",
+              );
             } finally {
               setLoggingOut(false);
             }
           },
         },
-      ]
+      ],
     );
   }
 
@@ -155,7 +168,10 @@ export default function PaywallScreen() {
         {canDismiss ? (
           <Pressable
             onPress={() => router.back()}
-            style={({ pressed }) => [styles.closeBtn, pressed && { opacity: 0.6 }]}
+            style={({ pressed }) => [
+              styles.closeBtn,
+              pressed && { opacity: 0.6 },
+            ]}
             hitSlop={12}
           >
             <Ionicons name="close" size={24} color={theme.color.textPrimary} />
@@ -207,11 +223,11 @@ export default function PaywallScreen() {
             </Text>
           </View>
           <Text style={styles.priceAmount}>
-            {packages?.monthly?.product?.priceString || t.planPrice || "₹149/month"}
+            {packages?.monthly?.product?.priceString ||
+              t.planPrice ||
+              "₹149/month"}
           </Text>
-          <Text style={styles.priceSub}>
-            100% full access to all features
-          </Text>
+          <Text style={styles.priceSub}>100% full access to all features</Text>
         </View>
 
         {/* Features Checklist */}
@@ -228,12 +244,11 @@ export default function PaywallScreen() {
 
         {/* Action Buttons */}
         <View style={styles.actions}>
-          <Pressable
+          <PressableScale
             onPress={handleSubscribe}
             disabled={busy || restoring}
-            style={({ pressed }) => [
+            style={[
               styles.subscribeBtn,
-              pressed && { opacity: 0.9, transform: [{ scale: 0.99 }] },
               (busy || restoring) && { opacity: 0.7 },
             ]}
           >
@@ -244,15 +259,12 @@ export default function PaywallScreen() {
                 {t.subscribe || "Subscribe — ₹149/month"}
               </Text>
             )}
-          </Pressable>
+          </PressableScale>
 
-          <Pressable
+          <PressableScale
             onPress={handleRestore}
             disabled={busy || restoring}
-            style={({ pressed }) => [
-              styles.restoreBtn,
-              pressed && { opacity: 0.6 },
-            ]}
+            style={styles.restoreBtn}
           >
             {restoring ? (
               <ActivityIndicator color={theme.color.primary} size="small" />
@@ -261,7 +273,7 @@ export default function PaywallScreen() {
                 {t.restorePurchase || "Restore purchase"}
               </Text>
             )}
-          </Pressable>
+          </PressableScale>
         </View>
 
         {/* Legal Disclaimer */}
@@ -275,14 +287,15 @@ export default function PaywallScreen() {
           <Pressable
             onPress={handleLogout}
             disabled={loggingOut}
-            style={({ pressed }) => [styles.logoutBtn, pressed && { opacity: 0.6 }]}
+            style={({ pressed }) => [
+              styles.logoutBtn,
+              pressed && { opacity: 0.6 },
+            ]}
           >
             {loggingOut ? (
               <ActivityIndicator color={colors.textSecondary} size="small" />
             ) : (
-              <Text style={styles.logoutText}>
-                {t.logout || "Log Out"}
-              </Text>
+              <Text style={styles.logoutText}>{t.logout || "Log Out"}</Text>
             )}
           </Pressable>
         </View>
@@ -353,49 +366,59 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   pricingCard: {
-    backgroundColor: theme.color.surfaceCard,
-    borderRadius: theme.radius.xl,
-    borderWidth: 2,
-    borderColor: theme.color.primary,
-    paddingVertical: 20,
+    backgroundColor: colors.white,
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: colors.primary,
+    paddingVertical: 24,
     paddingHorizontal: 20,
     alignItems: "center",
-    marginBottom: 16,
-    ...theme.shadow.card,
+    marginBottom: 18,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.14,
+    shadowRadius: 20,
+    elevation: 4,
   },
   pricingBadge: {
-    backgroundColor: theme.color.primaryTint,
+    backgroundColor: colors.primaryLight,
     paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: theme.radius.full,
-    marginBottom: 10,
+    paddingVertical: 5,
+    borderRadius: 14,
+    marginBottom: 12,
   },
   pricingBadgeText: {
-    fontSize: 11.5,
-    fontWeight: "700",
-    color: theme.color.primaryDeep,
+    fontSize: 11,
+    fontWeight: "800",
+    color: colors.primary,
     textTransform: "uppercase",
+    letterSpacing: 0.8,
   },
   priceAmount: {
-    fontSize: 32,
+    fontSize: 38,
     fontWeight: "800",
-    color: theme.color.textPrimary,
-    letterSpacing: -0.5,
+    color: colors.textPrimary,
+    letterSpacing: -1.2,
   },
   priceSub: {
     fontSize: 13,
-    color: theme.color.textSecondary,
+    color: colors.textSecondary,
     marginTop: 4,
+    fontWeight: "500",
   },
   featuresCard: {
-    backgroundColor: theme.color.surfaceCard,
-    borderRadius: theme.radius.xl,
+    backgroundColor: colors.white,
+    borderRadius: 22,
     borderWidth: 1,
-    borderColor: theme.color.border,
-    padding: 20,
-    gap: 14,
+    borderColor: "rgba(0,0,0,0.05)",
+    padding: 22,
+    gap: 16,
     marginBottom: 24,
-    ...theme.shadow.card,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.03,
+    shadowRadius: 12,
+    elevation: 2,
   },
   featureRow: {
     flexDirection: "row",
@@ -403,17 +426,20 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   checkCircle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: theme.color.primary,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: colors.successLight,
+    borderWidth: 1,
+    borderColor: "rgba(22, 163, 74, 0.2)",
     alignItems: "center",
     justifyContent: "center",
   },
   featureText: {
-    fontSize: 14.5,
+    fontSize: 15,
     fontWeight: "600",
-    color: theme.color.textPrimary,
+    color: colors.textPrimary,
+    letterSpacing: -0.2,
     flex: 1,
   },
   actions: {
@@ -421,28 +447,33 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   subscribeBtn: {
-    backgroundColor: theme.color.primary,
-    borderRadius: theme.radius.lg,
-    paddingVertical: 16,
+    backgroundColor: colors.primary,
+    borderRadius: 18,
+    paddingVertical: 18,
     alignItems: "center",
     justifyContent: "center",
-    ...theme.shadow.button,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.32,
+    shadowRadius: 16,
+    elevation: 6,
   },
   subscribeBtnText: {
     color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
-    letterSpacing: 0.2,
+    fontSize: 17,
+    fontWeight: "800",
+    letterSpacing: -0.3,
   },
   restoreBtn: {
-    paddingVertical: 10,
+    paddingVertical: 12,
     alignItems: "center",
     justifyContent: "center",
   },
   restoreBtnText: {
-    color: theme.color.primary,
+    color: colors.primary,
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: "700",
+    letterSpacing: -0.2,
   },
   legalText: {
     fontSize: 11.5,

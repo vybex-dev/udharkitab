@@ -26,6 +26,7 @@ import { getLocalProfile } from "../../lib/profile";
 import EntryRow from "../../components/EntryRow";
 import AvatarCircle from "../../components/AvatarCircle";
 import AddPhoneModal from "../../components/AddPhoneModal";
+import PressableScale from "../../components/PressableScale";
 
 import {
   getCustomer,
@@ -500,11 +501,8 @@ export default function CustomerDetailScreen() {
   function OverdueBanner() {
     if (!hasOverdue) return null;
     return (
-      <Pressable
-        style={({ pressed }) => [
-          overdue.banner,
-          pressed && overdue.bannerPressed,
-        ]}
+      <PressableScale
+        style={overdue.banner}
         onPress={() => setOverdueModalVisible(true)}
       >
         <View style={overdue.iconWrap}>
@@ -519,7 +517,7 @@ export default function CustomerDetailScreen() {
         <View style={overdue.updateBtn}>
           <Text style={overdue.updateBtnText}>{t.updateDueDate}</Text>
         </View>
-      </Pressable>
+      </PressableScale>
     );
   }
 
@@ -530,7 +528,7 @@ export default function CustomerDetailScreen() {
         <OverdueBanner />
 
         <View style={styles.hero}>
-          <AvatarCircle name={customer?.name ?? ""} size={68} elevated />
+          <AvatarCircle name={customer?.name ?? ""} size={72} elevated />
           <Text style={styles.customerName}>{customer?.name ?? "..."}</Text>
           {customer?.phone ? (
             <View style={styles.phoneChip}>
@@ -540,11 +538,8 @@ export default function CustomerDetailScreen() {
           ) : null}
 
           <View style={styles.contactActionsRow}>
-            <Pressable
-              style={({ pressed }) => [
-                styles.contactAction,
-                pressed && styles.contactActionPressed,
-              ]}
+            <PressableScale
+              style={styles.contactAction}
               onPress={handleCallPress}
             >
               <View style={[styles.contactIconCircle, styles.callIconCircle]}>
@@ -553,12 +548,9 @@ export default function CustomerDetailScreen() {
               <Text style={[styles.contactLabel, styles.callLabel]}>
                 {t.call}
               </Text>
-            </Pressable>
-            <Pressable
-              style={({ pressed }) => [
-                styles.contactAction,
-                pressed && styles.contactActionPressed,
-              ]}
+            </PressableScale>
+            <PressableScale
+              style={styles.contactAction}
               onPress={handleWhatsAppPress}
             >
               <View
@@ -573,7 +565,7 @@ export default function CustomerDetailScreen() {
               <Text style={[styles.contactLabel, styles.whatsappLabel]}>
                 {t.whatsapp}
               </Text>
-            </Pressable>
+            </PressableScale>
           </View>
 
           <View style={styles.divider} />
@@ -582,7 +574,7 @@ export default function CustomerDetailScreen() {
             <View style={styles.statusRow}>
               <Ionicons
                 name="checkmark-circle"
-                size={17}
+                size={18}
                 color={colors.success}
               />
               <Text style={styles.statusRowText}>{t.allSettled}</Text>
@@ -600,7 +592,7 @@ export default function CustomerDetailScreen() {
             <View style={styles.creditRow}>
               <Ionicons
                 name="arrow-up-circle"
-                size={14}
+                size={15}
                 color={colors.success}
               />
               <Text style={styles.creditRowText}>
@@ -613,36 +605,29 @@ export default function CustomerDetailScreen() {
           )}
 
           {isFullySettled ? (
-            <Pressable
-              style={({ pressed }) => [
+            <PressableScale
+              style={[
                 styles.receivePaymentBtn,
                 styles.receivePaymentBtnFullWidth,
-                pressed && styles.receivePaymentPressed,
               ]}
               onPress={openPaymentModal}
             >
-              <Text style={styles.receivePaymentText}>
-                {t.receivePayment}
-              </Text>
-            </Pressable>
+              <Text style={styles.receivePaymentText}>{t.receivePayment}</Text>
+            </PressableScale>
           ) : (
             <View style={styles.actionsRow}>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.receivePaymentBtn,
-                  pressed && styles.receivePaymentPressed,
-                ]}
+              <PressableScale
+                style={styles.receivePaymentBtn}
                 onPress={openPaymentModal}
                 disabled={!hasUnsettled}
               >
                 <Text style={styles.receivePaymentText}>
                   {t.receivePayment}
                 </Text>
-              </Pressable>
-              <Pressable
-                style={({ pressed }) => [
+              </PressableScale>
+              <PressableScale
+                style={[
                   styles.settleAllBtn,
-                  pressed && styles.settleAllPressed,
                   settling && styles.settleAllDisabled,
                 ]}
                 onPress={handleSettleAll}
@@ -653,7 +638,7 @@ export default function CustomerDetailScreen() {
                 ) : (
                   <Text style={styles.settleAllText}>{t.markAllPaid}</Text>
                 )}
-              </Pressable>
+              </PressableScale>
             </View>
           )}
         </View>
@@ -744,50 +729,54 @@ export default function CustomerDetailScreen() {
           style={modal.kav}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-        <Pressable
-          style={modal.backdrop}
-          onPress={() => setOverdueModalVisible(false)}
-        />
-        <View style={modal.sheet}>
-          {/* Handle */}
-          <View style={modal.handle} />
-
-          <Text style={modal.title}>{t.updateDueDateTitle}</Text>
-          <Text style={modal.subtitle}>
-            {t.updateDueDateSubtitle(
-              overdueEntries.length,
-              customer?.name ?? "",
-            )}
-          </Text>
-
-          <View style={modal.pickerWrap}>
-            <DatePicker value={newDueDate} onChange={setNewDueDate} />
-            <Text style={modal.datePreview}>{formatDateHindi(newDueDate)}</Text>
-          </View>
-
           <Pressable
-            style={({ pressed }) => [
-              modal.confirmBtn,
-              pressed && modal.confirmBtnPressed,
-              updatingDue && modal.confirmBtnDisabled,
-            ]}
-            onPress={handleUpdateOverdue}
-            disabled={updatingDue}
-          >
-            {updatingDue ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              <Text style={modal.confirmBtnText}>{t.updateDueDateConfirm}</Text>
-            )}
-          </Pressable>
-
-          <Pressable
+            style={modal.backdrop}
             onPress={() => setOverdueModalVisible(false)}
-            style={modal.cancelBtn}
-          >
-            <Text style={modal.cancelText}>{t.cancel}</Text>
-          </Pressable>
-        </View>
+          />
+          <View style={modal.sheet}>
+            {/* Handle */}
+            <View style={modal.handle} />
+
+            <Text style={modal.title}>{t.updateDueDateTitle}</Text>
+            <Text style={modal.subtitle}>
+              {t.updateDueDateSubtitle(
+                overdueEntries.length,
+                customer?.name ?? "",
+              )}
+            </Text>
+
+            <View style={modal.pickerWrap}>
+              <DatePicker value={newDueDate} onChange={setNewDueDate} />
+              <Text style={modal.datePreview}>
+                {formatDateHindi(newDueDate)}
+              </Text>
+            </View>
+
+            <Pressable
+              style={({ pressed }) => [
+                modal.confirmBtn,
+                pressed && modal.confirmBtnPressed,
+                updatingDue && modal.confirmBtnDisabled,
+              ]}
+              onPress={handleUpdateOverdue}
+              disabled={updatingDue}
+            >
+              {updatingDue ? (
+                <ActivityIndicator color={colors.white} />
+              ) : (
+                <Text style={modal.confirmBtnText}>
+                  {t.updateDueDateConfirm}
+                </Text>
+              )}
+            </Pressable>
+
+            <Pressable
+              onPress={() => setOverdueModalVisible(false)}
+              style={modal.cancelBtn}
+            >
+              <Text style={modal.cancelText}>{t.cancel}</Text>
+            </Pressable>
+          </View>
         </KeyboardAvoidingView>
       </Modal>
 
@@ -802,122 +791,124 @@ export default function CustomerDetailScreen() {
           style={modal.kav}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-        <Pressable style={modal.backdrop} onPress={closePaymentModal} />
-        <View style={[modal.sheet, payment.sheet]}>
-          <View style={modal.handle} />
+          <Pressable style={modal.backdrop} onPress={closePaymentModal} />
+          <View style={[modal.sheet, payment.sheet]}>
+            <View style={modal.handle} />
 
-          <Text style={modal.title}>{t.receivePaymentTitle}</Text>
-          <Text style={modal.subtitle}>
-            {t.receivePaymentSubtitle(customer?.name ?? "")}
-          </Text>
-
-          <View style={payment.amountRow}>
-            <Text style={payment.rupeeSymbol}>₹</Text>
-            <TextInput
-              style={payment.amountInput}
-              value={paymentAmount}
-              onChangeText={handlePaymentAmountChange}
-              placeholder="0"
-              placeholderTextColor={colors.textTertiary}
-              keyboardType="numeric"
-              maxLength={8}
-            />
-          </View>
-
-          {isOverpayment ? (
-            <Text style={[payment.allocatedText, payment.allocatedTextDone]}>
-              {t.advanceWillBeAdded(formatRupees(advanceAmount))}
+            <Text style={modal.title}>{t.receivePaymentTitle}</Text>
+            <Text style={modal.subtitle}>
+              {t.receivePaymentSubtitle(customer?.name ?? "")}
             </Text>
-          ) : parsedPaymentAmount > 0 ? (
-            <Text
-              style={[
-                payment.allocatedText,
-                canSavePayment && payment.allocatedTextDone,
-              ]}
+
+            <View style={payment.amountRow}>
+              <Text style={payment.rupeeSymbol}>₹</Text>
+              <TextInput
+                style={payment.amountInput}
+                value={paymentAmount}
+                onChangeText={handlePaymentAmountChange}
+                placeholder="0"
+                placeholderTextColor={colors.textTertiary}
+                keyboardType="numeric"
+                maxLength={8}
+              />
+            </View>
+
+            {isOverpayment ? (
+              <Text style={[payment.allocatedText, payment.allocatedTextDone]}>
+                {t.advanceWillBeAdded(formatRupees(advanceAmount))}
+              </Text>
+            ) : parsedPaymentAmount > 0 ? (
+              <Text
+                style={[
+                  payment.allocatedText,
+                  canSavePayment && payment.allocatedTextDone,
+                ]}
+              >
+                {t.allocatedOfAmount(
+                  formatRupees(allocatedTotal),
+                  formatRupees(parsedPaymentAmount),
+                )}
+                {!canSavePayment ? ` — ${t.selectMoreItemsHint}` : ""}
+              </Text>
+            ) : null}
+
+            {pendingEntries.length > 0 && (
+              <Text style={payment.sectionLabel}>{t.selectItemsLabel}</Text>
+            )}
+
+            <ScrollView
+              style={payment.itemList}
+              keyboardShouldPersistTaps="handled"
             >
-              {t.allocatedOfAmount(
-                formatRupees(allocatedTotal),
-                formatRupees(parsedPaymentAmount),
-              )}
-              {!canSavePayment ? ` — ${t.selectMoreItemsHint}` : ""}
-            </Text>
-          ) : null}
-
-          {pendingEntries.length > 0 && (
-            <Text style={payment.sectionLabel}>{t.selectItemsLabel}</Text>
-          )}
-
-          <ScrollView
-            style={payment.itemList}
-            keyboardShouldPersistTaps="handled"
-          >
-            {pendingEntries.length === 0 ? (
-              <Text style={payment.emptyText}>{t.noPendingItems}</Text>
-            ) : (
-              pendingEntries.map((item) => {
-                const due = item.amount - (item.paid_amount || 0);
-                const isSelected = isOverpayment || selectedEntryIds.has(item.id);
-                const applied = appliedMap[item.id] || 0;
-                return (
-                  <Pressable
-                    key={item.id}
-                    style={[
-                      payment.itemRow,
-                      isSelected && payment.itemRowSelected,
-                    ]}
-                    onPress={() => toggleEntrySelection(item.id)}
-                  >
-                    <View
+              {pendingEntries.length === 0 ? (
+                <Text style={payment.emptyText}>{t.noPendingItems}</Text>
+              ) : (
+                pendingEntries.map((item) => {
+                  const due = item.amount - (item.paid_amount || 0);
+                  const isSelected =
+                    isOverpayment || selectedEntryIds.has(item.id);
+                  const applied = appliedMap[item.id] || 0;
+                  return (
+                    <Pressable
+                      key={item.id}
                       style={[
-                        payment.checkbox,
-                        isSelected && payment.checkboxChecked,
+                        payment.itemRow,
+                        isSelected && payment.itemRowSelected,
                       ]}
+                      onPress={() => toggleEntrySelection(item.id)}
                     >
-                      {isSelected && (
-                        <Text style={payment.checkboxMark}>✓</Text>
-                      )}
-                    </View>
-                    <View style={payment.itemInfo}>
-                      <Text style={payment.itemNote} numberOfLines={1}>
-                        {item.note || relativeLabel(item.date)}
-                      </Text>
-                      <Text style={payment.itemDue}>
-                        {formatRupees(due)} {t.pendingTag}
-                      </Text>
-                    </View>
-                    {isSelected && applied > 0.009 && (
-                      <View style={payment.appliedBadge}>
-                        <Text style={payment.appliedBadgeText}>
-                          {t.appliedTag(formatRupees(applied))}
+                      <View
+                        style={[
+                          payment.checkbox,
+                          isSelected && payment.checkboxChecked,
+                        ]}
+                      >
+                        {isSelected && (
+                          <Text style={payment.checkboxMark}>✓</Text>
+                        )}
+                      </View>
+                      <View style={payment.itemInfo}>
+                        <Text style={payment.itemNote} numberOfLines={1}>
+                          {item.note || relativeLabel(item.date)}
+                        </Text>
+                        <Text style={payment.itemDue}>
+                          {formatRupees(due)} {t.pendingTag}
                         </Text>
                       </View>
-                    )}
-                  </Pressable>
-                );
-              })
-            )}
-          </ScrollView>
+                      {isSelected && applied > 0.009 && (
+                        <View style={payment.appliedBadge}>
+                          <Text style={payment.appliedBadgeText}>
+                            {t.appliedTag(formatRupees(applied))}
+                          </Text>
+                        </View>
+                      )}
+                    </Pressable>
+                  );
+                })
+              )}
+            </ScrollView>
 
-          <Pressable
-            style={({ pressed }) => [
-              modal.confirmBtn,
-              pressed && modal.confirmBtnPressed,
-              (!canSavePayment || recordingPayment) && modal.confirmBtnDisabled,
-            ]}
-            onPress={handleRecordPayment}
-            disabled={!canSavePayment || recordingPayment}
-          >
-            {recordingPayment ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              <Text style={modal.confirmBtnText}>{t.recordPaymentBtn}</Text>
-            )}
-          </Pressable>
+            <Pressable
+              style={({ pressed }) => [
+                modal.confirmBtn,
+                pressed && modal.confirmBtnPressed,
+                (!canSavePayment || recordingPayment) &&
+                  modal.confirmBtnDisabled,
+              ]}
+              onPress={handleRecordPayment}
+              disabled={!canSavePayment || recordingPayment}
+            >
+              {recordingPayment ? (
+                <ActivityIndicator color={colors.white} />
+              ) : (
+                <Text style={modal.confirmBtnText}>{t.recordPaymentBtn}</Text>
+              )}
+            </Pressable>
 
-          <Pressable onPress={closePaymentModal} style={modal.cancelBtn}>
-            <Text style={modal.cancelText}>{t.cancel}</Text>
-          </Pressable>
-        </View>
+            <Pressable onPress={closePaymentModal} style={modal.cancelBtn}>
+              <Text style={modal.cancelText}>{t.cancel}</Text>
+            </Pressable>
+          </View>
         </KeyboardAvoidingView>
       </Modal>
 
@@ -932,55 +923,58 @@ export default function CustomerDetailScreen() {
           style={modal.kav}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-        <Pressable
-          style={modal.backdrop}
-          onPress={() => setSettleAllModalVisible(false)}
-        />
-        <View style={modal.sheet}>
-          <View style={modal.handle} />
-          <Text style={modal.title}>{t.settleAllTitle || "Settle all?"}</Text>
-          <Text style={modal.subtitle}>
-            {t.settleAllMessage
-              ? t.settleAllMessage(customer?.name ?? "")
-              : `Mark all of ${customer?.name ?? "this customer"}'s udhar as settled?`}
-          </Text>
-
-          <TextInput
-            style={modal.confirmInput}
-            value={settleAllConfirmText}
-            onChangeText={setSettleAllConfirmText}
-            placeholder={
-              t.typeConfirmPlaceholder || 'Type "confirm" to proceed'
-            }
-            placeholderTextColor={colors.textTertiary}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-
           <Pressable
-            style={({ pressed }) => [
-              modal.confirmBtn,
-              modal.confirmBtnDanger,
-              pressed && modal.confirmBtnPressed,
-              (!settleAllConfirmValid || settling) && modal.confirmBtnDisabled,
-            ]}
-            onPress={confirmSettleAll}
-            disabled={!settleAllConfirmValid || settling}
-          >
-            {settling ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              <Text style={modal.confirmBtnText}>{t.confirm || "Confirm"}</Text>
-            )}
-          </Pressable>
-
-          <Pressable
+            style={modal.backdrop}
             onPress={() => setSettleAllModalVisible(false)}
-            style={modal.cancelBtn}
-          >
-            <Text style={modal.cancelText}>{t.cancel}</Text>
-          </Pressable>
-        </View>
+          />
+          <View style={modal.sheet}>
+            <View style={modal.handle} />
+            <Text style={modal.title}>{t.settleAllTitle || "Settle all?"}</Text>
+            <Text style={modal.subtitle}>
+              {t.settleAllMessage
+                ? t.settleAllMessage(customer?.name ?? "")
+                : `Mark all of ${customer?.name ?? "this customer"}'s udhar as settled?`}
+            </Text>
+
+            <TextInput
+              style={modal.confirmInput}
+              value={settleAllConfirmText}
+              onChangeText={setSettleAllConfirmText}
+              placeholder={
+                t.typeConfirmPlaceholder || 'Type "confirm" to proceed'
+              }
+              placeholderTextColor={colors.textTertiary}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+            <Pressable
+              style={({ pressed }) => [
+                modal.confirmBtn,
+                modal.confirmBtnDanger,
+                pressed && modal.confirmBtnPressed,
+                (!settleAllConfirmValid || settling) &&
+                  modal.confirmBtnDisabled,
+              ]}
+              onPress={confirmSettleAll}
+              disabled={!settleAllConfirmValid || settling}
+            >
+              {settling ? (
+                <ActivityIndicator color={colors.white} />
+              ) : (
+                <Text style={modal.confirmBtnText}>
+                  {t.confirm || "Confirm"}
+                </Text>
+              )}
+            </Pressable>
+
+            <Pressable
+              onPress={() => setSettleAllModalVisible(false)}
+              style={modal.cancelBtn}
+            >
+              <Text style={modal.cancelText}>{t.cancel}</Text>
+            </Pressable>
+          </View>
         </KeyboardAvoidingView>
       </Modal>
 
@@ -995,53 +989,53 @@ export default function CustomerDetailScreen() {
           style={modal.kav}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-        <Pressable
-          style={modal.backdrop}
-          onPress={() => setSettleEntryModalVisible(false)}
-        />
-        <View style={modal.sheet}>
-          <View style={modal.handle} />
-          <Text style={modal.title}>
-            {t.settleConfirmTitle || "Settle this udhar?"}
-          </Text>
-          <Text style={modal.subtitle}>
-            {t.settleConfirmMessage
-              ? t.settleConfirmMessage(formatRupees(pendingSettleRemaining))
-              : `Mark ${formatRupees(pendingSettleRemaining)} as settled?`}
-          </Text>
-
-          <TextInput
-            style={modal.confirmInput}
-            value={settleEntryConfirmText}
-            onChangeText={setSettleEntryConfirmText}
-            placeholder={
-              t.typeConfirmPlaceholder || 'Type "confirm" to proceed'
-            }
-            placeholderTextColor={colors.textTertiary}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-
           <Pressable
-            style={({ pressed }) => [
-              modal.confirmBtn,
-              modal.confirmBtnDanger,
-              pressed && modal.confirmBtnPressed,
-              !settleEntryConfirmValid && modal.confirmBtnDisabled,
-            ]}
-            onPress={confirmSettleEntry}
-            disabled={!settleEntryConfirmValid}
-          >
-            <Text style={modal.confirmBtnText}>{t.confirm || "Confirm"}</Text>
-          </Pressable>
-
-          <Pressable
+            style={modal.backdrop}
             onPress={() => setSettleEntryModalVisible(false)}
-            style={modal.cancelBtn}
-          >
-            <Text style={modal.cancelText}>{t.cancel}</Text>
-          </Pressable>
-        </View>
+          />
+          <View style={modal.sheet}>
+            <View style={modal.handle} />
+            <Text style={modal.title}>
+              {t.settleConfirmTitle || "Settle this udhar?"}
+            </Text>
+            <Text style={modal.subtitle}>
+              {t.settleConfirmMessage
+                ? t.settleConfirmMessage(formatRupees(pendingSettleRemaining))
+                : `Mark ${formatRupees(pendingSettleRemaining)} as settled?`}
+            </Text>
+
+            <TextInput
+              style={modal.confirmInput}
+              value={settleEntryConfirmText}
+              onChangeText={setSettleEntryConfirmText}
+              placeholder={
+                t.typeConfirmPlaceholder || 'Type "confirm" to proceed'
+              }
+              placeholderTextColor={colors.textTertiary}
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+            <Pressable
+              style={({ pressed }) => [
+                modal.confirmBtn,
+                modal.confirmBtnDanger,
+                pressed && modal.confirmBtnPressed,
+                !settleEntryConfirmValid && modal.confirmBtnDisabled,
+              ]}
+              onPress={confirmSettleEntry}
+              disabled={!settleEntryConfirmValid}
+            >
+              <Text style={modal.confirmBtnText}>{t.confirm || "Confirm"}</Text>
+            </Pressable>
+
+            <Pressable
+              onPress={() => setSettleEntryModalVisible(false)}
+              style={modal.cancelBtn}
+            >
+              <Text style={modal.cancelText}>{t.cancel}</Text>
+            </Pressable>
+          </View>
         </KeyboardAvoidingView>
       </Modal>
 
@@ -1074,37 +1068,55 @@ const overdue = StyleSheet.create({
   banner: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.dangerLight,
+    backgroundColor: "#FFF1F2",
     borderWidth: 1,
-    borderColor: colors.danger,
+    borderColor: "rgba(225, 29, 72, 0.16)",
     marginHorizontal: 16,
     marginTop: 14,
-    borderRadius: 16,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    gap: 12,
-  },
-  bannerPressed: { opacity: 0.85 },
-  iconWrap: {
-    width: 36,
-    height: 36,
     borderRadius: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    gap: 12,
+    shadowColor: colors.danger,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  iconWrap: {
+    width: 38,
+    height: 38,
+    borderRadius: 14,
     backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
     flexShrink: 0,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
   },
-  left: { flex: 1, gap: 1 },
+  left: { flex: 1, gap: 2 },
   icon: { fontSize: 16 },
-  title: { fontSize: 13, fontWeight: "700", color: colors.danger },
-  sub: { fontSize: 11, color: colors.danger, opacity: 0.8, marginTop: 1 },
+  title: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.danger,
+    letterSpacing: -0.2,
+  },
+  sub: { fontSize: 12, color: colors.danger, opacity: 0.85 },
   updateBtn: {
     backgroundColor: colors.danger,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 14,
   },
-  updateBtnText: { fontSize: 12, fontWeight: "700", color: colors.white },
+  updateBtnText: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: colors.white,
+    letterSpacing: -0.2,
+  },
 });
 
 // ── Modal styles ──────────────────────────────────────────────────────────────
@@ -1332,85 +1344,91 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     paddingTop: 28,
     paddingBottom: 24,
-    paddingHorizontal: 24,
+    paddingHorizontal: 22,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.04)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.05,
+    shadowRadius: 18,
+    elevation: 4,
   },
   customerName: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "800",
     color: colors.textPrimary,
     marginTop: 14,
-    letterSpacing: -0.4,
+    letterSpacing: -0.6,
     textAlign: "center",
   },
   phoneChip: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
-    backgroundColor: colors.surface,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 12,
+    gap: 6,
+    backgroundColor: colors.surfaceHover || "#F8FAFC",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.04)",
     marginTop: 8,
   },
-  phoneChipIcon: { fontSize: 11 },
+  phoneChipIcon: { fontSize: 12 },
   customerPhone: {
     fontSize: 13,
     color: colors.textSecondary,
     fontWeight: "600",
+    letterSpacing: 0.2,
   },
 
   contactActionsRow: {
     flexDirection: "row",
     justifyContent: "center",
     gap: 36,
-    marginTop: 14,
+    marginTop: 16,
   },
   contactAction: { alignItems: "center", gap: 6 },
-  contactActionPressed: { opacity: 0.7 },
   contactIconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 50,
+    height: 50,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.04)",
     alignItems: "center",
     justifyContent: "center",
   },
   callIconCircle: { backgroundColor: colors.primaryLight },
   whatsappIconCircle: { backgroundColor: colors.whatsappLight },
-  contactLabel: { fontSize: 12, fontWeight: "700" },
+  contactLabel: { fontSize: 12, fontWeight: "700", letterSpacing: -0.2 },
   callLabel: { color: colors.primary },
   whatsappLabel: { color: colors.whatsapp },
 
   divider: {
     width: "100%",
     height: 1,
-    backgroundColor: colors.border,
+    backgroundColor: "rgba(0,0,0,0.05)",
     marginVertical: 18,
   },
 
   pendingLabel: {
-    fontSize: 12,
+    fontSize: 11,
     color: colors.textTertiary,
     fontWeight: "700",
-    letterSpacing: 0.4,
+    letterSpacing: 0.8,
     textTransform: "uppercase",
   },
   pendingAmount: {
-    fontSize: 40,
+    fontSize: 42,
     fontWeight: "800",
     color: colors.danger,
-    letterSpacing: -1,
-    lineHeight: 46,
+    letterSpacing: -1.4,
+    lineHeight: 48,
     marginTop: 4,
   },
 
   actionsRow: {
     flexDirection: "row",
-    gap: 10,
+    gap: 12,
     marginTop: 22,
     width: "100%",
   },
@@ -1419,32 +1437,40 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.primary,
-    borderRadius: 14,
-    paddingVertical: 14,
+    borderRadius: 16,
+    paddingVertical: 15,
     shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.22,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.26,
+    shadowRadius: 12,
     elevation: 4,
   },
-  receivePaymentPressed: { opacity: 0.85 },
-  receivePaymentText: { fontSize: 14, fontWeight: "700", color: colors.white },
+  receivePaymentText: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: colors.white,
+    letterSpacing: -0.2,
+  },
 
   settleAllBtn: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.white,
-    borderWidth: 1.5,
-    borderColor: colors.success,
-    borderRadius: 14,
-    paddingVertical: 13,
+    backgroundColor: "#F0FDF4",
+    borderWidth: 1,
+    borderColor: "rgba(22, 163, 74, 0.25)",
+    borderRadius: 16,
+    paddingVertical: 14,
     gap: 6,
   },
-  settleAllPressed: { opacity: 0.75 },
   settleAllDisabled: { opacity: 0.4 },
-  settleAllText: { fontSize: 14, fontWeight: "700", color: colors.success },
+  settleAllText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.success,
+    letterSpacing: -0.2,
+  },
 
   statusRow: {
     flexDirection: "row",

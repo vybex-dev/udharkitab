@@ -3,8 +3,9 @@
  * Single entry row — now shows due_date if set.
  */
 
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useLanguage } from "../contexts/LanguageContext";
+import PressableScale from "./PressableScale";
 import { colors } from "../constants/colors";
 import { formatRupees, relativeLabel, formatDate, todayISO } from "../lib/date";
 
@@ -89,16 +90,14 @@ export default function EntryRow({ entry, onSettle }) {
             <Text style={styles.settledBadgeText}>{t.settledBadge}</Text>
           </View>
         ) : (
-          <Pressable
-            style={({ pressed }) => [
-              styles.settleBtn,
-              pressed && styles.settleBtnPressed,
-            ]}
+          <PressableScale
+            style={styles.settleBtn}
             onPress={() => onSettle(entry.id)}
-            hitSlop={6}
+            activeScale={0.94}
+            hitSlop={8}
           >
             <Text style={styles.settleBtnText}>{t.settleBtn}</Text>
-          </Pressable>
+          </PressableScale>
         )}
       </View>
     </View>
@@ -110,29 +109,37 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 14,
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     marginHorizontal: 16,
     marginBottom: 10,
     backgroundColor: colors.white,
-    borderRadius: 16,
+    borderRadius: 18,
     gap: 12,
-    borderLeftWidth: 3,
+    borderLeftWidth: 3.5,
     borderLeftColor: "transparent",
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.04)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
     elevation: 1,
   },
   rowPending: { borderLeftColor: colors.danger },
   rowSettled: {
-    backgroundColor: colors.surface,
-    opacity: 0.75,
+    backgroundColor: colors.surfaceHover || "#F8FAFC",
+    opacity: 0.85,
+    borderColor: "rgba(0,0,0,0.02)",
     shadowOpacity: 0,
     elevation: 0,
   },
-  left: { flex: 1, gap: 3 },
-  date: { fontSize: 14, fontWeight: "600", color: colors.textPrimary },
+  left: { flex: 1, gap: 4 },
+  date: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.textPrimary,
+    letterSpacing: -0.2,
+  },
   dateSettled: { color: colors.textSecondary },
   note: { fontSize: 13, color: colors.textSecondary, lineHeight: 18 },
   noteSettled: { color: colors.textTertiary },
@@ -143,33 +150,33 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: "rgba(0,0,0,0.06)",
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 10,
   },
   dueDateChipToday: {
     backgroundColor: colors.amberLight,
-    borderColor: colors.amber,
+    borderColor: "rgba(217, 119, 6, 0.25)",
   },
   dueDateChipOverdue: {
     backgroundColor: colors.dangerLight,
-    borderColor: colors.danger,
+    borderColor: "rgba(225, 29, 72, 0.25)",
   },
   dueDateChipText: {
     fontSize: 11,
     fontWeight: "600",
     color: colors.textSecondary,
   },
-  dueDateChipTextToday: { color: colors.amber },
-  dueDateChipTextOverdue: { color: colors.danger },
+  dueDateChipTextToday: { color: colors.amber, fontWeight: "700" },
+  dueDateChipTextOverdue: { color: colors.danger, fontWeight: "700" },
 
   pendingPill: {
     marginTop: 2,
     alignSelf: "flex-start",
     backgroundColor: colors.dangerLight,
-    paddingHorizontal: 7,
-    paddingVertical: 2,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
     borderRadius: 10,
   },
   pendingPillText: {
@@ -184,9 +191,9 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     backgroundColor: colors.amberLight,
     borderWidth: 1,
-    borderColor: colors.amber,
-    paddingHorizontal: 7,
-    paddingVertical: 2,
+    borderColor: "rgba(217, 119, 6, 0.2)",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
     borderRadius: 10,
   },
   partialPillText: {
@@ -197,7 +204,12 @@ const styles = StyleSheet.create({
   },
 
   right: { alignItems: "flex-end", gap: 8 },
-  amount: { fontSize: 16, fontWeight: "700", color: colors.danger },
+  amount: {
+    fontSize: 16,
+    fontWeight: "800",
+    color: colors.danger,
+    letterSpacing: -0.3,
+  },
   amountSettled: {
     color: colors.textTertiary,
     textDecorationLine: "line-through",
@@ -206,23 +218,27 @@ const styles = StyleSheet.create({
 
   settleBtn: {
     backgroundColor: colors.primary,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 14,
     shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.22,
+    shadowRadius: 8,
+    elevation: 2,
   },
-  settleBtnPressed: { opacity: 0.75, transform: [{ scale: 0.96 }] },
-  settleBtnText: { fontSize: 13, fontWeight: "700", color: colors.white },
+  settleBtnText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: colors.white,
+    letterSpacing: -0.2,
+  },
 
   settledBadge: {
     backgroundColor: colors.successLight,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 20,
+    borderRadius: 14,
   },
-  settledBadgeText: { fontSize: 12, fontWeight: "600", color: colors.success },
+  settledBadgeText: { fontSize: 12, fontWeight: "700", color: colors.success },
 });

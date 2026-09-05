@@ -20,10 +20,11 @@
  *   />
  */
 
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import PressableScale from "./PressableScale";
 import { colors } from "../constants/colors";
 import { useLanguage } from "../contexts/LanguageContext";
 
@@ -85,16 +86,14 @@ export default function BottomTabBar({
 
         {/* Center "+" button, floats above the bar */}
         <View style={styles.centerSlot}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.addButton,
-              pressed && styles.addButtonPressed,
-            ]}
+          <PressableScale
+            style={styles.addButton}
             onPress={() => router.push("/add-entry")}
+            activeScale={0.93}
             hitSlop={8}
           >
             <Ionicons name="add" size={30} color={colors.white} />
-          </Pressable>
+          </PressableScale>
         </View>
 
         {rightTabs.map((tab) => (
@@ -110,20 +109,27 @@ export default function BottomTabBar({
 
 function TabItem({ tab, active }) {
   return (
-    <Pressable
-      style={({ pressed }) => [styles.tab, pressed && styles.tabPressed]}
+    <PressableScale
+      containerStyle={styles.tabContainer}
+      style={styles.tab}
       onPress={tab.onPress}
+      activeScale={0.9}
       hitSlop={6}
     >
       <Ionicons
         name={active ? tab.iconActive : tab.icon}
-        size={22}
-        color={active ? colors.primary : colors.textTertiary}
+        size={23}
+        color={active ? colors.primary : "#8E8E93"}
       />
-      <Text style={[styles.tabLabel, active && styles.tabLabelActive]}>
+      <Text
+        style={[styles.tabLabel, active && styles.tabLabelActive]}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.7}
+      >
         {tab.label}
       </Text>
-    </Pressable>
+    </PressableScale>
   );
 }
 
@@ -136,34 +142,39 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     justifyContent: "space-around",
     height: BAR_HEIGHT,
-    paddingTop: 8,
+    paddingTop: 6,
     paddingHorizontal: 8,
     backgroundColor: colors.white,
     borderTopLeftRadius: TOP_CORNER_RADIUS,
     borderTopRightRadius: TOP_CORNER_RADIUS,
-    // hairline separation only, no floating shadow
+    borderTopWidth: 0.5,
+    borderTopColor: "rgba(0, 0, 0, 0.06)",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: { width: 0, height: -3 },
     shadowOpacity: 0.03,
-    shadowRadius: 2,
-    elevation: 1,
+    shadowRadius: 12,
+    elevation: 3,
+  },
+  tabContainer: {
+    flex: 1,
   },
   tab: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    gap: 2,
+    gap: 3,
     paddingVertical: 4,
   },
-  tabPressed: { opacity: 0.6 },
   tabLabel: {
-    fontSize: 11,
-    fontWeight: "600",
-    color: colors.textTertiary,
+    fontSize: 10,
+    fontWeight: "500",
+    color: "#8E8E93",
+    letterSpacing: -0.1,
+    lineHeight: 14,
+    includeFontPadding: false,
   },
   tabLabelActive: {
     color: colors.primary,
-    fontWeight: "700",
+    fontWeight: "600",
   },
 
   safeAreaFill: {
@@ -175,18 +186,17 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   addButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: -20, // sits snug against the bar, not floating far above it
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 6,
+    marginTop: -18,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 8,
   },
-  addButtonPressed: { opacity: 0.85, transform: [{ scale: 0.96 }] },
 });

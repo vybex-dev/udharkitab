@@ -29,14 +29,27 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, ActivityIndicator, AppState, LogBox } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  AppState,
+  LogBox,
+} from "react-native";
 import { useEffect, useRef, useState, useCallback } from "react";
 
 import { LanguageProvider, useLanguage } from "../contexts/LanguageContext";
-import { SubscriptionProvider, useSubscription } from "../contexts/SubscriptionContext";
+import {
+  SubscriptionProvider,
+  useSubscription,
+} from "../contexts/SubscriptionContext";
 import { useAuth } from "../hooks/useAuth";
 import { getCombinedPlanStatus } from "../lib/trial";
-import { isOnboardingComplete, markOnboardingComplete, pullProfileFromCloud } from "../lib/profile";
+import {
+  isOnboardingComplete,
+  markOnboardingComplete,
+  pullProfileFromCloud,
+} from "../lib/profile";
 import { initDB, closeDB, restoreCustomersFromCloud } from "../lib/db";
 import { colors } from "../constants/colors";
 
@@ -213,7 +226,17 @@ function AuthGate() {
       setCheckingPlan(false);
       gateRunning.current = false;
     }
-  }, [authLoading, onboardingChecked, onboardingDone, session, user, setLanguage, isPremium, trial?.active, refreshSubscription]);
+  }, [
+    authLoading,
+    onboardingChecked,
+    onboardingDone,
+    session,
+    user,
+    setLanguage,
+    isPremium,
+    trial?.active,
+    refreshSubscription,
+  ]);
 
   useEffect(() => {
     runGate();
@@ -249,6 +272,7 @@ function AuthGate() {
           headerShown: false,
           contentStyle: { backgroundColor: colors.background },
           animation: "slide_from_right",
+          animationMatchesGesture: true,
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
@@ -275,7 +299,10 @@ function AuthGate() {
           options={{ presentation: "modal", animation: "slide_from_bottom" }}
         />
         <Stack.Screen name="customer/[id]" options={{ headerShown: false }} />
-        <Stack.Screen name="paywall" options={{ headerShown: false, animation: "fade" }} />
+        <Stack.Screen
+          name="paywall"
+          options={{ headerShown: false, animation: "fade" }}
+        />
       </Stack>
 
       {checkingPlan && (

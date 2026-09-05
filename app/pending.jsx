@@ -19,6 +19,7 @@ import {
   ScrollView,
   Modal,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useState, useMemo, useEffect } from "react";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -29,6 +30,7 @@ import SettledCustomerRow from "../components/SettledCustomerRow";
 import EmptyState from "../components/EmptyState";
 import SettledEmptyState from "../components/SettledEmptyState";
 import BottomTabBar from "../components/BottomTabBar";
+import PressableScale from "../components/PressableScale";
 
 import { useCustomers } from "../hooks/useCustomers";
 import { useSettledCustomers } from "../hooks/useSettledCustomers";
@@ -134,10 +136,7 @@ export default function PendingScreen() {
     if (overdueCustomers.length === 0) return null;
     const isSingle = overdueCustomers.length === 1;
     return (
-      <Pressable
-        style={({ pressed }) => [banner.container, pressed && banner.pressed]}
-        onPress={handleBannerPress}
-      >
+      <PressableScale style={banner.container} onPress={handleBannerPress}>
         <View style={banner.left}>
           <Text style={banner.icon}>⚠️</Text>
           <View style={{ flex: 1 }}>
@@ -154,7 +153,7 @@ export default function PendingScreen() {
         <View style={banner.arrow}>
           <Text style={banner.arrowText}>›</Text>
         </View>
-      </Pressable>
+      </PressableScale>
     );
   }
 
@@ -252,9 +251,9 @@ export default function PendingScreen() {
           contentContainerStyle={due.scroll}
         >
           {dueToday.map((customer) => (
-            <Pressable
+            <PressableScale
               key={customer.id}
-              style={({ pressed }) => [due.card, pressed && due.cardPressed]}
+              style={due.card}
               onPress={() => router.push(`/customer/${customer.id}`)}
             >
               <View style={due.avatarCircle}>
@@ -266,7 +265,7 @@ export default function PendingScreen() {
                 {customer.name}
               </Text>
               <Text style={due.amount}>{formatRupees(customer.pending)}</Text>
-            </Pressable>
+            </PressableScale>
           ))}
         </ScrollView>
       </View>
@@ -297,7 +296,7 @@ export default function PendingScreen() {
         )}
         <View style={styles.pillRow}>
           {SORT_OPTIONS.map((opt) => (
-            <Pressable
+            <PressableScale
               key={opt.key}
               style={[styles.pill, sort === opt.key && styles.pillActive]}
               onPress={() => setSort(opt.key)}
@@ -310,7 +309,7 @@ export default function PendingScreen() {
               >
                 {opt.label}
               </Text>
-            </Pressable>
+            </PressableScale>
           ))}
         </View>
       </>
@@ -341,7 +340,7 @@ export default function PendingScreen() {
       {/* Header */}
       {searchActive ? (
         <View style={styles.searchBar}>
-          <Text style={styles.searchBarIcon}>🔍</Text>
+          <Ionicons name="search" size={18} color={colors.textTertiary} />
           <TextInput
             style={styles.searchInput}
             value={searchQuery}
@@ -374,7 +373,7 @@ export default function PendingScreen() {
           </Text>
           <View style={styles.headerIcons}>
             <Pressable onPress={openSearch} hitSlop={12}>
-              <Text style={styles.searchIconText}>🔍</Text>
+              <Ionicons name="search" size={22} color={colors.textSecondary} />
             </Pressable>
           </View>
         </View>
@@ -428,12 +427,12 @@ export default function PendingScreen() {
       )}
 
       {!searchActive && filteredCustomers.length > 0 && (
-        <Pressable
-          style={({ pressed }) => [styles.fab, pressed && styles.fabPressed]}
+        <PressableScale
+          style={styles.fab}
           onPress={() => router.push("/add-entry")}
         >
           <Text style={styles.fabText}>{t.addUdhar}</Text>
-        </Pressable>
+        </PressableScale>
       )}
 
       {!searchActive && (
@@ -464,37 +463,43 @@ const banner = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 16,
     marginTop: 10,
-    marginBottom: 2,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    backgroundColor: "#FEF2F2",
-    borderRadius: 14,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: "#FFF1F2",
+    borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#FECACA",
+    borderColor: "rgba(225, 29, 72, 0.15)",
+    shadowColor: colors.danger,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 2,
   },
-  pressed: { opacity: 0.8 },
   left: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 12,
     flex: 1,
   },
   icon: { fontSize: 20 },
   title: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: "700",
-    color: "#DC2626",
+    color: colors.danger,
+    letterSpacing: -0.2,
   },
   sub: {
-    fontSize: 11,
-    color: "#EF4444",
+    fontSize: 12,
+    color: "#E11D48",
+    opacity: 0.85,
     marginTop: 2,
   },
   arrow: {
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#DC2626",
+    backgroundColor: colors.danger,
     alignItems: "center",
     justifyContent: "center",
     marginLeft: 8,
@@ -503,7 +508,7 @@ const banner = StyleSheet.create({
     fontSize: 16,
     fontWeight: "800",
     color: "#FFFFFF",
-    lineHeight: 20,
+    lineHeight: 18,
   },
 });
 
@@ -511,41 +516,47 @@ const banner = StyleSheet.create({
 const modal = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.45)",
+    backgroundColor: "rgba(0,0,0,0.4)",
     justifyContent: "flex-end",
   },
   sheet: {
     backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingBottom: 32,
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    paddingBottom: 36,
     paddingTop: 12,
     maxHeight: "75%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10,
   },
   handle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: "#E5E7EB",
+    width: 38,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: "#E2E8F0",
     alignSelf: "center",
     marginBottom: 16,
   },
   title: {
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: "800",
-    color: "#DC2626",
+    color: colors.danger,
+    letterSpacing: -0.4,
     paddingHorizontal: 20,
   },
   subtitle: {
-    fontSize: 12,
-    color: "#6B7280",
+    fontSize: 13,
+    color: colors.textSecondary,
     paddingHorizontal: 20,
     marginTop: 4,
-    marginBottom: 14,
+    marginBottom: 16,
   },
   list: {
     borderTopWidth: 1,
-    borderTopColor: "#F3F4F6",
+    borderTopColor: "rgba(0,0,0,0.05)",
   },
   row: {
     flexDirection: "row",
@@ -553,48 +564,58 @@ const modal = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: "#F3F4F6",
+    borderBottomColor: "rgba(0,0,0,0.05)",
     gap: 12,
   },
   rowLast: { borderBottomWidth: 0 },
-  rowPressed: { backgroundColor: "#FEF2F2" },
+  rowPressed: { backgroundColor: "#FFF1F2" },
 
   avatar: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: "#FEE2E2",
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: "#FFE4E6",
     borderWidth: 1.5,
-    borderColor: "#FECACA",
+    borderColor: "#FECDD3",
     alignItems: "center",
     justifyContent: "center",
   },
   avatarLetter: {
     fontSize: 18,
     fontWeight: "800",
-    color: "#DC2626",
+    color: colors.danger,
   },
 
   rowInfo: { flex: 1 },
-  rowName: { fontSize: 15, fontWeight: "700", color: "#111827" },
-  rowOverdue: { fontSize: 12, color: "#EF4444", marginTop: 2 },
+  rowName: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: colors.textPrimary,
+    letterSpacing: -0.2,
+  },
+  rowOverdue: { fontSize: 12, color: colors.danger, marginTop: 2 },
 
   rowRight: { alignItems: "flex-end", gap: 2 },
-  rowAmount: { fontSize: 15, fontWeight: "700", color: "#DC2626" },
-  rowArrow: { fontSize: 20, color: "#9CA3AF", fontWeight: "600" },
+  rowAmount: {
+    fontSize: 15,
+    fontWeight: "800",
+    color: colors.danger,
+    letterSpacing: -0.3,
+  },
+  rowArrow: { fontSize: 18, color: colors.textTertiary, fontWeight: "600" },
 
   closeBtn: {
     marginHorizontal: 20,
     marginTop: 16,
     paddingVertical: 14,
-    borderRadius: 14,
-    backgroundColor: "#F3F4F6",
+    borderRadius: 16,
+    backgroundColor: "#F1F5F9",
     alignItems: "center",
   },
   closeBtnText: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#374151",
+    color: colors.textPrimary,
   },
 });
 
@@ -602,58 +623,64 @@ const modal = StyleSheet.create({
 const due = StyleSheet.create({
   container: {
     marginHorizontal: 16,
-    marginBottom: 4,
+    marginBottom: 6,
     marginTop: 8,
     backgroundColor: colors.white,
-    borderRadius: 14,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: colors.amber,
+    borderColor: "rgba(217, 119, 6, 0.18)",
     overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.03,
+    shadowRadius: 8,
+    elevation: 1,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 14,
-    paddingTop: 10,
-    paddingBottom: 8,
-    gap: 6,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 10,
+    gap: 8,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: "rgba(0,0,0,0.04)",
   },
-  headerIcon: { fontSize: 15 },
+  headerIcon: { fontSize: 16 },
   headerTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "700",
     color: colors.amber,
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
     flex: 1,
   },
   badge: {
     backgroundColor: colors.amber,
     borderRadius: 10,
-    paddingHorizontal: 7,
+    paddingHorizontal: 8,
     paddingVertical: 2,
   },
   badgeText: { fontSize: 11, fontWeight: "800", color: colors.white },
 
-  scroll: { paddingHorizontal: 12, paddingVertical: 10, gap: 10 },
+  scroll: { paddingHorizontal: 14, paddingVertical: 12, gap: 10 },
 
   card: {
     alignItems: "center",
     backgroundColor: colors.amberLight,
-    borderRadius: 12,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.amber,
-    paddingVertical: 10,
+    borderColor: "rgba(217, 119, 6, 0.15)",
+    paddingVertical: 12,
     paddingHorizontal: 14,
-    gap: 4,
-    minWidth: 88,
+    gap: 6,
+    minWidth: 92,
   },
-  cardPressed: { opacity: 0.75 },
 
   avatarCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     backgroundColor: colors.amber,
     alignItems: "center",
     justifyContent: "center",
@@ -663,10 +690,16 @@ const due = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
     color: colors.textPrimary,
-    maxWidth: 80,
+    maxWidth: 86,
     textAlign: "center",
+    letterSpacing: -0.2,
   },
-  amount: { fontSize: 13, fontWeight: "800", color: colors.danger },
+  amount: {
+    fontSize: 13,
+    fontWeight: "800",
+    color: colors.danger,
+    letterSpacing: -0.2,
+  },
 });
 
 // ── Main styles ───────────────────────────────────────────────────────────────
@@ -677,15 +710,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 4,
+    paddingHorizontal: 20,
+    paddingTop: 14,
+    paddingBottom: 8,
   },
   screenTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "800",
     color: colors.textPrimary,
-    letterSpacing: -0.3,
+    letterSpacing: -0.6,
   },
   headerIcons: { flexDirection: "row", alignItems: "center", gap: 12 },
   searchIconText: { fontSize: 20 },
@@ -693,56 +726,64 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     backgroundColor: colors.white,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    gap: 8,
+    borderBottomColor: "rgba(0,0,0,0.06)",
+    gap: 10,
   },
   searchBarIcon: { fontSize: 16 },
   searchInput: {
     flex: 1,
-    height: 40,
+    height: 42,
     fontSize: 15,
     color: colors.textPrimary,
-    backgroundColor: colors.surface,
-    borderRadius: 10,
-    paddingHorizontal: 12,
+    backgroundColor: colors.surfaceHover || "#F8FAFC",
+    borderRadius: 12,
+    paddingHorizontal: 14,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: "rgba(0,0,0,0.06)",
   },
   clearBtn: { padding: 4 },
   clearBtnText: { fontSize: 13, color: colors.textTertiary, fontWeight: "600" },
-  cancelText: { fontSize: 14, fontWeight: "600", color: colors.primary },
+  cancelText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: colors.primary,
+    letterSpacing: -0.2,
+  },
 
   resultsBadge: {
     paddingHorizontal: 16,
-    paddingVertical: 6,
+    paddingVertical: 8,
     backgroundColor: colors.primaryLight,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: "rgba(0,0,0,0.04)",
   },
-  resultsBadgeText: { fontSize: 12, fontWeight: "600", color: colors.primary },
+  resultsBadgeText: { fontSize: 12, fontWeight: "700", color: colors.primary },
 
   pillRow: {
     flexDirection: "row",
     flexWrap: "wrap",
     paddingHorizontal: 16,
     paddingVertical: 10,
+    gap: 8,
   },
   pill: {
     paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
+    paddingVertical: 9,
+    borderRadius: 18,
     backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: "rgba(0,0,0,0.06)",
     flexShrink: 0,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 8,
-    marginBottom: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.02,
+    shadowRadius: 3,
   },
   pillActive: {
     backgroundColor: colors.primaryLight,
@@ -751,8 +792,11 @@ const styles = StyleSheet.create({
   pillText: {
     fontSize: 13,
     color: colors.textSecondary,
-    fontWeight: "400",
+    fontWeight: "500",
+    letterSpacing: -0.2,
     flexShrink: 0,
+    lineHeight: 20,
+    includeFontPadding: false,
   },
   pillTextActive: { color: colors.primary, fontWeight: "700" },
 
@@ -770,28 +814,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     color: colors.textPrimary,
+    letterSpacing: -0.3,
   },
   noResultsSub: {
     fontSize: 13,
     color: colors.textSecondary,
     textAlign: "center",
     paddingHorizontal: 32,
+    lineHeight: 18,
   },
 
   fab: {
     position: "absolute",
-    bottom: 92, // sits above the footer/tab bar instead of the old bottom:50
+    bottom: 92,
     alignSelf: "center",
     backgroundColor: colors.primary,
     paddingHorizontal: 28,
     paddingVertical: 15,
     borderRadius: 32,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.18,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.28,
+    shadowRadius: 14,
+    elevation: 12,
+    zIndex: 10,
   },
-  fabPressed: { opacity: 0.85, transform: [{ scale: 0.97 }] },
-  fabText: { color: colors.white, fontSize: 16, fontWeight: "700" },
+  fabText: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: "700",
+    letterSpacing: -0.2,
+  },
 });
