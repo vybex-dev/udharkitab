@@ -13,13 +13,62 @@
  * dates before shipping.
  */
 
-export const PRIVACY_POLICY_LAST_UPDATED = "[05/09/2026]";
-export const PRIVACY_POLICY_EFFECTIVE_DATE = "[DATE OF PUBLICATION]";
+export const PRIVACY_POLICY_LAST_UPDATED = "[05 September 2026]";
+export const PRIVACY_POLICY_EFFECTIVE_DATE = "[DATE OF PRODUCT RELEASE]";
+
+// Quick, plain-language summary shown above the full legal text — most
+// people should be able to stop reading here and trust the rest is
+// covered. Icon names are Ionicons names.
+export const privacyPolicyTldr = [
+  {
+    icon: "phone-portrait-outline",
+    text: "Your ledger stays on your device by default — the app works fully offline.",
+  },
+  {
+    icon: "cloud-outline",
+    text: "Cloud backup is optional. You turn it on, and you can turn it off anytime.",
+  },
+  {
+    icon: "shield-checkmark-outline",
+    text: "We never sell your data, and never use it for ads or profiling.",
+  },
+  {
+    icon: "chatbubble-outline",
+    text: "Call and WhatsApp buttons open your own apps — we never see or log those messages.",
+  },
+  {
+    icon: "card-outline",
+    text: "Payments go through Google/Apple. We never see your card or bank details.",
+  },
+  {
+    icon: "person-circle-outline",
+    text: "You can request access, correction, or deletion of your data anytime.",
+  },
+];
+
+// One Ionicons name per entry in privacyPolicySections, in the same order —
+// purely presentational, kept here so the screen stays generic.
+export const privacyPolicySectionIcons = [
+  "information-circle-outline",
+  "people-outline",
+  "folder-open-outline",
+  "save-outline",
+  "construct-outline",
+  "share-social-outline",
+  "time-outline",
+  "shield-checkmark-outline",
+  "happy-outline",
+  "person-outline",
+  "lock-closed-outline",
+  "mail-outline",
+  "refresh-outline",
+  "hammer-outline",
+];
 
 // Block types the screen knows how to render: "p" | "ul" | "ol" | "dataTable" | "contactCard"
 export const privacyPolicySections = [
   {
-    title: null, // intro, rendered above the numbered sections
+    title: "About This Policy",
     blocks: [
       {
         type: "p",
