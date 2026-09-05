@@ -12,4 +12,5 @@
 
 // TODO: swap this placeholder for the real, published Privacy Policy URL
 // before release.
-export const PRIVACY_POLICY_URL = "https://udharkitab.app/privacy";
+export const PRIVACY_POLICY_URL =
+  "https://github.com/vybex-dev/udharkitab/blob/main/Privacy.md";

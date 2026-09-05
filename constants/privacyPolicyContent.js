@@ -13,8 +13,8 @@
  * dates before shipping.
  */
 
-export const PRIVACY_POLICY_LAST_UPDATED = "[DATE]";
-export const PRIVACY_POLICY_EFFECTIVE_DATE = "[DATE]";
+export const PRIVACY_POLICY_LAST_UPDATED = "[05/09/2026]";
+export const PRIVACY_POLICY_EFFECTIVE_DATE = "[DATE OF PUBLICATION]";
 
 // Block types the screen knows how to render: "p" | "ul" | "ol" | "dataTable" | "contactCard"
 export const privacyPolicySections = [
@@ -31,7 +31,7 @@ export const privacyPolicySections = [
       },
       {
         type: "p",
-        text: "This policy is written to comply with the Digital Personal Data Protection Act, 2023 and the Digital Personal Data Protection Rules, 2025 (together, \"DPDP Law\"), the Information Technology Act, 2000 and the Information Technology (Reasonable Security Practices and Sensitive Personal Data or Information) Rules, 2011, and the data disclosure requirements of the Google Play Store and Apple App Store.",
+        text: 'This policy is written to comply with the Digital Personal Data Protection Act, 2023 and the Digital Personal Data Protection Rules, 2025 (together, "DPDP Law"), the Information Technology Act, 2000 and the Information Technology (Reasonable Security Practices and Sensitive Personal Data or Information) Rules, 2011, and the data disclosure requirements of the Google Play Store and Apple App Store.',
       },
       {
         type: "p",
