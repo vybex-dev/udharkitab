@@ -171,7 +171,7 @@ To use your own project:
 
 ## Privacy Policy
 
-Read the full policy at **[udharkitab.app/privacy](https://github.com/vybex-dev/udharkitab/blob/main/Privacy.md)**.
+Read the full policy at **[Privacy Policy](https://github.com/vybex-dev/udharkitab/blob/main/Privacy.md)**.
 
 In-app, the policy renders natively at `app/privacy-policy.jsx` (content in `constants/privacyPolicyContent.js`) rather than opening a browser — linked from Settings and from the onboarding consent step.
 
