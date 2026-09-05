@@ -1,7 +1,7 @@
 # Privacy Policy — UdharKitab
 
-**Last updated:** [DATE]
-**Effective date:** [DATE]
+**Last updated:** [05/09/2026]
+**Effective date:** [DATE OF PUBLICATION]
 
 This Privacy Policy explains how UdharKitab ("**UdharKitab**", "**the App**", "**we**", "**us**", "**our**") collects, uses, stores, shares, and protects information when you use our mobile application (available on Android and iOS, package/bundle ID `com.udharkitab.app`).
 
