@@ -18,7 +18,7 @@ By using UdharKitab, you agree to the collection and use of information as descr
 Because of how the App works, this policy needs to speak to **two different kinds of people**, and it's important you understand which one you are:
 
 1. **You, the App user (the "Account Holder")** — the shopkeeper or business owner who downloads UdharKitab, creates an account, and enters data into it. Most of this policy is written for you.
-2. **Your Customers (the "Data Subjects")** — the people *you* record in your ledger (their name, phone number, and amounts owed). They do not download or interact with the App themselves. Section 9 below explains your responsibilities toward them.
+2. **Your Customers (the "Data Subjects")** — the people _you_ record in your ledger (their name, phone number, and amounts owed). They do not download or interact with the App themselves. Section 9 below explains your responsibilities toward them.
 
 ---
 
@@ -26,12 +26,12 @@ Because of how the App works, this policy needs to speak to **two different kind
 
 ### 2.1 Information you provide directly
 
-| Data | When it's collected | Why |
-|---|---|---|
-| Name, email address, profile photo | When you sign in with Google | To create and secure your account |
-| Shop name, display theme, language preference | During onboarding / Settings | To personalize the App |
-| Customer name and phone number | When you add a customer to your ledger | Core function of the App — tracking who owes you money |
-| Transaction entries (amount, note, date, due date), payments, and running credit/balance | When you record udhar entries or payments | Core ledger function |
+| Data                                                                                     | When it's collected                       | Why                                                    |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------ |
+| Name, email address, profile photo                                                       | When you sign in with Google              | To create and secure your account                      |
+| Shop name, display theme, language preference                                            | During onboarding / Settings              | To personalize the App                                 |
+| Customer name and phone number                                                           | When you add a customer to your ledger    | Core function of the App — tracking who owes you money |
+| Transaction entries (amount, note, date, due date), payments, and running credit/balance | When you record udhar entries or payments | Core ledger function                                   |
 
 ### 2.2 Information collected automatically
 
@@ -72,16 +72,17 @@ We do **not** sell your data, and we do **not** use your customers' names, phone
 
 We share data only with the following service providers, strictly to operate the App (each acts as our data processor, bound by their own security and confidentiality obligations):
 
-| Provider | Purpose | Data involved |
-|---|---|---|
-| **Google Firebase** (Authentication, Cloud Firestore) | Sign-in and optional cloud backup | Name, email, UID, customer/ledger data (if Cloud Sync is on) |
-| **Google Sign-In** | Authentication | Name, email, profile photo |
-| **RevenueCat** | Subscription/entitlement management | User ID, purchase/transaction and entitlement data |
-| **Google Play / Apple App Store** | Payment processing, app distribution | Purchase data (card details are handled by Google/Apple, never by us) |
+| Provider                                              | Purpose                              | Data involved                                                         |
+| ----------------------------------------------------- | ------------------------------------ | --------------------------------------------------------------------- |
+| **Google Firebase** (Authentication, Cloud Firestore) | Sign-in and optional cloud backup    | Name, email, UID, customer/ledger data (if Cloud Sync is on)          |
+| **Google Sign-In**                                    | Authentication                       | Name, email, profile photo                                            |
+| **RevenueCat**                                        | Subscription/entitlement management  | User ID, purchase/transaction and entitlement data                    |
+| **Google Play / Apple App Store**                     | Payment processing, app distribution | Purchase data (card details are handled by Google/Apple, never by us) |
 
 We do not share data with data brokers, advertisers, or analytics companies. We will only disclose personal data to law enforcement or government authorities if legally compelled to do so (e.g., a valid court order or statutory request under Indian law).
 
 ### Cross-border data transfer
+
 Some of the above providers (Google Firebase, RevenueCat) may process or store data on servers located outside India. Under the DPDP Act, 2023, cross-border transfer of personal data is permitted except to countries specifically restricted by the Central Government; as of the date of this policy, we are not aware of any such restriction applicable to our providers. We require these providers to maintain security standards consistent with applicable law.
 
 ---
@@ -158,4 +159,4 @@ This policy is governed by the laws of India. Any disputes arising out of or in 
 
 ---
 
-*This policy is also available in-app and at: https://udharkitab.app/privacy*
+_This policy is also available in-app and at: https://github.com/vybex-dev/udharkitab/blob/main/Privacy.md_

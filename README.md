@@ -1,17 +1,18 @@
 <div align="center">
   <img src="assets/icon.png" alt="UdharKitab logo" width="120" />
 
-  # UdharKitab (उधार किताब)
+# UdharKitab (उधार किताब)
 
-  **A shopkeeper's credit book, digitized.**
+**A shopkeeper's credit book, digitized.**
 
-  [![Repo](https://img.shields.io/badge/GitHub-vybex--dev%2Fudharkitab-181717?logo=github)](https://github.com/vybex-dev/udharkitab)
-  [![Expo](https://img.shields.io/badge/Expo-SDK%2054-000020?logo=expo)](https://expo.dev)
-  [![RevenueCat](https://img.shields.io/badge/Powered%20by-RevenueCat-F2545B?logo=revenuecat)](https://www.revenuecat.com/)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Repo](https://img.shields.io/badge/GitHub-vybex--dev%2Fudharkitab-181717?logo=github)](https://github.com/vybex-dev/udharkitab)
+[![Expo](https://img.shields.io/badge/Expo-SDK%2054-000020?logo=expo)](https://expo.dev)
+[![RevenueCat](https://img.shields.io/badge/Powered%20by-RevenueCat-F2545B?logo=revenuecat)](https://www.revenuecat.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 </div>
 
-UdharKitab replaces the paper *udhar khata* that small shopkeepers across India use to track credit given to regular customers. It's offline-first, bilingual (Hindi/English), and built for someone who has never used a business app before.
+UdharKitab replaces the paper _udhar khata_ that small shopkeepers across India use to track credit given to regular customers. It's offline-first, bilingual (Hindi/English), and built for someone who has never used a business app before.
 
 Built with React Native + Expo · SQLite-first with optional cloud backup · RevenueCat-powered subscriptions.
 
@@ -37,7 +38,7 @@ Built with React Native + Expo · SQLite-first with optional cloud backup · Rev
 
 ## Why
 
-Most credit-tracking apps assume the user is comfortable with English, spreadsheets, and a stable internet connection. UdharKitab doesn't. It's designed for a *kirana* store owner who:
+Most credit-tracking apps assume the user is comfortable with English, spreadsheets, and a stable internet connection. UdharKitab doesn't. It's designed for a _kirana_ store owner who:
 
 - thinks in Hindi, not English
 - needs the app to work the same with or without signal
@@ -59,15 +60,15 @@ Most credit-tracking apps assume the user is comfortable with English, spreadshe
 
 ## Tech Stack
 
-| Layer | Choice |
-|---|---|
-| Framework | [Expo](https://expo.dev) (SDK 54) + [Expo Router](https://docs.expo.dev/router/introduction/) (file-based routing) |
-| UI runtime | React 19 / React Native 0.81 |
-| Local storage | `expo-sqlite` (async API) |
-| Cloud sync & auth | Firebase (Firestore + Auth), Google Sign-In |
-| Subscriptions | [RevenueCat](https://www.revenuecat.com/) (`react-native-purchases`) |
-| Animation | `react-native-reanimated` |
-| Icons | `@expo/vector-icons` |
+| Layer             | Choice                                                                                                             |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Framework         | [Expo](https://expo.dev) (SDK 54) + [Expo Router](https://docs.expo.dev/router/introduction/) (file-based routing) |
+| UI runtime        | React 19 / React Native 0.81                                                                                       |
+| Local storage     | `expo-sqlite` (async API)                                                                                          |
+| Cloud sync & auth | Firebase (Firestore + Auth), Google Sign-In                                                                        |
+| Subscriptions     | [RevenueCat](https://www.revenuecat.com/) (`react-native-purchases`)                                               |
+| Animation         | `react-native-reanimated`                                                                                          |
+| Icons             | `@expo/vector-icons`                                                                                               |
 
 ## Project Structure
 
@@ -170,18 +171,18 @@ To use your own project:
 
 ## Privacy Policy
 
-Read the full policy at **[udharkitab.app/privacy](https://udharkitab.app/privacy)**.
+Read the full policy at **[udharkitab.app/privacy](https://github.com/vybex-dev/udharkitab/blob/main/Privacy.md)**.
 
 In-app, the policy renders natively at `app/privacy-policy.jsx` (content in `constants/privacyPolicyContent.js`) rather than opening a browser — linked from Settings and from the onboarding consent step.
 
 ## Scripts
 
-| Command | Description |
-|---|---|
-| `npm start` | Start the Expo dev server |
+| Command           | Description                                        |
+| ----------------- | -------------------------------------------------- |
+| `npm start`       | Start the Expo dev server                          |
 | `npm run android` | Build & run on a connected Android device/emulator |
-| `npm run ios` | Build & run on iOS simulator/device |
-| `npm run web` | Run the web build |
+| `npm run ios`     | Build & run on iOS simulator/device                |
+| `npm run web`     | Run the web build                                  |
 
 ## Architecture Notes
 
