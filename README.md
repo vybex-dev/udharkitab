@@ -8,7 +8,7 @@
 [![Repo](https://img.shields.io/badge/GitHub-vybex--dev%2Fudharkitab-181717?logo=github)](https://github.com/vybex-dev/udharkitab)
 [![Expo](https://img.shields.io/badge/Expo-SDK%2054-000020?logo=expo)](https://expo.dev)
 [![RevenueCat](https://img.shields.io/badge/Powered%20by-RevenueCat-F2545B?logo=revenuecat)](https://www.revenuecat.com/)
-[![License](https://img.shields.io/badge/License-All%20Rights%20Reserved-lightgrey.svg)](./LICENSE)
+[![License](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](./LICENSE)
 
 </div>
 
@@ -202,4 +202,17 @@ In-app, the policy renders natively at `app/privacy-policy.jsx` (content in `con
 
 ## License
 
-All rights reserved — see [LICENSE](./LICENSE). The source is public for the RevenueCat Shipaton 2026 submission and evaluation, not for reuse or redistribution.
+UdharKitab
+Copyright (C) 2026 Harsh Yadav, trading as Vybex
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+See the [LICENSE](./LICENSE) file for the full license text.
