@@ -322,6 +322,8 @@ export const en = {
   topCustomers: "Top Customers",
   seeAll: "See all",
   noPendingCustomers: "No pending customers right now.",
+  notifications: "Notifications",
+  notificationsEmpty: "You're all caught up — no pending reminders.",
   dueToday: "Due Today",
   dueTodayLabel: "Due today",
   overdue: "Overdue",

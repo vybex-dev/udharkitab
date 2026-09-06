@@ -276,6 +276,29 @@ function AuthGate() {
         }}
       >
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        {/* Pending/Settled are siblings switched via router.replace (see
+            BottomTabBar), not a real forward/back stack relationship, so
+            neither has one fixed "enters from the right" animation.
+            Whoever navigates passes ?dir=left|right (see app/pending.jsx
+            and app/settled.jsx) and the incoming screen slides in from
+            that side; with no dir param (e.g. pushed fresh from Home) it
+            defaults to the app-wide slide_from_right. */}
+        <Stack.Screen
+          name="pending"
+          options={({ route }) => ({
+            headerShown: false,
+            animation:
+              route.params?.dir === "left" ? "slide_from_left" : "slide_from_right",
+          })}
+        />
+        <Stack.Screen
+          name="settled"
+          options={({ route }) => ({
+            headerShown: false,
+            animation:
+              route.params?.dir === "left" ? "slide_from_left" : "slide_from_right",
+          })}
+        />
         <Stack.Screen
           name="welcome"
           options={{ headerShown: false, animation: "fade" }}

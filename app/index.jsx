@@ -11,6 +11,7 @@
  * (replaced below with an honestly-labelled "Collection Rate").
  */
 
+import { useState } from "react";
 import {
   View,
   Text,
@@ -19,9 +20,11 @@ import {
   StyleSheet,
   ActivityIndicator,
   RefreshControl,
+  Modal,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 
 import BottomTabBar from "../components/BottomTabBar";
 import WeeklyFlowChart from "../components/analytics/WeeklyFlowChart";
@@ -48,6 +51,13 @@ export default function HomeScreen() {
     refreshing,
     refresh,
   } = useHomeAnalytics();
+
+  const [notifVisible, setNotifVisible] = useState(false);
+
+  // Counts come straight from the same overdue/due-today data already
+  // loaded for the cards below — nothing fabricated for the badge.
+  const notifCount = (overdueList?.length || 0) + (dueToday?.length || 0);
+  const notifBadgeLabel = notifCount > 9 ? "9+" : String(notifCount);
 
   const collectionRatePct = Math.round(
     (monthComparison.currentRate || 0) * 100,
@@ -96,10 +106,34 @@ export default function HomeScreen() {
         >
           {/* Header */}
           <View style={styles.headerBlock}>
-            <Text style={styles.eyebrow}>{t.namaste || "NAMASTE"}</Text>
-            <Text style={styles.shopName} numberOfLines={1}>
-              {shopName || "UdharKitab"}
-            </Text>
+            <View style={styles.headerRow}>
+              <View style={styles.headerTextCol}>
+                <Text style={styles.eyebrow}>{t.namaste || "NAMASTE"}</Text>
+                <Text style={styles.shopName} numberOfLines={1}>
+                  {shopName || "UdharKitab"}
+                </Text>
+              </View>
+
+              <PressableScale
+                style={styles.bellButton}
+                onPress={() => setNotifVisible(true)}
+                hitSlop={10}
+                activeScale={0.9}
+                accessibilityRole="button"
+                accessibilityLabel={t.notifications || "Notifications"}
+              >
+                <Ionicons
+                  name="notifications-outline"
+                  size={22}
+                  color={colors.textPrimary}
+                />
+                {notifCount > 0 && (
+                  <View style={styles.bellBadge}>
+                    <Text style={styles.bellBadgeText}>{notifBadgeLabel}</Text>
+                  </View>
+                )}
+              </PressableScale>
+            </View>
           </View>
 
           {/* Total Collection card */}
@@ -317,6 +351,115 @@ export default function HomeScreen() {
         onSelectPending={() => router.push("/pending")}
         onSelectSettled={() => router.push("/settled")}
       />
+
+      <Modal
+        visible={notifVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setNotifVisible(false)}
+      >
+        <Pressable
+          style={styles.notifBackdrop}
+          onPress={() => setNotifVisible(false)}
+        />
+        <View style={styles.notifSheet}>
+          <View style={styles.notifHandle} />
+          <View style={styles.notifHeaderRow}>
+            <Text style={styles.notifTitle}>
+              {t.notifications || "Notifications"}
+            </Text>
+            <PressableScale
+              onPress={() => setNotifVisible(false)}
+              hitSlop={10}
+              activeScale={0.9}
+            >
+              <Ionicons name="close" size={22} color={colors.textSecondary} />
+            </PressableScale>
+          </View>
+
+          <ScrollView
+            style={styles.notifList}
+            contentContainerStyle={{ paddingBottom: 12 }}
+          >
+            {notifCount === 0 ? (
+              <Text style={styles.notifEmpty}>
+                {t.notificationsEmpty ||
+                  "You're all caught up — no pending reminders."}
+              </Text>
+            ) : (
+              <>
+                {overdueCards.length > 0 && (
+                  <>
+                    <Text style={styles.notifSectionLabel}>
+                      {t.overdue || "Overdue"}
+                    </Text>
+                    {overdueCards.map((c) => (
+                      <PressableScale
+                        key={`notif-overdue-${c.id}`}
+                        style={styles.notifRow}
+                        onPress={() => {
+                          setNotifVisible(false);
+                          router.push(`/customer/${c.id}`);
+                        }}
+                        activeScale={0.98}
+                      >
+                        <View
+                          style={[styles.notifDot, styles.notifDotDanger]}
+                        />
+                        <View style={styles.notifRowText}>
+                          <Text style={styles.notifRowName} numberOfLines={1}>
+                            {c.name}
+                          </Text>
+                          <Text style={styles.notifRowSub}>
+                            {c.oldest_due_date
+                              ? `${t.due || "Due"}: ${relativeLabel(c.oldest_due_date, language)}`
+                              : t.overdueLabel || "Overdue"}
+                          </Text>
+                        </View>
+                        <Text style={styles.notifRowAmount}>
+                          {formatRupees(c.pending)}
+                        </Text>
+                      </PressableScale>
+                    ))}
+                  </>
+                )}
+
+                {dueTodayCards.length > 0 && (
+                  <>
+                    <Text style={styles.notifSectionLabel}>
+                      {t.dueToday || "Due Today"}
+                    </Text>
+                    {dueTodayCards.map((c) => (
+                      <PressableScale
+                        key={`notif-due-${c.id}`}
+                        style={styles.notifRow}
+                        onPress={() => {
+                          setNotifVisible(false);
+                          router.push(`/customer/${c.id}`);
+                        }}
+                        activeScale={0.98}
+                      >
+                        <View style={[styles.notifDot, styles.notifDotAmber]} />
+                        <View style={styles.notifRowText}>
+                          <Text style={styles.notifRowName} numberOfLines={1}>
+                            {c.name}
+                          </Text>
+                          <Text style={styles.notifRowSub}>
+                            {t.dueTodayLabel || "Due today"}
+                          </Text>
+                        </View>
+                        <Text style={styles.notifRowAmount}>
+                          {formatRupees(c.pending)}
+                        </Text>
+                      </PressableScale>
+                    ))}
+                  </>
+                )}
+              </>
+            )}
+          </ScrollView>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -329,6 +472,47 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 12,
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+  },
+  headerTextCol: { flex: 1, paddingRight: 12 },
+  bellButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 2,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.04)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  bellBadge: {
+    position: "absolute",
+    top: -2,
+    right: -2,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    paddingHorizontal: 4,
+    backgroundColor: colors.danger,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: colors.background,
+  },
+  bellBadgeText: {
+    fontSize: 10,
+    fontWeight: "800",
+    color: colors.white,
   },
   eyebrow: {
     fontSize: 12,
@@ -629,6 +813,93 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "700",
     color: colors.white,
+    letterSpacing: -0.2,
+  },
+
+  notifBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.35)",
+  },
+  notifSheet: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    maxHeight: "75%",
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingTop: 10,
+    paddingHorizontal: 20,
+    paddingBottom: 24,
+  },
+  notifHandle: {
+    width: 40,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.border,
+    alignSelf: "center",
+    marginBottom: 14,
+  },
+  notifHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  notifTitle: {
+    fontSize: 18,
+    fontWeight: "800",
+    color: colors.textPrimary,
+    letterSpacing: -0.4,
+  },
+  notifList: { marginTop: 6 },
+  notifEmpty: {
+    fontSize: 14,
+    color: colors.textSecondary,
+    textAlign: "center",
+    paddingVertical: 32,
+  },
+  notifSectionLabel: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: colors.textTertiary,
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
+    marginTop: 14,
+    marginBottom: 8,
+  },
+  notifRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 14,
+    gap: 10,
+  },
+  notifDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  notifDotDanger: { backgroundColor: colors.danger },
+  notifDotAmber: { backgroundColor: colors.amber },
+  notifRowText: { flex: 1 },
+  notifRowName: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.textPrimary,
+    letterSpacing: -0.2,
+  },
+  notifRowSub: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    marginTop: 1,
+  },
+  notifRowAmount: {
+    fontSize: 14,
+    fontWeight: "800",
+    color: colors.textPrimary,
     letterSpacing: -0.2,
   },
 });

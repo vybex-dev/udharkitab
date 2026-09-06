@@ -173,7 +173,9 @@ export default function PendingScreen() {
           active="pending"
           onSelectHome={() => router.back()}
           onSelectPending={() => {}}
-          onSelectSettled={() => router.replace("/settled")}
+          onSelectSettled={() =>
+            router.replace({ pathname: "/settled", params: { dir: "right" } })
+          }
         />
       )}
 

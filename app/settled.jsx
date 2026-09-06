@@ -136,7 +136,9 @@ export default function SettledScreen() {
         <BottomTabBar
           active="settled"
           onSelectHome={() => router.back()}
-          onSelectPending={() => router.replace("/pending")}
+          onSelectPending={() =>
+            router.replace({ pathname: "/pending", params: { dir: "left" } })
+          }
           onSelectSettled={() => {}}
         />
       )}

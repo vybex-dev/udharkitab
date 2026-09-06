@@ -322,6 +322,8 @@ export const hi = {
   topCustomers: "मुख्य ग्राहक",
   seeAll: "सभी देखें",
   noPendingCustomers: "अभी कोई बाकी ग्राहक नहीं है।",
+  notifications: "सूचनाएं",
+  notificationsEmpty: "सब कुछ ठीक है — कोई लंबित रिमाइंडर नहीं।",
   dueToday: "आज देय",
   dueTodayLabel: "आज देय",
   overdue: "देरी से बाकी",

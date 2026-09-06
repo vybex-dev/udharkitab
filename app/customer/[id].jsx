@@ -506,7 +506,7 @@ export default function CustomerDetailScreen() {
         onPress={() => setOverdueModalVisible(true)}
       >
         <View style={overdue.iconWrap}>
-          <Text style={overdue.icon}>⚠️</Text>
+          <Ionicons name="alert-circle" size={19} color={colors.danger} />
         </View>
         <View style={overdue.left}>
           <Text style={overdue.title}>
@@ -528,11 +528,11 @@ export default function CustomerDetailScreen() {
         <OverdueBanner />
 
         <View style={styles.hero}>
-          <AvatarCircle name={customer?.name ?? ""} size={72} elevated />
+          <AvatarCircle name={customer?.name ?? ""} size={76} elevated />
           <Text style={styles.customerName}>{customer?.name ?? "..."}</Text>
           {customer?.phone ? (
             <View style={styles.phoneChip}>
-              <Text style={styles.phoneChipIcon}>📞</Text>
+              <Ionicons name="call" size={11} color={colors.textSecondary} />
               <Text style={styles.customerPhone}>{customer.phone}</Text>
             </View>
           ) : null}
@@ -571,13 +571,13 @@ export default function CustomerDetailScreen() {
           <View style={styles.divider} />
 
           {isFullySettled ? (
-            <View style={styles.statusRow}>
+            <View style={styles.settledStatusBadge}>
               <Ionicons
                 name="checkmark-circle"
-                size={18}
+                size={17}
                 color={colors.success}
               />
-              <Text style={styles.statusRowText}>{t.allSettled}</Text>
+              <Text style={styles.settledStatusText}>{t.allSettled}</Text>
             </View>
           ) : (
             <>
@@ -617,7 +617,7 @@ export default function CustomerDetailScreen() {
           ) : (
             <View style={styles.actionsRow}>
               <PressableScale
-                style={styles.receivePaymentBtn}
+                style={[styles.receivePaymentBtn, styles.receivePaymentBtnInRow]}
                 onPress={openPaymentModal}
                 disabled={!hasUnsettled}
               >
@@ -1364,21 +1364,18 @@ const styles = StyleSheet.create({
   phoneChip: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
-    backgroundColor: colors.surfaceHover || "#F8FAFC",
+    gap: 5,
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.04)",
-    marginTop: 8,
+    paddingVertical: 5,
+    borderRadius: 12,
+    backgroundColor: colors.surface,
+    marginTop: 6,
   },
-  phoneChipIcon: { fontSize: 12 },
   customerPhone: {
     fontSize: 13,
     color: colors.textSecondary,
     fontWeight: "600",
-    letterSpacing: 0.2,
+    letterSpacing: 0.1,
   },
 
   contactActionsRow: {
@@ -1433,7 +1430,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   receivePaymentBtn: {
-    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.primary,
@@ -1441,10 +1437,13 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.26,
-    shadowRadius: 12,
-    elevation: 4,
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 3,
   },
+  // Only the two-up layout (next to Settle All) should split space evenly —
+  // the standalone "All Settled" button must size to its own content.
+  receivePaymentBtnInRow: { flex: 1 },
   receivePaymentText: {
     fontSize: 15,
     fontWeight: "700",
@@ -1472,13 +1471,21 @@ const styles = StyleSheet.create({
     letterSpacing: -0.2,
   },
 
-  statusRow: {
+  settledStatusBadge: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
     gap: 6,
+    backgroundColor: colors.successLight,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
   },
-  statusRowText: { fontSize: 16, fontWeight: "700", color: colors.success },
+  settledStatusText: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: colors.success,
+    letterSpacing: -0.2,
+  },
 
   receivePaymentBtnFullWidth: { width: "100%", marginTop: 16 },
 
