@@ -10,7 +10,7 @@ import PressableScale from "./PressableScale";
 import { colors } from "../constants/colors";
 import { formatRupees, relativeLabel, formatDate, todayISO } from "../lib/date";
 
-export default function EntryRow({ entry, onSettle }) {
+export default function EntryRow({ entry, onSettle, isLast }) {
   const { t, language } = useLanguage();
   const { amount, note, date, settled, due_date, paid_amount } = entry;
 
@@ -24,7 +24,13 @@ export default function EntryRow({ entry, onSettle }) {
   const isOverdue = due_date && !settled && due_date < today;
 
   return (
-    <View style={[styles.row, settled ? styles.rowSettled : styles.rowPending]}>
+    <View
+      style={[
+        styles.row,
+        settled ? styles.rowSettled : styles.rowPending,
+        !isLast && styles.rowDivider,
+      ]}
+    >
       {/* Left */}
       <View style={styles.left}>
         <Text style={[styles.date, settled && styles.dateSettled]}>
@@ -119,32 +125,26 @@ export default function EntryRow({ entry, onSettle }) {
 }
 
 const styles = StyleSheet.create({
+  // Sits inside the shared entriesCard container (see [id].jsx) — no own
+  // margin, radius, border or shadow. isFirst/isLast round only the outer
+  // corners of the group, and rowDivider draws the hairline between rows.
   row: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 14,
     paddingHorizontal: 16,
-    marginHorizontal: 16,
-    marginBottom: 10,
     backgroundColor: colors.white,
-    borderRadius: 18,
     gap: 12,
     borderLeftWidth: 3.5,
     borderLeftColor: "transparent",
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.04)",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.03,
-    shadowRadius: 8,
-    elevation: 1,
+  },
+  rowDivider: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "rgba(0,0,0,0.07)",
   },
   rowPending: { borderLeftColor: colors.danger },
   rowSettled: {
     backgroundColor: colors.surfaceHover || "#F8FAFC",
-    borderColor: "rgba(0,0,0,0.02)",
-    shadowOpacity: 0,
-    elevation: 0,
   },
   left: { flex: 1, gap: 4 },
   date: {

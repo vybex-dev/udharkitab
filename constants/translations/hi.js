@@ -32,7 +32,7 @@ export const hi = {
   // Customer detail
   markAllPaid: "✓ सब चुकता करें",
   markPaid: "चुकता",
-  allSettled: "सब चुकता ✓",
+  allSettled: "सब चुकता",
   entryGone: "चुकता होने पर हट जाएगी",
   back: "वापस",
   addUdharShort: "+ उधार",
@@ -241,26 +241,31 @@ export const hi = {
   logoutConfirmTitle: "लॉग आउट?",
   logoutConfirmMessage: "क्या आप लॉग आउट करना चाहते हैं?",
   deleteAccount: "खाता डिलीट करें",
-  deleteAccountError: "खाता डिलीट करने में कुछ गड़बड़ हो गई। कृपया अपना इंटरनेट कनेक्शन जांचें और फिर से कोशिश करें।",
+  deleteAccountError:
+    "खाता डिलीट करने में कुछ गड़बड़ हो गई। कृपया अपना इंटरनेट कनेक्शन जांचें और फिर से कोशिश करें।",
 
   // खाता डिलीट फ्लो — चरण 1 (अनुरोध)
   deletePleaTitle: "कृपया मत जाइए 🥺",
-  deletePleaSubtitle: "खाता डिलीट करने से Udhar Kitab में सब कुछ हमेशा के लिए मिट जाएगा। आप यह सब पीछे छोड़ देंगे:",
+  deletePleaSubtitle:
+    "खाता डिलीट करने से Udhar Kitab में सब कुछ हमेशा के लिए मिट जाएगा। आप यह सब पीछे छोड़ देंगे:",
   deletePleaStatsCustomers: (n) => `${n} ग्राहक जिनका आप हिसाब रख रहे हैं`,
-  deletePleaStatsPending: (amount) => `${amount} का बकाया उधार जिसका हिसाब खो जाएगा`,
+  deletePleaStatsPending: (amount) =>
+    `${amount} का बकाया उधार जिसका हिसाब खो जाएगा`,
   deletePleaStatsForever: "इसके बाद कुछ भी वापस नहीं मिलेगा।",
   deleteKeepAccount: "मेरा खाता रखें",
   deleteStillWantTo: "मुझे फिर भी अपना खाता डिलीट करना है",
 
   // खाता डिलीट फ्लो — चरण 2 (लॉगआउट का विकल्प)
   deleteDetourTitle: "बस थोड़ा ब्रेक चाहिए?",
-  deleteDetourSubtitle: "लॉग आउट करने से हर ग्राहक, एंट्री और भुगतान सुरक्षित रहता है — आप कभी भी वापस लॉग इन कर सकते हैं। खाता डिलीट करना वापस नहीं हो सकता।",
+  deleteDetourSubtitle:
+    "लॉग आउट करने से हर ग्राहक, एंट्री और भुगतान सुरक्षित रहता है — आप कभी भी वापस लॉग इन कर सकते हैं। खाता डिलीट करना वापस नहीं हो सकता।",
   deleteLogoutInstead: "इसके बजाय लॉग आउट करें",
   deletePermanently: "नहीं, मेरा खाता हमेशा के लिए डिलीट करें",
 
   // खाता डिलीट फ्लो — चरण 3 (अंतिम पुष्टि)
   deleteFinalTitle: "यह स्थायी है",
-  deleteFinalSubtitle: "आपका खाता, दुकान की प्रोफ़ाइल और सारा स्थानीय उधार डेटा तुरंत मिट जाएगा। इसे वापस नहीं लाया जा सकता।",
+  deleteFinalSubtitle:
+    "आपका खाता, दुकान की प्रोफ़ाइल और सारा स्थानीय उधार डेटा तुरंत मिट जाएगा। इसे वापस नहीं लाया जा सकता।",
   deleteConfirmWord: "DELETE",
   deleteTypePrompt: (word) => `पुष्टि के लिए ${word} टाइप करें`,
   deleteConfirmButton: "मेरा खाता हमेशा के लिए डिलीट करें",
@@ -269,12 +274,15 @@ export const hi = {
   changeLanguage: "भाषा बदलें",
   dataLocal: "सारा उधार डेटा सिर्फ आपके फोन पर है",
   dataSynced: "क्लाउड पर बैकअप है",
-  cloudSyncOnHint: "आपके ग्राहक, एंट्री और भुगतान क्लाउड पर सुरक्षित हैं। इसे कभी भी बंद करके सिंकिंग रोकें और क्लाउड की प्रति हटाएं।",
-  cloudSyncOffHint: "आपका डेटा सिर्फ इस फोन पर है। फोन बदलने पर सुरक्षित रहे, इसके लिए इसे चालू करें।",
+  cloudSyncOnHint:
+    "आपके ग्राहक, एंट्री और भुगतान क्लाउड पर सुरक्षित हैं। इसे कभी भी बंद करके सिंकिंग रोकें और क्लाउड की प्रति हटाएं।",
+  cloudSyncOffHint:
+    "आपका डेटा सिर्फ इस फोन पर है। फोन बदलने पर सुरक्षित रहे, इसके लिए इसे चालू करें।",
 
   // Network gate (login + settings sync toggle, only shown when sync needs the network)
   networkErrorTitle: "इंटरनेट कनेक्शन नहीं है",
-  networkErrorSubtitle: "क्लाउड सिंक चालू है, इसलिए इस चरण के लिए इंटरनेट ज़रूरी है। कनेक्शन जांचें और फिर से कोशिश करें।",
+  networkErrorSubtitle:
+    "क्लाउड सिंक चालू है, इसलिए इस चरण के लिए इंटरनेट ज़रूरी है। कनेक्शन जांचें और फिर से कोशिश करें।",
   networkErrorRetry: "फिर से कोशिश करें",
   networkErrorRetrying: "जांच हो रही है...",
   bottomNote: "Udhar Kitab — सिर्फ आपका, सिर्फ आपके फोन पर 🔒",
@@ -375,7 +383,8 @@ export const hi = {
   // ऑनबोर्डिंग — चरण 1: भाषा
   onboardingWelcomeEyebrow: "स्वागत है",
   onboardingLanguageTitle: "आपकी डिजिटल खाता बही, बिल्कुल आसान।",
-  onboardingLanguageSubtitle: "बिना कागज़ी काम के उधार और भुगतान का हिसाब रखें।",
+  onboardingLanguageSubtitle:
+    "बिना कागज़ी काम के उधार और भुगतान का हिसाब रखें।",
   onboardingLanguageStamp: "भाषा तय हो गई",
 
   // ऑनबोर्डिंग — चरण 2: दुकान का नाम
@@ -401,9 +410,11 @@ export const hi = {
   // ऑनबोर्डिंग — चरण 4: Google साइन-इन
   onboardingGoogleEyebrow: "अपना खाता सुरक्षित करें",
   onboardingGoogleTitle: "चलिए आपका खाता सुरक्षित करते हैं।",
-  onboardingGoogleSubtitle: "जारी रखने के लिए Google से साइन इन करें — यह तेज़ और सुरक्षित है।",
+  onboardingGoogleSubtitle:
+    "जारी रखने के लिए Google से साइन इन करें — यह तेज़ और सुरक्षित है।",
   onboardingGoogleStamp: "साइन इन हो गया",
-  onboardingGoogleTrust: "हम आपके Google खाते का इस्तेमाल सिर्फ आपकी खाता बही बनाने और सुरक्षित करने के लिए करते हैं। कोई OTP नहीं, कोई पासवर्ड नहीं।",
+  onboardingGoogleTrust:
+    "हम आपके Google खाते का इस्तेमाल सिर्फ आपकी खाता बही बनाने और सुरक्षित करने के लिए करते हैं। कोई OTP नहीं, कोई पासवर्ड नहीं।",
 
   // Onboarding — Step 5: गोपनीयता और क्लाउड सिंक
   onboardingSyncEyebrow: "आपका डेटा, आपकी पसंद",
@@ -414,7 +425,8 @@ export const hi = {
   onboardingSyncPrivacyDescription:
     "जारी रखने के लिए ज़रूरी — यह बताती है कि हम क्या जानकारी लेते हैं और उसका इस्तेमाल कैसे करते हैं।",
   onboardingSyncPrivacyLink: "गोपनीयता नीति पढ़ें →",
-  onboardingSyncPrivacyRequired: "जारी रखने के लिए कृपया गोपनीयता नीति से सहमत हों।",
+  onboardingSyncPrivacyRequired:
+    "जारी रखने के लिए कृपया गोपनीयता नीति से सहमत हों।",
   onboardingSyncCloudTitle: "मेरे ग्राहकों का डेटा क्लाउड पर बैकअप करें",
   onboardingSyncCloudDescription:
     "वैकल्पिक। आपके ग्राहक, उधार एंट्री और भुगतान आपके Google खाते से जुड़े एक सुरक्षित क्लाउड डेटाबेस में सुरक्षित रहते हैं, ताकि फोन बदलने पर कुछ न खोए। इसे कभी भी सेटिंग्स से चालू या बंद कर सकते हैं।",
@@ -429,10 +441,12 @@ export const hi = {
   trialFeature4: "डेटा सिर्फ आपके फोन पर सुरक्षित है",
   trialKhataReadyEyebrow: "आपका खाता तैयार है",
   trialKhataReadyTitle: "दुकान का बहीखाता तैयार है",
-  trialKhataReadySub: () => "आज ही अपने उधार का हिसाब रखना शुरू करें — बिल्कुल मुफ़्त।",
+  trialKhataReadySub: () =>
+    "आज ही अपने उधार का हिसाब रखना शुरू करें — बिल्कुल मुफ़्त।",
   trialStartCta: () => "मेरा बहीखाता खोलें",
   trialOpeningCta: "खाता खोल रहे हैं...",
-  trialLegalNote: () => "Udhar Kitab 100% मुफ़्त है। सारा डेटा आपके फोन पर सुरक्षित रहता है।",
+  trialLegalNote: () =>
+    "Udhar Kitab 100% मुफ़्त है। सारा डेटा आपके फोन पर सुरक्षित रहता है।",
   trialCoverOpened: "शुरू हुआ",
   trialCoverLang: "भाषा",
   trialCoverReady: "✓ इस्तेमाल के लिए तैयार",

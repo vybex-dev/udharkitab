@@ -13,6 +13,7 @@
 import {
   View,
   Text,
+  Image,
   Pressable,
   StyleSheet,
   SafeAreaView,
@@ -50,7 +51,11 @@ export default function LanguagePickerScreen() {
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         {/* Logo */}
-        <Text style={styles.logo}>📒</Text>
+        <Image
+          source={require("../assets/splash.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
         <Text style={styles.appName}>UdharKitab</Text>
 
         {/* Heading — bilingual so it's clear before any selection */}
@@ -118,7 +123,8 @@ const styles = StyleSheet.create({
 
   // Logo
   logo: {
-    fontSize: 56,
+    width: 88,
+    height: 88,
     marginBottom: 8,
   },
   appName: {

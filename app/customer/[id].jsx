@@ -6,7 +6,6 @@
 import {
   View,
   Text,
-  FlatList,
   Pressable,
   StyleSheet,
   Alert,
@@ -527,124 +526,142 @@ export default function CustomerDetailScreen() {
       <View>
         <OverdueBanner />
 
-        <View style={styles.hero}>
-          <AvatarCircle name={customer?.name ?? ""} size={76} elevated />
-          <Text style={styles.customerName}>{customer?.name ?? "..."}</Text>
-          {customer?.phone ? (
-            <View style={styles.phoneChip}>
-              <Ionicons name="call" size={11} color={colors.textSecondary} />
-              <Text style={styles.customerPhone}>{customer.phone}</Text>
-            </View>
-          ) : null}
-
-          <View style={styles.contactActionsRow}>
-            <PressableScale
-              style={styles.contactAction}
-              onPress={handleCallPress}
-            >
-              <View style={[styles.contactIconCircle, styles.callIconCircle]}>
-                <Ionicons name="call" size={20} color={colors.primary} />
+        <View style={styles.heroCard}>
+          <View
+            style={[
+              styles.heroAccent,
+              {
+                backgroundColor: isFullySettled
+                  ? colors.success
+                  : hasUnsettled
+                    ? colors.danger
+                    : colors.border,
+              },
+            ]}
+          />
+          <View style={styles.hero}>
+            <AvatarCircle name={customer?.name ?? ""} size={84} elevated />
+            <Text style={styles.customerName}>{customer?.name ?? "..."}</Text>
+            {customer?.phone ? (
+              <View style={styles.phoneRow}>
+                <Ionicons name="call" size={12} color={colors.textTertiary} />
+                <Text style={styles.customerPhone}>{customer.phone}</Text>
               </View>
-              <Text style={[styles.contactLabel, styles.callLabel]}>
-                {t.call}
-              </Text>
-            </PressableScale>
-            <PressableScale
-              style={styles.contactAction}
-              onPress={handleWhatsAppPress}
-            >
-              <View
-                style={[styles.contactIconCircle, styles.whatsappIconCircle]}
+            ) : null}
+
+            <View style={styles.contactActionsRow}>
+              <PressableScale
+                style={styles.contactAction}
+                onPress={handleCallPress}
               >
-                <Ionicons
-                  name="logo-whatsapp"
-                  size={22}
-                  color={colors.whatsapp}
-                />
-              </View>
-              <Text style={[styles.contactLabel, styles.whatsappLabel]}>
-                {t.whatsapp}
-              </Text>
-            </PressableScale>
-          </View>
-
-          <View style={styles.divider} />
-
-          {isFullySettled ? (
-            <View style={styles.settledStatusBadge}>
-              <Ionicons
-                name="checkmark-circle"
-                size={17}
-                color={colors.success}
-              />
-              <Text style={styles.settledStatusText}>{t.allSettled}</Text>
-            </View>
-          ) : (
-            <>
-              <Text style={styles.pendingLabel}>{t.totalPending}</Text>
-              <Text style={styles.pendingAmount}>
-                {formatRupees(pendingAmount)}
-              </Text>
-            </>
-          )}
-
-          {creditBalance > 0.009 && (
-            <View style={styles.creditRow}>
-              <Ionicons
-                name="arrow-up-circle"
-                size={15}
-                color={colors.success}
-              />
-              <Text style={styles.creditRowText}>
-                {t.advanceBalance} ·{" "}
-                <Text style={styles.creditRowAmount}>
-                  {formatRupees(creditBalance)}
+                <View style={[styles.contactIconCircle, styles.callIconCircle]}>
+                  <Ionicons name="call" size={20} color={colors.primary} />
+                </View>
+                <Text style={[styles.contactLabel, styles.callLabel]}>
+                  {t.call}
                 </Text>
-              </Text>
+              </PressableScale>
+              <PressableScale
+                style={styles.contactAction}
+                onPress={handleWhatsAppPress}
+              >
+                <View
+                  style={[styles.contactIconCircle, styles.whatsappIconCircle]}
+                >
+                  <Ionicons
+                    name="logo-whatsapp"
+                    size={22}
+                    color={colors.whatsapp}
+                  />
+                </View>
+                <Text style={[styles.contactLabel, styles.whatsappLabel]}>
+                  {t.whatsapp}
+                </Text>
+              </PressableScale>
             </View>
-          )}
 
-          {isFullySettled ? (
-            <PressableScale
-              style={[
-                styles.receivePaymentBtn,
-                styles.receivePaymentBtnFullWidth,
-              ]}
-              onPress={openPaymentModal}
-            >
-              <Text style={styles.receivePaymentText}>{t.receivePayment}</Text>
-            </PressableScale>
-          ) : (
-            <View style={styles.actionsRow}>
+            <View style={styles.divider} />
+
+            {isFullySettled ? (
+              <View style={styles.settledStatusBadge}>
+                <Ionicons
+                  name="checkmark-circle"
+                  size={17}
+                  color={colors.success}
+                />
+                <Text style={styles.settledStatusText}>{t.allSettled}</Text>
+              </View>
+            ) : (
+              <>
+                <Text style={styles.pendingLabel}>{t.totalPending}</Text>
+                <Text style={styles.pendingAmount}>
+                  {formatRupees(pendingAmount)}
+                </Text>
+              </>
+            )}
+
+            {creditBalance > 0.009 && (
+              <View style={styles.creditRow}>
+                <Ionicons
+                  name="arrow-up-circle"
+                  size={15}
+                  color={colors.success}
+                />
+                <Text style={styles.creditRowText}>
+                  {t.advanceBalance}:{" "}
+                  <Text style={styles.creditRowAmount}>
+                    {formatRupees(creditBalance)}
+                  </Text>
+                </Text>
+              </View>
+            )}
+
+            {isFullySettled ? (
               <PressableScale
                 style={[
                   styles.receivePaymentBtn,
-                  styles.receivePaymentBtnInRow,
-                  !hasUnsettled && styles.receivePaymentBtnDisabled,
+                  styles.receivePaymentBtnFullWidth,
                 ]}
                 onPress={openPaymentModal}
-                disabled={!hasUnsettled}
               >
                 <Text style={styles.receivePaymentText}>
                   {t.receivePayment}
                 </Text>
               </PressableScale>
-              <PressableScale
-                style={[
-                  styles.settleAllBtn,
-                  (settling || !hasUnsettled) && styles.settleAllDisabled,
-                ]}
-                onPress={handleSettleAll}
-                disabled={settling || !hasUnsettled}
-              >
-                {settling ? (
-                  <ActivityIndicator color={colors.success} size="small" />
-                ) : (
-                  <Text style={styles.settleAllText}>{t.markAllPaid}</Text>
-                )}
-              </PressableScale>
-            </View>
-          )}
+            ) : (
+              <View style={styles.actionsRow}>
+                <PressableScale
+                  style={[
+                    styles.settleAllBtn,
+                    (settling || !hasUnsettled) && styles.settleAllDisabled,
+                  ]}
+                  onPress={handleSettleAll}
+                  disabled={settling || !hasUnsettled}
+                >
+                  {settling ? (
+                    <ActivityIndicator color={colors.success} size="small" />
+                  ) : (
+                    <>
+                      <Text style={styles.settleAllText}>{t.markAllPaid}</Text>
+                    </>
+                  )}
+                </PressableScale>
+                <PressableScale
+                  style={[
+                    styles.receivePaymentBtn,
+                    styles.receivePaymentBtnInRow,
+                    !hasUnsettled && styles.receivePaymentBtnDisabled,
+                  ]}
+                  onPress={openPaymentModal}
+                  disabled={!hasUnsettled}
+                >
+                  <Text style={styles.receivePaymentText}>
+                    {t.receivePayment}
+                  </Text>
+                </PressableScale>
+              </View>
+            )}
+          </View>
         </View>
 
         {entries.length > 0 && (
@@ -663,8 +680,28 @@ export default function CustomerDetailScreen() {
     if (loading) return null;
     return (
       <View style={styles.emptyWrap}>
-        <Ionicons name="receipt-outline" size={40} color={colors.textTertiary} />
+        <Ionicons
+          name="receipt-outline"
+          size={40}
+          color={colors.textTertiary}
+        />
         <Text style={styles.emptyText}>{t.noEntries}</Text>
+      </View>
+    );
+  }
+
+  function EntriesList() {
+    if (entries.length === 0) return <ListEmpty />;
+    return (
+      <View style={styles.entriesCard}>
+        {entries.map((item, index) => (
+          <EntryRow
+            key={String(item.id)}
+            entry={item}
+            onSettle={handleSettle}
+            isLast={index === entries.length - 1}
+          />
+        ))}
       </View>
     );
   }
@@ -673,7 +710,11 @@ export default function CustomerDetailScreen() {
     <SafeAreaView key={language} style={styles.safe} edges={["top"]}>
       {/* Nav bar */}
       <View style={styles.navBar}>
-        <Pressable onPress={() => router.back()} hitSlop={12} style={styles.backBtn}>
+        <Pressable
+          onPress={() => router.back()}
+          hitSlop={12}
+          style={styles.backBtn}
+        >
           <Ionicons name="chevron-back" size={22} color={colors.primary} />
           <Text style={styles.backText}>{t.back}</Text>
         </Pressable>
@@ -707,20 +748,17 @@ export default function CustomerDetailScreen() {
           color={colors.primary}
         />
       ) : (
-        <FlatList
-          data={entries}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => (
-            <EntryRow entry={item} onSettle={handleSettle} />
-          )}
-          ListHeaderComponent={<ListHeader />}
-          ListEmptyComponent={<ListEmpty />}
+        <ScrollView
+          style={styles.list}
           contentContainerStyle={[
             styles.listContent,
             entries.length === 0 && styles.emptyContent,
           ]}
-          style={styles.list}
-        />
+          showsVerticalScrollIndicator={false}
+        >
+          <ListHeader />
+          <EntriesList />
+        </ScrollView>
       )}
 
       {/* ── Overdue date update modal ── */}
@@ -1349,15 +1387,12 @@ const styles = StyleSheet.create({
   },
 
   // Floating profile card
-  hero: {
-    alignItems: "center",
+  heroCard: {
     backgroundColor: colors.white,
     marginHorizontal: 16,
     marginTop: 16,
     borderRadius: 24,
-    paddingTop: 28,
-    paddingBottom: 24,
-    paddingHorizontal: 24,
+    overflow: "hidden",
     borderWidth: 1,
     borderColor: "rgba(0,0,0,0.04)",
     shadowColor: "#000",
@@ -1366,27 +1401,30 @@ const styles = StyleSheet.create({
     shadowRadius: 18,
     elevation: 4,
   },
+  heroAccent: { height: 4, width: "100%" },
+  hero: {
+    alignItems: "center",
+    paddingTop: 26,
+    paddingBottom: 24,
+    paddingHorizontal: 24,
+  },
   customerName: {
-    fontSize: 24,
+    fontSize: 25,
     fontWeight: "800",
     color: colors.textPrimary,
-    marginTop: 12,
+    marginTop: 14,
     letterSpacing: -0.6,
     textAlign: "center",
   },
-  phoneChip: {
+  phoneRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: 5,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 12,
-    backgroundColor: colors.surface,
-    marginTop: 6,
+    marginTop: 5,
   },
   customerPhone: {
     fontSize: 13,
-    color: colors.textSecondary,
+    color: colors.textTertiary,
     fontWeight: "600",
     letterSpacing: 0.1,
   },
@@ -1444,15 +1482,20 @@ const styles = StyleSheet.create({
   },
   receivePaymentBtn: {
     height: 52,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    gap: 6,
+    paddingLeft: 16,
+    paddingRight: 16,
     backgroundColor: colors.primary,
-    borderRadius: 16,
+    borderRadius: 26,
     shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.18,
     shadowRadius: 10,
     elevation: 3,
+    marginLeft: 10,
   },
   // Only the two-up layout (next to Settle All) should split space evenly —
   // the standalone "All Settled" button must size to its own content.
@@ -1474,7 +1517,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0FDF4",
     borderWidth: 1,
     borderColor: "rgba(22, 163, 74, 0.25)",
-    borderRadius: 16,
+    borderRadius: 26,
     gap: 6,
   },
   settleAllDisabled: { opacity: 0.4 },
@@ -1483,6 +1526,8 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: colors.success,
     letterSpacing: -0.2,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
 
   settledStatusBadge: {
@@ -1501,7 +1546,24 @@ const styles = StyleSheet.create({
     letterSpacing: -0.2,
   },
 
-  receivePaymentBtnFullWidth: { width: "100%", marginTop: 16 },
+  receivePaymentBtnFullWidth: {
+    marginTop: 16,
+    height: 52,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    paddingLeft: 16,
+    paddingRight: 16,
+    backgroundColor: colors.primary,
+    borderRadius: 26,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.18,
+    shadowRadius: 10,
+    elevation: 3,
+    marginLeft: 10,
+  },
 
   // Compact one-line credit note — replaces the old boxed "advance balance"
   // panel so a settled khata with a carried-forward amount doesn't stack
@@ -1547,6 +1609,23 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "700",
     color: colors.textSecondary,
+  },
+
+  // Grouped entries card — one rounded container, rows divided by hairlines,
+  // matching the iOS Settings/Contacts "insetGrouped" list style instead of
+  // each entry floating as its own separate card.
+  entriesCard: {
+    marginHorizontal: 16,
+    borderRadius: 20,
+    overflow: "hidden",
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.04)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    elevation: 2,
   },
 
   list: { flex: 1 },
