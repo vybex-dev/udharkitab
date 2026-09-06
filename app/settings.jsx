@@ -126,14 +126,8 @@ const sec = StyleSheet.create({
 export default function SettingsScreen() {
   const router = useRouter();
   const { t, language } = useLanguage();
-  const {
-    isPremium,
-    trial,
-    planSource,
-    presentPaywall,
-    presentCustomerCenter,
-    restore,
-  } = useSubscription();
+  const { isPremium, trial, planSource, presentCustomerCenter, restore } =
+    useSubscription();
 
   // Translated theme labels — built here so they always reflect the current language
   const themeLabels = {
@@ -349,14 +343,7 @@ export default function SettingsScreen() {
             style={styles.proBanner}
             onPress={async () => {
               if (!isPremium) {
-                const res = await presentPaywall().catch(() => ({
-                  success: false,
-                }));
-                // Only fall back to our custom paywall on a genuine failure
-                // (e.g. native module unavailable). If the user just closed
-                // the RevenueCat sheet, respect that instead of stacking a
-                // second paywall on top.
-                if (!res?.success && !res?.cancelled) router.push("/paywall");
+                router.push("/paywall");
               } else {
                 presentCustomerCenter();
               }
@@ -504,17 +491,7 @@ export default function SettingsScreen() {
             {!isPremium ? (
               <Row
                 label={t.upgradeToPremium || "Upgrade to Premium"}
-                onPress={async () => {
-                  const res = await presentPaywall().catch(() => ({
-                    success: false,
-                  }));
-                  // Only fall back to our custom paywall on a genuine
-                  // failure — not when the user cancelled the RevenueCat
-                  // sheet, or we'd stack a second paywall on top of it.
-                  if (!res?.success && !res?.cancelled) {
-                    router.push("/paywall");
-                  }
-                }}
+                onPress={() => router.push("/paywall")}
                 right={
                   <View style={styles.langRight}>
                     <Text

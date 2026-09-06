@@ -91,7 +91,7 @@ export const hi = {
   noPhone: "नंबर नहीं है",
   selectHint: "चुनें",
   call: "कॉल",
-  whatsapp: "WhatsApp",
+  whatsapp: "वॉट्सऐप",
   addPhoneTitle: "मोबाइल नंबर जोड़ें",
   addPhoneSubtitle: (name) => `${name} को कॉल या मैसेज करने के लिए नंबर सहेजें`,
   phoneRequiredForDuplicate:
