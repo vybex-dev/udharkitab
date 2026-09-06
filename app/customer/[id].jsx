@@ -617,7 +617,11 @@ export default function CustomerDetailScreen() {
           ) : (
             <View style={styles.actionsRow}>
               <PressableScale
-                style={[styles.receivePaymentBtn, styles.receivePaymentBtnInRow]}
+                style={[
+                  styles.receivePaymentBtn,
+                  styles.receivePaymentBtnInRow,
+                  !hasUnsettled && styles.receivePaymentBtnDisabled,
+                ]}
                 onPress={openPaymentModal}
                 disabled={!hasUnsettled}
               >
@@ -628,7 +632,7 @@ export default function CustomerDetailScreen() {
               <PressableScale
                 style={[
                   styles.settleAllBtn,
-                  settling && styles.settleAllDisabled,
+                  (settling || !hasUnsettled) && styles.settleAllDisabled,
                 ]}
                 onPress={handleSettleAll}
                 disabled={settling || !hasUnsettled}
@@ -659,7 +663,7 @@ export default function CustomerDetailScreen() {
     if (loading) return null;
     return (
       <View style={styles.emptyWrap}>
-        <Text style={styles.emptyIcon}>📒</Text>
+        <Ionicons name="receipt-outline" size={40} color={colors.textTertiary} />
         <Text style={styles.emptyText}>{t.noEntries}</Text>
       </View>
     );
@@ -669,8 +673,9 @@ export default function CustomerDetailScreen() {
     <SafeAreaView key={language} style={styles.safe} edges={["top"]}>
       {/* Nav bar */}
       <View style={styles.navBar}>
-        <Pressable onPress={() => router.back()} hitSlop={12}>
-          <Text style={styles.backText}>‹ {t.back}</Text>
+        <Pressable onPress={() => router.back()} hitSlop={12} style={styles.backBtn}>
+          <Ionicons name="chevron-back" size={22} color={colors.primary} />
+          <Text style={styles.backText}>{t.back}</Text>
         </Pressable>
         <View style={styles.navBarRight}>
           <Pressable
@@ -1097,7 +1102,6 @@ const overdue = StyleSheet.create({
     shadowRadius: 4,
   },
   left: { flex: 1, gap: 2 },
-  icon: { fontSize: 16 },
   title: {
     fontSize: 14,
     fontWeight: "700",
@@ -1303,17 +1307,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 12,
     backgroundColor: colors.white,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
-    elevation: 2,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "rgba(0,0,0,0.08)",
     zIndex: 2,
   },
-  backText: { fontSize: 15, color: colors.primary, fontWeight: "700" },
-  navBarRight: { flexDirection: "row", alignItems: "center", gap: 14 },
+  backBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: -6,
+  },
+  backText: {
+    fontSize: 16,
+    color: colors.primary,
+    fontWeight: "600",
+    marginLeft: -2,
+  },
+  navBarRight: { flexDirection: "row", alignItems: "center", gap: 12 },
   deleteBtn: {
     width: 34,
     height: 34,
@@ -1323,10 +1334,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   addBtn: {
+    height: 34,
     backgroundColor: colors.primaryLight,
     paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 17,
+    alignItems: "center",
+    justifyContent: "center",
   },
   addText: {
     fontSize: 13,
@@ -1340,11 +1353,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: colors.white,
     marginHorizontal: 16,
-    marginTop: 14,
+    marginTop: 16,
     borderRadius: 24,
     paddingTop: 28,
     paddingBottom: 24,
-    paddingHorizontal: 22,
+    paddingHorizontal: 24,
     borderWidth: 1,
     borderColor: "rgba(0,0,0,0.04)",
     shadowColor: "#000",
@@ -1357,7 +1370,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "800",
     color: colors.textPrimary,
-    marginTop: 14,
+    marginTop: 12,
     letterSpacing: -0.6,
     textAlign: "center",
   },
@@ -1382,7 +1395,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     gap: 36,
-    marginTop: 16,
+    marginTop: 18,
   },
   contactAction: { alignItems: "center", gap: 6 },
   contactIconCircle: {
@@ -1430,20 +1443,21 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   receivePaymentBtn: {
+    height: 52,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.primary,
     borderRadius: 16,
-    paddingVertical: 15,
     shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.18,
     shadowRadius: 10,
     elevation: 3,
   },
   // Only the two-up layout (next to Settle All) should split space evenly —
   // the standalone "All Settled" button must size to its own content.
   receivePaymentBtnInRow: { flex: 1 },
+  receivePaymentBtnDisabled: { opacity: 0.4 },
   receivePaymentText: {
     fontSize: 15,
     fontWeight: "700",
@@ -1452,6 +1466,7 @@ const styles = StyleSheet.create({
   },
 
   settleAllBtn: {
+    height: 52,
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
@@ -1460,12 +1475,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(22, 163, 74, 0.25)",
     borderRadius: 16,
-    paddingVertical: 14,
     gap: 6,
   },
   settleAllDisabled: { opacity: 0.4 },
   settleAllText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "700",
     color: colors.success,
     letterSpacing: -0.2,
@@ -1510,8 +1524,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginHorizontal: 20,
-    marginTop: 22,
+    marginHorizontal: 16,
+    marginTop: 24,
     marginBottom: 10,
   },
   sectionLabel: {
@@ -1544,7 +1558,6 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     gap: 8,
   },
-  emptyIcon: { fontSize: 40 },
   emptyText: { fontSize: 15, color: colors.textSecondary },
 });
 
@@ -1587,17 +1600,17 @@ function WaPickerModal({
 
   const BUCKET_META = {
     noDate: {
-      emoji: "📋",
+      icon: "document-text",
       label: t.waTemplateNoDateLabel,
       sub: t.waTemplateNoDateSub,
     },
     dueToday: {
-      emoji: "⏰",
+      icon: "time",
       label: t.waTemplateDueTodayLabel,
       sub: t.waTemplateDueTodaySub,
     },
     overdue: {
-      emoji: "⚠️",
+      icon: "alert-circle",
       label: t.waTemplateOverdueLabel,
       sub: t.waTemplateOverdueSub,
     },
@@ -1660,14 +1673,18 @@ function WaPickerModal({
                 )}
               </View>
 
-              <Text
+              <View
                 style={[
-                  waPicker.optionEmoji,
-                  disabled && waPicker.textDisabled,
+                  waPicker.optionIconWrap,
+                  disabled && waPicker.optionIconWrapDisabled,
                 ]}
               >
-                {meta.emoji}
-              </Text>
+                <Ionicons
+                  name={meta.icon}
+                  size={16}
+                  color={disabled ? colors.textTertiary : colors.textSecondary}
+                />
+              </View>
 
               <View style={waPicker.optionBody}>
                 <Text
@@ -1798,7 +1815,15 @@ const waPicker = StyleSheet.create({
     backgroundColor: colors.surface,
   },
 
-  optionEmoji: { fontSize: 20, width: 26, textAlign: "center" },
+  optionIconWrap: {
+    width: 30,
+    height: 30,
+    borderRadius: 10,
+    backgroundColor: colors.surface,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  optionIconWrapDisabled: { backgroundColor: "rgba(0,0,0,0.03)" },
   optionBody: { flex: 1 },
   optionLabel: { fontSize: 15, fontWeight: "700", color: colors.textPrimary },
   optionSub: { fontSize: 12, color: colors.textSecondary, marginTop: 2 },

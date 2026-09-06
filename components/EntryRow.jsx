@@ -4,6 +4,7 @@
  */
 
 import { View, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useLanguage } from "../contexts/LanguageContext";
 import PressableScale from "./PressableScale";
 import { colors } from "../constants/colors";
@@ -47,6 +48,19 @@ export default function EntryRow({ entry, onSettle }) {
               isOverdue && styles.dueDateChipOverdue,
             ]}
           >
+            <Ionicons
+              name={
+                isOverdue ? "alert-circle" : isDueToday ? "time" : "calendar"
+              }
+              size={11}
+              color={
+                isOverdue
+                  ? colors.danger
+                  : isDueToday
+                    ? colors.amber
+                    : colors.textSecondary
+              }
+            />
             <Text
               style={[
                 styles.dueDateChipText,
@@ -55,10 +69,10 @@ export default function EntryRow({ entry, onSettle }) {
               ]}
             >
               {isOverdue
-                ? `⚠️ ${t.overdueChip}`
+                ? t.overdueChip
                 : isDueToday
-                  ? `⏰ ${t.dueTodayChip}`
-                  : `📅 ${formatDate(due_date, language)}`}
+                  ? t.dueTodayChip
+                  : formatDate(due_date, language)}
             </Text>
           </View>
         )}
@@ -128,7 +142,6 @@ const styles = StyleSheet.create({
   rowPending: { borderLeftColor: colors.danger },
   rowSettled: {
     backgroundColor: colors.surfaceHover || "#F8FAFC",
-    opacity: 0.85,
     borderColor: "rgba(0,0,0,0.02)",
     shadowOpacity: 0,
     elevation: 0,
@@ -146,6 +159,9 @@ const styles = StyleSheet.create({
 
   // Due date chip
   dueDateChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
     marginTop: 4,
     alignSelf: "flex-start",
     backgroundColor: colors.surface,
@@ -223,7 +239,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.22,
+    shadowOpacity: 0.18,
     shadowRadius: 8,
     elevation: 2,
   },

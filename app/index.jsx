@@ -497,7 +497,7 @@ const styles = StyleSheet.create({
   },
   bellBadge: {
     position: "absolute",
-    top: -2,
+    top: -3,
     right: -2,
     minWidth: 18,
     height: 18,
@@ -513,6 +513,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "800",
     color: colors.white,
+    top: -1.5,
   },
   eyebrow: {
     fontSize: 12,
