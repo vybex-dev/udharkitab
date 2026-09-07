@@ -144,7 +144,6 @@ FIREBASE_STORAGE_BUCKET=
 FIREBASE_MESSAGING_SENDER_ID=
 FIREBASE_APP_ID=
 GOOGLE_WEB_CLIENT_ID=
-GOOGLE_IOS_URL_SCHEME=
 ```
 
 You'll also need `google-services.json` (Android) in the project root — already present in this repo for the sample Firebase project; swap it for your own before shipping.
