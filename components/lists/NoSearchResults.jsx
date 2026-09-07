@@ -6,6 +6,7 @@
  */
 
 import { View, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../../constants/colors";
 import { useLanguage } from "../../contexts/LanguageContext";
@@ -14,7 +15,12 @@ export default function NoSearchResults({ query }) {
   const { t } = useLanguage();
   return (
     <View style={styles.noResults}>
-      <Text style={styles.noResultsIcon}>🔍</Text>
+      <Ionicons
+        name="search"
+        size={36}
+        color={colors.textTertiary}
+        style={styles.noResultsIcon}
+      />
       <Text style={styles.noResultsTitle}>{t.noResultsTitle(query)}</Text>
       <Text style={styles.noResultsSub}>{t.noResultsSub}</Text>
     </View>
@@ -28,7 +34,7 @@ const styles = StyleSheet.create({
     paddingTop: 80,
     gap: 8,
   },
-  noResultsIcon: { fontSize: 40, marginBottom: 4 },
+  noResultsIcon: { marginBottom: 4 },
   noResultsTitle: {
     fontSize: 16,
     fontWeight: "700",
