@@ -182,7 +182,7 @@ export const en = {
   // Paywall
   paywallBrand: "Udhar Kitab Pro",
   paywallSubtitle: "Keep tracking your udhar — subscribe now",
-  subscribe: "Subscribe — ₹19/month",
+  subscribe: "Subscribe — $9.99/month",
   trialExpired: "Your free trial has ended",
   startTrialHeadline: "Start your free trial",
   freeTrialEnded: (days) => `Your ${days}-day free trial has ended`,
@@ -192,7 +192,7 @@ export const en = {
   offlineExpiredSub: "Turn on the internet to check your plan, then try again",
   retryConnection: "Try again",
   restorePurchase: "Restore purchase",
-  planPrice: "₹19/month",
+  planPrice: "$9.99/month",
   perMonth: "/month",
   cancelAnytime: "Cancel anytime",
   planFeature1: "Unlimited customers",
