@@ -214,7 +214,7 @@ export default function PaywallScreen() {
           <Text style={styles.priceAmount}>
             {packages?.monthly?.product?.priceString ||
               t.planPrice ||
-              "₹19/month"}
+              "$9.99/month"}
           </Text>
           <Text style={styles.priceSub}>100% full access to all features</Text>
         </View>
@@ -245,7 +245,7 @@ export default function PaywallScreen() {
               <ActivityIndicator color="#FFFFFF" size="small" />
             ) : (
               <Text style={styles.subscribeBtnText}>
-                {t.subscribe || "Subscribe — ₹19/month"}
+                {t.subscribe || "Subscribe — $9.99/month"}
               </Text>
             )}
           </PressableScale>
