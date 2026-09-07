@@ -180,7 +180,7 @@ export const hi = {
   // Paywall
   paywallBrand: "Udhar Kitab Pro",
   paywallSubtitle: "अपना उधार देखते रहें — सदस्यता लें",
-  subscribe: "सदस्यता लें — ₹149/माह",
+  subscribe: "सदस्यता लें — ₹19/माह",
   trialExpired: "मुफ़्त परीक्षण खत्म हो गया",
   startTrialHeadline: "मुफ़्त परीक्षण शुरू करें",
   freeTrialEnded: (days) => `आपका ${days} दिन का मुफ़्त परीक्षण खत्म हो गया`,
@@ -191,7 +191,7 @@ export const hi = {
     "योजना की जानकारी जाँचने के लिए इंटरनेट चालू करें और फिर से कोशिश करें",
   retryConnection: "दोबारा कोशिश करें",
   restorePurchase: "पुरानी खरीद वापस पाएं",
-  planPrice: "₹149/माह",
+  planPrice: "₹19/माह",
   perMonth: "/माह",
   cancelAnytime: "कभी भी रद्द करें",
   planFeature1: "असीमित ग्राहक",
