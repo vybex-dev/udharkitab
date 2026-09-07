@@ -2,7 +2,7 @@ import "dotenv/config";
 
 export default {
   expo: {
-    name: "UdharKitab",
+    name: "Udhar Kitab",
     slug: "udharkitab",
     owner: "broke_founder",
     version: "1.0.0",
