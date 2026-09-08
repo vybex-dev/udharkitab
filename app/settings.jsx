@@ -272,7 +272,7 @@ export default function SettingsScreen() {
           setLoggingOut(true);
           try {
             await signOut();
-            router.replace("/login");
+            router.replace("/welcome");
           } catch (e) {
             Alert.alert(t.error, t.retry);
           } finally {
@@ -308,7 +308,7 @@ export default function SettingsScreen() {
     if (error) throw error;
     await wipeAllLocalData();
     setDeleteModalVisible(false);
-    router.replace("/login");
+    router.replace("/welcome");
   }
 
   // Current language display

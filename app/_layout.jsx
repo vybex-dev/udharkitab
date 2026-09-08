@@ -9,7 +9,10 @@ import "react-native-url-polyfill/auto";
  *    onboarding.
  *  - Onboarding gate: users who pick "I'm new" go through /onboarding/*
  *    once (language → shop name → theme → phone → OTP → trial start)
- *  - Auth + plan gate: returning users go auth → trial/plan status → destination
+ *  - Auth + plan gate: any signed-out state (including logout, account
+ *    deletion, or a silently expired session) sends the user to /welcome —
+ *    never straight to /login. /login is only ever reached by the user's
+ *    own choice, via the "I already have a khata" button on /welcome.
  *  - GestureHandlerRootView + SafeAreaProvider
  *
  * Onboarding vs. legacy language-picker/login:
@@ -193,7 +196,7 @@ function AuthGate() {
       // ── Step 1: Auth ─────────────────────────────────────────────────────
       if (!session) {
         const inPublic = PUBLIC_SEGMENTS.includes(currentSegment);
-        if (!inPublic) router.replace("/login");
+        if (!inPublic) router.replace("/welcome");
         return;
       }
 
