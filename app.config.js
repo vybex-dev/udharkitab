@@ -7,10 +7,10 @@ export default {
     owner: "broke_founder",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: "./assets/settled-mark.png",
     userInterfaceStyle: "light",
     splash: {
-      image: "./assets/splash.png",
+      image: "./assets/settled-mark.png",
       resizeMode: "contain",
       backgroundColor: "#534AB7",
     },
@@ -20,7 +20,7 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
+        foregroundImage: "./assets/settled-mark.png",
         backgroundColor: "#534AB7",
       },
       package: "com.udharkitab.app",
