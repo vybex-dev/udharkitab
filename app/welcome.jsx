@@ -15,12 +15,20 @@ import { View, Text, StyleSheet, Image, ScrollView, Pressable } from "react-nati
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { useLanguage } from "../contexts/LanguageContext";
+import { translations } from "../constants/translations";
 import { colors } from "../constants/colors";
+
+// This is the very first screen a device ever sees, before the user has
+// made any choice at all — so it's intentionally NOT wired to the saved
+// language preference. It always shows English, even if a previous
+// install/session on this device had Hindi selected (e.g. after logout or
+// account deletion, the language choice is kept but the person is starting
+// fresh here). The language picker still happens right after, in
+// /onboarding/language, for anyone who continues as a new user.
+const t = translations.en;
 
 export default function WelcomeScreen() {
   const router = useRouter();
-  const { t } = useLanguage();
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>

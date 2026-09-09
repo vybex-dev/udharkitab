@@ -15,6 +15,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
 } from "react-native";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useLocalSearchParams, useRouter, useFocusEffect } from "expo-router";
@@ -56,6 +57,16 @@ import {
 } from "../../lib/date";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { colors } from "../../constants/colors";
+
+// The Receive Payment sheet caps its own height at 85% of the screen. This is
+// computed once as a fixed pixel value (app is portrait-locked) rather than a
+// "85%" string: a percentage height only resolves correctly when every
+// ancestor has a definite, stable height, and the KeyboardAvoidingView above
+// this sheet resizes itself as the keyboard opens — during/after that resize,
+// a percentage-based maxHeight can end up ambiguous and Yoga was collapsing
+// the scrollable item list inside it to 0 height instead. A concrete pixel
+// value sidesteps that entirely.
+const PAYMENT_SHEET_MAX_HEIGHT = Dimensions.get("window").height * 0.85;
 
 // ── Split a payment amount across the entries the user picked, in the order
 //    they appear in the list. Each entry only takes up to what it still owes;
@@ -838,51 +849,57 @@ export default function CustomerDetailScreen() {
           <View style={[modal.sheet, payment.sheet]}>
             <View style={modal.handle} />
 
-            <Text style={modal.title}>{t.receivePaymentTitle}</Text>
-            <Text style={modal.subtitle}>
-              {t.receivePaymentSubtitle(customer?.name ?? "")}
-            </Text>
-
-            <View style={payment.amountRow}>
-              <Text style={payment.rupeeSymbol}>₹</Text>
-              <TextInput
-                style={payment.amountInput}
-                value={paymentAmount}
-                onChangeText={handlePaymentAmountChange}
-                placeholder="0"
-                placeholderTextColor={colors.textTertiary}
-                keyboardType="numeric"
-                maxLength={8}
-              />
-            </View>
-
-            {isOverpayment ? (
-              <Text style={[payment.allocatedText, payment.allocatedTextDone]}>
-                {t.advanceWillBeAdded(formatRupees(advanceAmount))}
-              </Text>
-            ) : parsedPaymentAmount > 0 ? (
-              <Text
-                style={[
-                  payment.allocatedText,
-                  canSavePayment && payment.allocatedTextDone,
-                ]}
-              >
-                {t.allocatedOfAmount(
-                  formatRupees(allocatedTotal),
-                  formatRupees(parsedPaymentAmount),
-                )}
-                {!canSavePayment ? ` — ${t.selectMoreItemsHint}` : ""}
-              </Text>
-            ) : null}
-
-            {pendingEntries.length > 0 && (
-              <Text style={payment.sectionLabel}>{t.selectItemsLabel}</Text>
-            )}
-
+            {/* Whole sheet body scrolls as one unit. When the keyboard
+                shrinks the space below the handle, this ScrollView shrinks
+                with it (flexShrink) and scrolls to reveal the rest, instead
+                of the item list rendering at zero height and disappearing. */}
             <ScrollView
-              style={payment.itemList}
+              style={payment.scrollBody}
+              contentContainerStyle={payment.scrollContent}
               keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
             >
+              <Text style={modal.title}>{t.receivePaymentTitle}</Text>
+              <Text style={modal.subtitle}>
+                {t.receivePaymentSubtitle(customer?.name ?? "")}
+              </Text>
+
+              <View style={payment.amountRow}>
+                <Text style={payment.rupeeSymbol}>₹</Text>
+                <TextInput
+                  style={payment.amountInput}
+                  value={paymentAmount}
+                  onChangeText={handlePaymentAmountChange}
+                  placeholder="0"
+                  placeholderTextColor={colors.textTertiary}
+                  keyboardType="numeric"
+                  maxLength={8}
+                />
+              </View>
+
+              {isOverpayment ? (
+                <Text style={[payment.allocatedText, payment.allocatedTextDone]}>
+                  {t.advanceWillBeAdded(formatRupees(advanceAmount))}
+                </Text>
+              ) : parsedPaymentAmount > 0 ? (
+                <Text
+                  style={[
+                    payment.allocatedText,
+                    canSavePayment && payment.allocatedTextDone,
+                  ]}
+                >
+                  {t.allocatedOfAmount(
+                    formatRupees(allocatedTotal),
+                    formatRupees(parsedPaymentAmount),
+                  )}
+                  {!canSavePayment ? ` — ${t.selectMoreItemsHint}` : ""}
+                </Text>
+              ) : null}
+
+              {pendingEntries.length > 0 && (
+                <Text style={payment.sectionLabel}>{t.selectItemsLabel}</Text>
+              )}
+
               {pendingEntries.length === 0 ? (
                 <Text style={payment.emptyText}>{t.noPendingItems}</Text>
               ) : (
@@ -929,28 +946,28 @@ export default function CustomerDetailScreen() {
                   );
                 })
               )}
+
+              <Pressable
+                style={({ pressed }) => [
+                  modal.confirmBtn,
+                  pressed && modal.confirmBtnPressed,
+                  (!canSavePayment || recordingPayment) &&
+                    modal.confirmBtnDisabled,
+                ]}
+                onPress={handleRecordPayment}
+                disabled={!canSavePayment || recordingPayment}
+              >
+                {recordingPayment ? (
+                  <ActivityIndicator color={colors.white} />
+                ) : (
+                  <Text style={modal.confirmBtnText}>{t.recordPaymentBtn}</Text>
+                )}
+              </Pressable>
+
+              <Pressable onPress={closePaymentModal} style={modal.cancelBtn}>
+                <Text style={modal.cancelText}>{t.cancel}</Text>
+              </Pressable>
             </ScrollView>
-
-            <Pressable
-              style={({ pressed }) => [
-                modal.confirmBtn,
-                pressed && modal.confirmBtnPressed,
-                (!canSavePayment || recordingPayment) &&
-                  modal.confirmBtnDisabled,
-              ]}
-              onPress={handleRecordPayment}
-              disabled={!canSavePayment || recordingPayment}
-            >
-              {recordingPayment ? (
-                <ActivityIndicator color={colors.white} />
-              ) : (
-                <Text style={modal.confirmBtnText}>{t.recordPaymentBtn}</Text>
-              )}
-            </Pressable>
-
-            <Pressable onPress={closePaymentModal} style={modal.cancelBtn}>
-              <Text style={modal.cancelText}>{t.cancel}</Text>
-            </Pressable>
           </View>
         </KeyboardAvoidingView>
       </Modal>
@@ -1240,7 +1257,7 @@ const modal = StyleSheet.create({
 
 // ── Receive Payment modal styles ──────────────────────────────────────────────
 const payment = StyleSheet.create({
-  sheet: { maxHeight: "85%" },
+  sheet: { maxHeight: PAYMENT_SHEET_MAX_HEIGHT, flexShrink: 1 },
 
   amountRow: {
     flexDirection: "row",
@@ -1289,7 +1306,8 @@ const payment = StyleSheet.create({
     marginTop: 4,
   },
 
-  itemList: { maxHeight: 260 },
+  scrollBody: { flexGrow: 0, flexShrink: 1 },
+  scrollContent: { gap: 16, paddingBottom: 4 },
   emptyText: {
     fontSize: 14,
     color: colors.textTertiary,
