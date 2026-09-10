@@ -12,6 +12,7 @@ import { signInWithGoogle, signOut } from "../lib/firebase";
 import { pullProfileFromCloud, markOnboardingComplete } from "../lib/profile";
 import { getCloudSyncEnabled, restoreCustomersFromCloud } from "../lib/db";
 import { useLanguage } from "../contexts/LanguageContext";
+import { en } from "../constants/translations/en";
 import { useSubscription } from "../contexts/SubscriptionContext";
 import { useNetworkStatus } from "../hooks/useNetworkStatus";
 import { colors } from "../constants/colors";
@@ -20,7 +21,11 @@ import NetworkErrorScreen from "../components/NetworkErrorScreen";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { t, setLanguage } = useLanguage();
+  // This screen is intentionally always shown in English, regardless of the
+  // app's selected language (see `en` import above) — only `setLanguage` is
+  // still needed here, to apply a returning user's saved language choice
+  // once they land back inside the app after signing in.
+  const { setLanguage } = useLanguage();
   const { refreshSubscription } = useSubscription();
   const { isConnected, refresh } = useNetworkStatus();
 
@@ -88,7 +93,7 @@ export default function LoginScreen() {
         await signOut().catch(() => {});
       }
     } catch (e) {
-      setError(e.message ?? t.error);
+      setError(e.message ?? en.error);
     } finally {
       setLoading(false);
     }
@@ -109,22 +114,22 @@ export default function LoginScreen() {
               resizeMode="cover"
             />
           </View>
-          <Text style={styles.appName}>{t.appName}</Text>
-          <Text style={styles.tagline}>{t.loginTagline}</Text>
+          <Text style={styles.appName}>{en.appName}</Text>
+          <Text style={styles.tagline}>{en.loginTagline}</Text>
         </View>
 
         {/* Card */}
         <View style={styles.card}>
-          <Text style={styles.stepTitle}>{t.loginTitle}</Text>
-          <Text style={styles.stepSub}>{t.loginSubtitle}</Text>
+          <Text style={styles.stepTitle}>{en.loginTitle}</Text>
+          <Text style={styles.stepSub}>{en.loginSubtitle}</Text>
 
           {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
           {noAccountFound ? (
             <View style={styles.noAccountBox}>
-              <Text style={styles.noAccountText}>{t.loginNoAccountFound}</Text>
+              <Text style={styles.noAccountText}>{en.loginNoAccountFound}</Text>
               <Pressable onPress={() => router.push("/onboarding/language")} hitSlop={6}>
-                <Text style={styles.noAccountLink}>{t.loginSetUpInstead}</Text>
+                <Text style={styles.noAccountLink}>{en.loginSetUpInstead}</Text>
               </Pressable>
             </View>
           ) : null}
@@ -132,11 +137,11 @@ export default function LoginScreen() {
           <GoogleSignInButton
             onPress={handleGoogleSignIn}
             loading={loading}
-            label={t.continueWithGoogle}
+            label={en.continueWithGoogle}
           />
         </View>
 
-        <Text style={styles.footer}>{t.dataLocal}</Text>
+        <Text style={styles.footer}>{en.dataLocal}</Text>
       </ScrollView>
     </SafeAreaView>
   );

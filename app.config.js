@@ -20,7 +20,13 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/settled-mark.png",
+        // Was "./assets/settled-mark.png" — that source has zero safe-margin
+        // (the art touches every edge of a non-square canvas), so Android's
+        // adaptive-icon mask was cropping/stretching it unevenly, producing
+        // a warped, doubled-looking home-screen icon. This is the same mark,
+        // re-exported onto a square transparent canvas with the artwork
+        // scaled to fit inside the mask's visible safe zone.
+        foregroundImage: "./assets/adaptive-icon-foreground.png",
         backgroundColor: "#534AB7",
       },
       package: "com.udharkitab.app",
