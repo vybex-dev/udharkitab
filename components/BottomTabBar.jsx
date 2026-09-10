@@ -31,7 +31,11 @@ import PressableScale from "./PressableScale";
 import { colors } from "../constants/colors";
 import { useLanguage } from "../contexts/LanguageContext";
 
-const BAR_HEIGHT = 64; // height of the flat part of the bar
+// Exported so other floating elements (e.g. AddUdharFab) can position
+// themselves relative to the bar's *real* height instead of guessing a
+// fixed pixel value — the bar's total on-screen height is this plus each
+// device's own bottom safe-area inset, which varies a lot device to device.
+export const BAR_HEIGHT = 64; // height of the flat part of the bar
 const TOP_CORNER_RADIUS = 28; // rounds just the top-left/top-right corners
 
 export default function BottomTabBar({

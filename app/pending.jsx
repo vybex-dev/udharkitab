@@ -19,7 +19,7 @@ import {
 } from "react-native";
 import { useState, useMemo } from "react";
 import { useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import StatBar from "../components/StatBar";
 import CustomerRow from "../components/CustomerRow";
@@ -28,7 +28,7 @@ import BottomTabBar from "../components/BottomTabBar";
 import ListHeader from "../components/lists/ListHeader";
 import ResultsBadge from "../components/lists/ResultsBadge";
 import SortPillRow from "../components/lists/SortPillRow";
-import AddUdharFab from "../components/lists/AddUdharFab";
+import AddUdharFab, { getFabListClearance } from "../components/lists/AddUdharFab";
 import NoSearchResults from "../components/lists/NoSearchResults";
 import OverdueBanner from "../components/pending/OverdueBanner";
 import OverdueModal from "../components/pending/OverdueModal";
@@ -42,6 +42,8 @@ import { colors } from "../constants/colors";
 export default function PendingScreen() {
   const router = useRouter();
   const { t } = useLanguage();
+  const insets = useSafeAreaInsets();
+  const fabClearance = getFabListClearance(insets);
 
   const {
     customers,
@@ -148,9 +150,13 @@ export default function PendingScreen() {
           renderItem={({ item }) => <CustomerRow customer={item} />}
           ListHeaderComponent={renderHeader}
           ListEmptyComponent={<ListEmpty />}
-          contentContainerStyle={
-            filteredCustomers.length === 0 && styles.emptyContent
-          }
+          contentContainerStyle={[
+            filteredCustomers.length === 0 && styles.emptyContent,
+            // Reserve room for the floating "+ Add Udhar" button (only
+            // shown once there's at least one row) so the last card in
+            // the list is never hidden underneath it.
+            filteredCustomers.length > 0 && { paddingBottom: fabClearance },
+          ]}
           refreshControl={
             !searchActive ? (
               <RefreshControl
