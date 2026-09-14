@@ -20,6 +20,7 @@ Built with React Native + Expo · SQLite-first with optional cloud backup · Rev
 
 ## Table of Contents
 
+- [Try It](#try-it)
 - [Why](#why)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -35,6 +36,20 @@ Built with React Native + Expo · SQLite-first with optional cloud backup · Rev
 - [License](#license)
 
 ---
+
+## Try It
+
+Want to try UdharKitab without setting up the project locally? An **Android APK** and setup instructions are available on Google Drive:
+
+**[📱 Download APK & Instructions — Google Drive](https://drive.google.com/your-link-here)**
+
+The Drive folder includes:
+
+- The installable **Android APK** (sideload it directly — no Play Store needed)
+- A short **`instructions.txt` / `README`** covering how to install the APK (enable "Install unknown apps" for your file manager/browser) and a walkthrough of the core flows (onboarding, adding a customer, recording an entry, marking settled, switching language)
+- Any **test credentials** needed for Google Sign-In / cloud sync, if applicable
+
+> **Note:** This submission is **Android only**. An APK is Android's install-package format and won't install on iOS, and no iOS build is provided.
 
 ## Why
 
