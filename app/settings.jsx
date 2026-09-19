@@ -272,6 +272,13 @@ export default function SettingsScreen() {
           setLoggingOut(true);
           try {
             await signOut();
+            // Clear this device's local khata so it can never bleed into
+            // whichever account signs in here next — mirrors the wipe
+            // handleConfirmDeleteAccount already does below. Only the
+            // on-device copy is touched; the cloud copy is untouched, so
+            // signing back into *this* account, here or on another
+            // device, still restores everything.
+            await wipeAllLocalData();
             router.replace("/welcome");
           } catch (e) {
             Alert.alert(t.error, t.retry);

@@ -22,6 +22,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useSubscription } from "../contexts/SubscriptionContext";
 import { signOut } from "../lib/firebase";
+import { wipeAllLocalData } from "../lib/db";
 import { theme } from "../constants/theme";
 import { colors } from "../constants/colors";
 import PressableScale from "../components/PressableScale";
@@ -131,6 +132,11 @@ export default function PaywallScreen() {
             setLoggingOut(true);
             try {
               await signOut();
+              // Clear this device's local khata — otherwise it silently
+              // carries over to whichever account signs in next (see the
+              // same wipe in settings.jsx's handleLogout /
+              // handleConfirmDeleteAccount). The cloud copy is untouched.
+              await wipeAllLocalData();
               router.replace("/welcome");
             } catch (e) {
               console.error("Logout error:", e);

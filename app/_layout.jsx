@@ -8,7 +8,8 @@ import "react-native-url-polyfill/auto";
  *    "I already have a khata" instead of always being dropped into
  *    onboarding.
  *  - Onboarding gate: users who pick "I'm new" go through /onboarding/*
- *    once (language → shop name → theme → phone → OTP → trial start)
+ *    once (language → shop name → theme → Google sign-in → cloud sync
+ *    consent → trial start)
  *  - Auth + plan gate: any signed-out state (including logout, account
  *    deletion, or a silently expired session) sends the user to /welcome —
  *    never straight to /login. /login is only ever reached by the user's
@@ -20,12 +21,23 @@ import "react-native-url-polyfill/auto";
  *  that decides whether a user has been through the full onboarding flow.
  *  It's set at the very end of /onboarding/trial once the user taps
  *  "Start free trial" — or automatically, the moment a returning user's
- *  cloud profile is recovered after they sign in from /login (see
- *  handleGoogleSignIn in login.jsx and the recovery step below). Until one
- *  of those happens, any unauthenticated segment routes into /welcome —
- *  the old standalone /language-picker screen still exists (Settings still
- *  links to it for "Change Language"), it's just no longer the first-launch
- *  entry point.
+ *  cloud profile is recognized right after they sign in with Google, from
+ *  either /login or mid-onboarding at /onboarding/google (see
+ *  handleGoogleSignIn in each, and the recovery step below, which exists
+ *  for the one case neither of those screens can handle themselves: a
+ *  session that's already there when this gate first mounts, e.g. the app
+ *  relaunching with a persisted native session before local state catches
+ *  up). Until onboarding_complete is set, any unauthenticated segment
+ *  routes into /welcome — the old standalone /language-picker screen still
+ *  exists (Settings still links to it for "Change Language"), it's just no
+ *  longer the first-launch entry point.
+ *
+ *  This gate re-reads onboarding_complete from disk on every run rather
+ *  than trusting a cached flag, and separately tracks *whose* data is in
+ *  local SQLite (lib/profile.js's getLocalDataOwnerUid) so a different
+ *  account signing in on a device that still has someone else's khata gets
+ *  a clean slate instead of inheriting it — see the top of runGate below
+ *  for both.
  */
 
 import { Stack, useRouter, useSegments } from "expo-router";
@@ -52,8 +64,14 @@ import {
   isOnboardingComplete,
   markOnboardingComplete,
   pullProfileFromCloud,
+  getLocalDataOwnerUid,
 } from "../lib/profile";
-import { initDB, closeDB, restoreCustomersFromCloud } from "../lib/db";
+import {
+  initDB,
+  closeDB,
+  restoreCustomersFromCloud,
+  wipeAllLocalData,
+} from "../lib/db";
 import { colors } from "../constants/colors";
 
 // Suppress expected third-party offline noise from showing as red LogBox errors.
@@ -157,16 +175,51 @@ function AuthGate() {
 
     try {
       const currentSegment = segmentsRef.current[0];
+      const uid = session?.user?.uid || null;
+
+      // Local SQLite has no per-account scoping — it's just whatever khata
+      // was last written on this device. If a *different* account is now
+      // signed in than the one that data belongs to (e.g. an older build's
+      // sign-out didn't clear it, or the app was killed mid-switch), never
+      // let it silently show up under the new account. This is a safety
+      // net on top of every sign-out path already clearing local data
+      // itself (see wipeAllLocalData in settings.jsx/paywall.jsx's
+      // handleLogout and handleConfirmDeleteAccount).
+      if (uid) {
+        const owner = await getLocalDataOwnerUid();
+        if (owner && owner !== uid) {
+          await wipeAllLocalData();
+          recoveryAttempted.current = false;
+        }
+      }
+
+      // Re-read from disk instead of trusting the onboardingDone state
+      // variable: onboarding_complete is written directly (via
+      // lib/profile.js) by onboarding/trial.jsx, onboarding/google.jsx,
+      // login.jsx, the recovery step just below, AND cleared by every
+      // sign-out/delete path above — all without this component's state
+      // knowing. A cached flag here can go stale in either direction: stuck
+      // "true" right after a logout wipes it (letting the very next
+      // sign-in skip the checks below), or stuck "false" for a moment right
+      // after onboarding just finished (bouncing the person back to
+      // /welcome the instant some unrelated state change re-runs this
+      // gate).
+      const onboardingDoneNow = await isOnboardingComplete();
+      if (onboardingDoneNow !== onboardingDone) setOnboardingDone(onboardingDoneNow);
 
       // ── Step 0: Onboarding (first ever launch, not yet completed) ────────
-      if (!onboardingDone) {
+      if (!onboardingDoneNow) {
         // A session can exist here without onboarding_complete being set
         // locally — e.g. a returning user reinstalled, or the app relaunched
         // with a persisted native session before local state caught up. If
         // so, try to recover their profile from the cloud once, silently,
         // instead of making them sit through onboarding or the welcome
-        // screen again.
-        if (session && !recoveryAttempted.current) {
+        // screen again. Skipped while the person is actively inside the
+        // onboarding flow itself: app/onboarding/google.jsx already runs
+        // this exact recovery check the moment they sign in there, so
+        // doing it again here would just race that screen's own navigation
+        // for no benefit.
+        if (session && !recoveryAttempted.current && currentSegment !== "onboarding") {
           recoveryAttempted.current = true;
           try {
             const result = await pullProfileFromCloud();

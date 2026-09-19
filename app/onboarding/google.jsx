@@ -11,15 +11,19 @@ import { useState } from "react";
 import { signInWithGoogle } from "../../lib/firebase";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useOnboarding } from "../../contexts/OnboardingContext";
+import { useSubscription } from "../../contexts/SubscriptionContext";
 import { theme } from "../../constants/theme";
 import OnboardingStepShell from "../../components/onboarding/OnboardingStepShell";
 import ApprovalStamp from "../../components/onboarding/ApprovalStamp";
 import GoogleSignInButton from "../../components/GoogleSignInButton";
+import { pullProfileFromCloud, markOnboardingComplete } from "../../lib/profile";
+import { restoreCustomersFromCloud } from "../../lib/db";
 
 export default function OnboardingGoogleScreen() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, setLanguage } = useLanguage();
   const { draft, updateDraft } = useOnboarding();
+  const { refreshSubscription } = useSubscription();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -35,6 +39,25 @@ export default function OnboardingGoogleScreen() {
         // User closed the account picker — just let them try again.
         return;
       }
+
+      // This Google account may already have a khata from before — the
+      // person may have tapped "I'm new" by mistake, or be re-onboarding
+      // on a new/reset device. Recognize that the same way login.jsx does
+      // for the explicit "I already have a khata" flow, instead of
+      // barreling into a fresh setup that would silently overwrite their
+      // real shop name/theme/language and leave their actual customers
+      // behind in the cloud, untouched, while this device shows nothing
+      // (or someone else's leftover local data).
+      const result = await pullProfileFromCloud();
+      if (result.success && result.found) {
+        await restoreCustomersFromCloud().catch(() => {});
+        if (result.language) await setLanguage(result.language);
+        await markOnboardingComplete();
+        await refreshSubscription().catch(() => {});
+        router.replace("/");
+        return;
+      }
+
       updateDraft({
         uid: session.user.uid,
         email: session.user.email || "",
