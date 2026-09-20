@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/icon.png" alt="UdharKitab logo" width="120" />
 
-# UdharKitab (उधार किताब)
+# Udhar Kitab (उधार किताब)
 
 **A shopkeeper's credit book, digitized.**
 
