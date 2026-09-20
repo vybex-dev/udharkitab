@@ -49,9 +49,6 @@ The Drive folder includes:
 
 - The installable **Android APK** (sideload it directly — no Play Store needed)
 - A short **`instructions.txt` / `README`** covering how to install the APK (enable "Install unknown apps" for your file manager/browser) and a walkthrough of the core flows (onboarding, adding a customer, recording an entry, marking settled, switching language)
-- Any **test credentials** needed for Google Sign-In / cloud sync, if applicable
-
-> **Note:** This submission is **Android only**. An APK is Android's install-package format and won't install on iOS, and no iOS build is provided.
 
 ## Why
 
