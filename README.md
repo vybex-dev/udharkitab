@@ -92,7 +92,7 @@ udharkitab/
 │   ├── onboarding/           # shop name → language → trial → cloud sync
 │   ├── customer/[id].jsx     # single customer ledger
 │   ├── index.jsx             # home
-│   ├── pending.jsx           # "बाकी" — outstanding balances
+│   ├── pending.jsx           # outstanding balances
 │   ├── settings.jsx
 │   ├── analytics.jsx
 │   ├── paywall.jsx           # Udhar Kitab Pro screen
