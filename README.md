@@ -61,7 +61,7 @@ Most credit-tracking apps assume the user is comfortable with English, spreadshe
 
 ## Features
 
-- **Track credit (उधार) and settlements (चुकता)** — add entries, record partial or full payments, see running balances per customer.
+- **Track credit and settlements** — add entries, record partial or full payments, see running balances per customer.
 - **Overdue tracking** — a home-screen banner and per-customer indicators surface anyone whose payment is late, with one tap to adjust the due date.
 - **Offline-first storage** — all data lives locally in SQLite first; the app is fully usable with zero connectivity.
 - **Optional cloud backup & sync** — opt in during onboarding (or later from Settings) to mirror data to Firestore, so a shopkeeper can restore their book on a new phone.
