@@ -1,6 +1,7 @@
 /**
  * app/customer/[id].jsx
  * Customer detail — adds overdue banner with inline date update.
+ * eas build --platform android --profile preview --clear-cache
  */
 
 import {
@@ -878,7 +879,9 @@ export default function CustomerDetailScreen() {
               </View>
 
               {isOverpayment ? (
-                <Text style={[payment.allocatedText, payment.allocatedTextDone]}>
+                <Text
+                  style={[payment.allocatedText, payment.allocatedTextDone]}
+                >
                   {t.advanceWillBeAdded(formatRupees(advanceAmount))}
                 </Text>
               ) : parsedPaymentAmount > 0 ? (

@@ -12,6 +12,8 @@
 
 </div>
 
+UdharKitab comes from two simple Hindi words: “Udhar”, meaning credit or money owed, and “Kitab”, meaning book.
+
 UdharKitab replaces the paper _udhar khata_ that small shopkeepers across India use to track credit given to regular customers. It's offline-first, bilingual (Hindi/English), and built for someone who has never used a business app before.
 
 Built with React Native + Expo · SQLite-first with optional cloud backup · RevenueCat-powered subscriptions.
@@ -41,7 +43,7 @@ Built with React Native + Expo · SQLite-first with optional cloud backup · Rev
 
 Want to try UdharKitab without setting up the project locally? An **Android APK** and setup instructions are available on Google Drive:
 
-**[📱 Download APK & Instructions — Google Drive](https://drive.google.com/your-link-here)**
+**[📱 Download APK & Instructions — Google Drive](https://drive.google.com/drive/folders/1WGWEnHD27TRi7YwXtFzkkU3om26MTXtl?usp=sharing)**
 
 The Drive folder includes:
 
