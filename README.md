@@ -12,9 +12,9 @@
 
 </div>
 
-UdharKitab comes from two simple Hindi words: “Udhar”, meaning credit or money owed, and “Kitab”, meaning book.
+Udhar Kitab comes from two simple Hindi words: “Udhar”, meaning credit or money owed, and “Kitab”, meaning book.
 
-UdharKitab replaces the paper _udhar khata_ that small shopkeepers across India use to track credit given to regular customers. It's offline-first, bilingual (Hindi/English), and built for someone who has never used a business app before.
+Udhar Kitab replaces the paper _udhar khata_ that small shopkeepers across India use to track credit given to regular customers. It's offline-first, bilingual (Hindi/English), and built for someone who has never used a business app before.
 
 Built with React Native + Expo · SQLite-first with optional cloud backup · RevenueCat-powered subscriptions.
 
@@ -41,7 +41,7 @@ Built with React Native + Expo · SQLite-first with optional cloud backup · Rev
 
 ## Try It
 
-Want to try UdharKitab without setting up the project locally? An **Android APK** and setup instructions are available on Google Drive:
+Want to try Udhar Kitab without setting up the project locally? An **Android APK** and setup instructions are available on Google Drive:
 
 **[📱 Download APK & Instructions — Google Drive](https://drive.google.com/drive/folders/1WGWEnHD27TRi7YwXtFzkkU3om26MTXtl?usp=sharing)**
 
@@ -52,7 +52,7 @@ The Drive folder includes:
 
 ## Why
 
-Most credit-tracking apps assume the user is comfortable with English, spreadsheets, and a stable internet connection. UdharKitab doesn't. It's designed for a _kirana_ store owner who:
+Most credit-tracking apps assume the user is comfortable with English, spreadsheets, and a stable internet connection. Udhar Kitab doesn't. It's designed for a _kirana_ store owner who:
 
 - thinks in Hindi, not English
 - needs the app to work the same with or without signal
@@ -66,7 +66,7 @@ Most credit-tracking apps assume the user is comfortable with English, spreadshe
 - **Offline-first storage** — all data lives locally in SQLite first; the app is fully usable with zero connectivity.
 - **Optional cloud backup & sync** — opt in during onboarding (or later from Settings) to mirror data to Firestore, so a shopkeeper can restore their book on a new phone.
 - **Hindi / English throughout** — a context-driven i18n layer with persisted language choice, not just translated labels but locale-aware date/number formatting.
-- **WhatsApp & call reminders** — one-tap WhatsApp messages (three templates: no due date, due today, overdue) and a direct dial-out, without UdharKitab ever sending anything on the shopkeeper's behalf.
+- **WhatsApp & call reminders** — one-tap WhatsApp messages (three templates: no due date, due today, overdue) and a direct dial-out, without Udhar Kitab ever sending anything on the shopkeeper's behalf.
 - **Analytics dashboard** — outstanding totals, period-over-period comparison, monthly history, and a top-debtors list.
 - **Google Sign-In** via Firebase Auth, with a guided onboarding flow (shop name → language → trial → optional cloud sync).
 - **90-day free trial**, tracked both locally and in Firestore so it survives a reinstall.
@@ -95,7 +95,7 @@ udharkitab/
 │   ├── pending.jsx           # "बाकी" — outstanding balances
 │   ├── settings.jsx
 │   ├── analytics.jsx
-│   ├── paywall.jsx           # UdharKitab Pro screen
+│   ├── paywall.jsx           # Udhar Kitab Pro screen
 │   ├── privacy-policy.jsx    # in-app Privacy Policy screen
 │   └── login.jsx / welcome.jsx
 ├── components/
@@ -215,7 +215,7 @@ In-app, the policy renders natively at `app/privacy-policy.jsx` (content in `con
 
 ## License
 
-UdharKitab
+Udhar Kitab
 Copyright (C) 2026 Harsh Yadav, trading as Vybex
 
 This program is free software: you can redistribute it and/or modify
