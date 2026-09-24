@@ -46,7 +46,7 @@ Watch a walkthrough of Udhar Kitab in action:
 
 [![Udhar Kitab Demo Video](https://img.youtube.com/vi/sn71H6fW10c/maxresdefault.jpg)](https://youtu.be/sn71H6fW10c)
 
-**[▶️ Watch the demo on YouTube](https://youtu.be/sn71H6fW10c)**
+**[🎬 Watch the demo on YouTube](https://youtu.be/sn71H6fW10c)**
 
 ## Try It
 
